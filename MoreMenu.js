@@ -321,7 +321,7 @@
         isProtected : true
       },
       'Delete page' : {
-        url : mw.util.getUrl( pageName, { action: 'delete' } ) + ($(' #delete-reason ').text() ? '&wpReason=' + $(' #delete-reason ').text() : ''),
+        url : mw.util.getUrl( pageName, { action: 'delete' } ) + ( $( '#delete-reason' ).text() ? '&wpReason=' + $( '#delete-reason' ).text() : ''),
         userPermissions : [ 'delete' ],
         pageExists : true
       },
@@ -429,7 +429,7 @@
       if ( data.query.logevents.length === 0) {
         $( '#c2-user-blocks-view_block_log' ).remove();
       }
-      if ( $('#c2-user-blocks').find( 'li' ).length === 0 ) {
+      if ( $( '#c2-user-blocks' ).find( 'li' ).length === 0 ) {
         $( '#c2-user-blocks' );
       }
     } );
@@ -491,7 +491,7 @@
   }
 
   function canAddRemoveGroups( groups, permissions ) {
-    if ( permissions && permissions.indexOf( "userrights" ) >= 0 ) return true;
+    if ( permissions && permissions.indexOf( 'userrights' ) >= 0 ) return true;
     var ret = false;
     for ( var i=0; i<groups.length; i++ ) {
       if ( metaUserGroups[groups[i]].addRemoveGroups ) {
@@ -634,7 +634,7 @@
       if ( data ) {
         userData = data[0].query.users[0];
 
-        if ( userData.invalid === "" ) {
+        if ( userData.invalid === '' ) {
           userData.groups = [];
           userData.rights = [];
         }
