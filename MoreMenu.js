@@ -432,7 +432,7 @@
         $( '#c2-user-blocks-view_block_log' ).remove();
       }
       if ( $( '#c2-user-blocks' ).find( 'li' ).length === 0 ) {
-        $( '#c2-user-blocks' );
+        $( '#c2-user-blocks' ).remove();
       }
     } );
 
