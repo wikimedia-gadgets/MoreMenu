@@ -8,6 +8,8 @@
 //                 jStorage via ResourceLoader
 //                 Any modern broswer or IE8+
 //
+// Text available under the Creative Commons Attribution-ShareAlike License (CC BY-SA 3.0)
+//
 
 ( function( ) {
   var api = new mw.Api(),
