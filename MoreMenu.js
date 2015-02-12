@@ -23,7 +23,7 @@
   var escapedPageName = encodeURIComponent( pageName.replace( /[!'()*]/g, escape ) ),
     escapedUserName = encodeURIComponent( userName ).replace( /[!'()*]/g, escape );
 
-  if ( !$.jStorage ) mw.loader.load('jquery.jStorage');
+  if ( !$.jStorage ) mw.loader.load( 'jquery.jStorage' );
 
   $( '#ca-protect,#ca-unprotect,#ca-delete,#ca-undelete,#ca-move' ).remove();
 
