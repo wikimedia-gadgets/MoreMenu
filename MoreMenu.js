@@ -213,13 +213,13 @@
         url : mw.util.getUrl( 'Special:DeletedContributions/' + userName ),
         userPermissions : [ 'deletedhistory', 'deletedtext' ]
       },
-      'Email user' : {
-        url : mw.util.getUrl( 'Special:EmailUser/' + userName ),
-        groups : [ 'user' ]
-      },
       'Suppressed contribs' : {
         url : mw.util.getUrl( 'Special:Log/suppress', { offender: userName } ),
         userPermissions : [ 'oversight' ]
+      },
+      'Email user' : {
+        url : mw.util.getUrl( 'Special:EmailUser/' + userName ),
+        groups : [ 'user' ]
       },
       'Uploads' : {
         url : mw.util.getUrl( 'Special:ListFiles', { user: userName, ilshowall: '1' } ),
