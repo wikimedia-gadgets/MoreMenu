@@ -119,10 +119,12 @@
           userPermissions : 'block'
         },
         'Block globally' : {
-          url : mw.util.getUrl( 'Special:Block/' + userName, { action: 'view' } ),
-          userPermissions : 'globalblock'
+          url : '//meta.wikimedia.org/wiki/Special:GlobalBlock/' + userName,
+          userPermissions : 'globalblock',
+          ipOnly : true
         },
-        'Lock user' : {
+        'Central auth' : {
+          url : '//meta.wikimedia.org/wiki/Special:CentralAuth/' + userName,
           userPermissions : 'centralauth-lock'
         },
         'Unblock user' : {
@@ -374,7 +376,7 @@
 
   init( menus, function(data) {
     completePageLinks();
-    if ( isUserSpace ) completeUserLinks(data.query);
+    if ( isUserSpace ) completeUserLinks(data[0].query);
   } );
 
 
@@ -668,7 +670,7 @@
               '<div class="menu"><ul>';
         html += generateMenuContent( tabName, menus[i][tabName], userData, userPermissions );
         html += '</ul></div></div>';
-        if ( $( '#p-actions' )[0] ) {
+        if ( $( '#p-cactions' )[0] ) {
           $( html ).insertAfter( $( '#p-cactions' ) );
         } else {
           $( html ).insertAfter( $( '#p-views' ) );
@@ -676,7 +678,7 @@
         addListeners();
       }
 
-      if ( typeof fn === 'function' ) fn( data[0], userPermissions );
+      if ( typeof fn === 'function' ) fn( data, userPermissions );
 
       removeCactions();
     } );
