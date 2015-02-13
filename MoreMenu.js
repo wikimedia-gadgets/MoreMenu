@@ -21,7 +21,7 @@
     contentLanguage = mw.config.get( 'wgContentLanguage' ), noticeProject = mw.config.get( 'wgNoticeProject' ),
     articleId = mw.config.get( 'wgArticleId' ), mwDBname = mw.config.get( 'wgDBname' ),
     pageName = mw.config.get( 'wgPageName' ), userName = mw.config.get( 'wgRelevantUserName' ),
-    metaUserGroups, userPermissions, currentDate = new Date();
+    isUserSpace, metaUserGroups, userPermissions, currentDate = new Date();
   var escapedPageName = encodeURIComponent( pageName.replace( /[!'()*]/g, escape ) ),
     escapedUserName = encodeURIComponent( userName ).replace( /[!'()*]/g, escape );
 
@@ -242,6 +242,11 @@
 
   var pageMenuList = {
     'Page' : {
+      // 'More' : {
+      //   'Placeholder' : {
+      //     url : '#'
+      //   }
+      // },
       'Page logs' : {
         'All logs' : {
           url : mw.util.getUrl( 'Special:Log', { action: 'view', page: pageName } )
@@ -367,20 +372,20 @@
 
 
   // initialize script
+  mw.loader.using( 'jquery.jStorage', function() {
+    var menus = [];
 
-  var menus = [];
+    if ( namespaceNumber === 2 || namespaceNumber === 3 || canonicalSpecialPageName === 'Contributions' ) {
+      isUserSpace = true;
+      menus.push( userMenuList );
+    }
+    if ( namespaceNumber >= 0 ) menus.push( pageMenuList );
 
-  if ( namespaceNumber === 2 || namespaceNumber === 3 || canonicalSpecialPageName === 'Contributions' ) {
-    var isUserSpace = true;
-    menus.push( userMenuList );
-  }
-  if ( namespaceNumber >= 0 ) menus.push( pageMenuList );
-
-  init( menus, function(data) {
-    completePageLinks();
-    if ( isUserSpace ) completeUserLinks(data[0].query);
+    init( menus, function(data) {
+      completePageLinks();
+      if ( isUserSpace ) completeUserLinks(data[0].query);
+    } );
   } );
-
 
   // custom callback functions for these menus
 
@@ -416,7 +421,7 @@
     $( '#p-views ul' ).on( 'beforeTabCollapse', function() {
       if ( $( '#ca-history' ).hasClass( 'collapsible' ) ) {
         $( '#p-page2' ).find( 'ul' ).append( $( '#ca-history' ).detach() );
-        removeCactions();
+        // removeCactions();
       }
     } );
   }
@@ -463,6 +468,25 @@
         }
       } );
     }
+
+    // Absorb the More (cactions) menu unless user disables it
+    // if ( $.jStorage.get( 'mmNoAbsorbtion' ) ) {
+    //   $( '#c2-page-more' ).remove();
+    // } else {
+    //   var $cactions = $( '#p-cactions' ).find( 'ul' ),
+    //     $newCactions = $( '#c2-page-more' ).prop( 'id', 'p-cactions' );
+
+    //   $( '#p-cactions' ).remove();
+    //   $newCactions.find( 'ul' ).replaceWith($cactions);
+    //   $newCactions.find( 'ul' ).append( '<li id="c2-unabsorb"><a><small>Disable this feature</small></a></li>' );
+
+    //   $( '#c2-unabsorb' ).on( 'click', function() {
+    //     if ( confirm( 'Hit OK to refresh the page with the More menu back at it\'s own tab.\n\nThis setting will persist only in this browser session. To re-enable, clear your browser\'s cache.' ) ) {
+    //       $.jStorage.set( 'mmNoAbsorbtion', true );
+    //       document.location.reload();
+    //     }
+    //   } );
+    // }
   }
 
 
@@ -596,7 +620,7 @@
 
   function removeCactions() {
     return true;
-    // disable for now... conflicting with other scripts
+    // Comment out for now, conflicts with other scripts
     // if( $( '#p-cactions' ).find( 'li' ).length === 0 ) {
     //   $( '#p-cactions' ).remove();
     // }
@@ -684,7 +708,7 @@
 
       if ( typeof fn === 'function' ) fn( data, userPermissions );
 
-      removeCactions();
+      // removeCactions();
     } );
   }
 } )( );
