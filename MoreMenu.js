@@ -595,9 +595,11 @@
   }
 
   function removeCactions() {
-    if( $( '#p-cactions' ).find( 'li' ).length === 0 ) {
-      $( '#p-cactions' ).remove();
-    }
+    return true;
+    // disable for now... conflicting with other scripts
+    // if( $( '#p-cactions' ).find( 'li' ).length === 0 ) {
+    //   $( '#p-cactions' ).remove();
+    // }
   }
 
   function sanitize( name ) {
