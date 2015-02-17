@@ -25,8 +25,6 @@
   var escapedPageName = encodeURIComponent( pageName.replace( /[!'()*]/g, escape ) ),
     escapedUserName = encodeURIComponent( userName ).replace( /[!'()*]/g, escape );
 
-  if ( !$.jStorage ) mw.loader.load( 'jquery.jStorage' );
-
   $( '#ca-protect,#ca-unprotect,#ca-delete,#ca-undelete,#ca-move' ).remove();
 
   var userMenuList = {
@@ -370,9 +368,13 @@
     }
   };
 
+  var dependencies = [];
+
+  if ( !$.jStorage ) dependencies.push( 'jquery.jStorage' );
+  if ( !Object.keys ) dependencies.push( 'es5-shim' );
 
   // initialize script
-  mw.loader.using( 'jquery.jStorage', function() {
+  mw.loader.using( dependencies, function() {
     var menus = [];
 
     if ( namespaceNumber === 2 || namespaceNumber === 3 || canonicalSpecialPageName === 'Contributions' ) {
@@ -688,7 +690,7 @@
         $.jStorage.set( 'mmCacheDate', newDate.setDate( newDate.getDate() + 7 ) );
       }
 
-      for ( var i in menus ) {
+      for ( var i=0; i<menus.length; i++ ) {
         var tabName = Object.keys( menus[i] )[0];
         var html =  '<div id="p-' + tabName.toLowerCase() + '2" class="vectorMenu" style="z-index: 100;">' +
               '<h3>' +
