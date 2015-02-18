@@ -1,6 +1,6 @@
 //<nowiki>
 // Script:         MoreMenu.js
-// Version:        4.0.0
+// Version:        4.0.2
 // Author:         MusikAnimal
 // Documentation:  [[User:MusikAnimal/MoreMenu]]
 // GitHub:         https://github.com/MusikAnimal/MoreMenu
@@ -25,7 +25,7 @@
   var escapedPageName = encodeURIComponent( pageName.replace( /[!'()*]/g, escape ) ),
     escapedUserName = encodeURIComponent( userName ).replace( /[!'()*]/g, escape );
 
-  $( '#ca-protect,#ca-unprotect,#ca-delete,#ca-undelete,#ca-move' ).remove();
+  $( '#ca-protect,#ca-unprotect,#ca-delete,#ca-undelete' ).remove();
 
   var userMenuList = {
     'User' : {
@@ -415,6 +415,10 @@
       }
     }
 
+    if ( mwDBname !== 'commonswiki' ) {
+      $( '#ca-move' ).hide();
+    }
+
     $( '#p-views ul' ).on( 'beforeTabCollapse', function() {
       if ( $( '#ca-history' ).hasClass( 'collapsible' ) ) {
         $( '#p-page2' ).find( 'ul' ).append( $( '#ca-history' ).detach() );
@@ -631,7 +635,14 @@
       if ( data ) {
         userData = data[0].query.users[0];
 
-        if ( userData.invalid === '' ) {
+        if ( !userData ) {
+          // FIXME: add functionality to only show menu based on custom function;
+          //    temporary fix so that script doesn't break on pages of users that don't exist
+          isUserSpace = false;
+          for ( var j = 0; j < menus.length; j++ ) {
+            if ( !!menus[j].User ) menus.splice( j, 1 );
+          }
+        } else if ( userData.invalid === '' ) {
           userData.groups = [];
           userData.rights = [];
         }
