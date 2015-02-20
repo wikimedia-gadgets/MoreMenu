@@ -83,45 +83,56 @@
       },
       'RfXs' : {
         'RfAs' : {
-          url : mw.util.getUrl( 'Special:PrefixIndex/Wikipedia:Requests_for_adminship/' + userName, { action: 'view' } ),
+          url : mw.util.getUrl( 'Special:PrefixIndex/Wikipedia:Requests_for_adminship/' + userName ),
           style : 'display:none',
           title : 'Requests for Adminship'
         },
         'RfBs' : {
-          url : mw.util.getUrl( 'Special:PrefixIndex/Wikipedia:Requests_for_bureaucratship/' + userName, { action: 'view' } ),
+          url : mw.util.getUrl( 'Special:PrefixIndex/Wikipedia:Requests_for_bureaucratship/' + userName ),
           style : 'display:none',
           title : 'Requests for Bureaucratship'
         },
-        'RfAr' : {
-          url : mw.util.getUrl( 'Wikipedia:Requests_for_arbitration/' + userName, { action: 'view' } ),
+        'RfArb' : {
+          url : mw.util.getUrl( 'Wikipedia:Requests_for_arbitration/' + userName ),
           style : 'display:none',
           title : 'Requests for Arbitration'
         },
         'RfC' : {
-          url : mw.util.getUrl( 'Wikipedia:Requests_for_comment/' + userName, { action: 'view' } ),
+          url : mw.util.getUrl( 'Wikipedia:Requests_for_comment/' + userName ),
           style : 'display:none',
           title : 'Requests for Comment'
         },
         'RfCU' : {
-          url : mw.util.getUrl( 'Wikipedia:Requests_for_checkuser/Case/' + userName, { action: 'view' } ),
+          url : mw.util.getUrl( 'Wikipedia:Requests_for_checkuser/Case/' + userName ),
           style : 'display:none',
           title : 'Request for Checkuser'
         },
+        'CCI' : {
+          url : mw.util.getUrl( 'Wikipedia:Contributor_copyright_investigations/' + userName ),
+          style : 'display:none',
+          title : 'Contributor copyright investigations'
+        },
         'SPI' : {
-          url : mw.util.getUrl( 'Wikipedia:Sockpuppet_investigations/' + userName, { action: 'view' } ),
+          url : mw.util.getUrl( 'Wikipedia:Sockpuppet_investigations/' + userName ),
           style : 'display:none',
           title : 'Sockpuppet investigations (as the sockmaster)'
         }
       },
       'Blocks' : {
         'Block user' : {
-          url : mw.util.getUrl( 'Special:Block/' + userName, { action: 'view' } ),
-          userPermissions : 'block'
+          url : mw.util.getUrl( 'Special:Block/' + userName ),
+          userPermissions : 'block',
+          blocked : false
         },
         'Block globally' : {
           url : '//meta.wikimedia.org/wiki/Special:GlobalBlock/' + userName,
           userPermissions : 'globalblock',
           ipOnly : true
+        },
+        'Change block' : {
+          url : mw.util.getUrl( 'Special:Block/' + userName ),
+          userPermissions : 'block',
+          blocked : true
         },
         'Central auth' : {
           url : '//meta.wikimedia.org/wiki/Special:CentralAuth/' + userName,
@@ -340,7 +351,7 @@
         pageExists : true
       },
       'Move page' : {
-        url : mw.util.getUrl( 'Special:MovePage/' + pageName, { action: 'view' } ),
+        url : mw.util.getUrl( 'Special:MovePage/' + pageName ),
         userPermissions : [ 'move' ],
         pageExists : true
       },
@@ -353,10 +364,10 @@
         pageExists : true
       },
       'Subpages' : {
-        url : mw.util.getUrl( 'Special:PrefixIndex/' + pageName, { action: 'view' } ),
+        url : mw.util.getUrl( 'Special:PrefixIndex/' + pageName ),
       },
       'Undelete page' : {
-        url : mw.util.getUrl( 'Special:Undelete/' + pageName, { action: 'view' } ),
+        url : mw.util.getUrl( 'Special:Undelete/' + pageName ),
         userPermissions : [ 'undelete' ],
         pageDeleted : true
       }
@@ -398,11 +409,11 @@
           if ( i > -1 ) {
             if ( data.query.pages[i].title.split( '/' )[0] === 'Wikipedia:Miscellany for deletion' ) {
               $( '#c2-page-xfds' ).show().find( 'a' ).text( 'MfDs' ).prop( 'href',
-                mw.util.getUrl( 'Special:PrefixIndex/Wikipedia:Miscellany_for_deletion/' + pageName, { action: 'view' } )
+                mw.util.getUrl( 'Special:PrefixIndex/Wikipedia:Miscellany_for_deletion/' + pageName )
               );
             } else if ( data.query.pages[i].title.split( '/' )[0] === 'Wikipedia:Articles for deletion' ) {
               $( '#c2-page-xfds' ).show().find( 'a' ).text( 'AfDs' ).prop( 'href',
-                mw.util.getUrl( 'Special:PrefixIndex/Wikipedia:Articles_for_deletion/' + pageName, { action: 'view' } )
+                mw.util.getUrl( 'Special:PrefixIndex/Wikipedia:Articles_for_deletion/' + pageName )
               );
             }
             break;
@@ -444,9 +455,10 @@
     var rfxs = {
       'Wikipedia:Requests for adminship' : 'rfas',
       'Wikipedia:Requests for bureaucratship' : 'rfbs',
-      'Wikipedia:Requests for arbitration' : 'rfar',
+      'Wikipedia:Arbitration/Requests/Case' : 'rfarb',
       'Wikipedia:Requests for comment' : 'rfc',
       'Wikipedia:Requests for checkuser/Case' : 'rfcu',
+      'Wikipedia:Contributor copyright investigations' : 'cci',
       'Wikipedia:Sockpuppet investigations' : 'spi'
     };
 
@@ -462,7 +474,7 @@
         for ( var id in pages ) {
           if ( id > 0 ) {
             $( '#c2-user-rfxs' ).show();
-            var key = pages[id].title.split( '/' )[0];
+            var key = pages[id].title.replace( '/' + userName, '' );
             $( '#c2-user-rfxs-' + rfxs[key] ).find( 'a' ).show();
           }
         }
@@ -587,7 +599,7 @@
       validations &=
         /* their user groups  */ hasConditional( action.groups, userData.groups ) &&
         /* their permissions  */ hasConditional( action.permissions, userData.rights ) &&
-        /* they're blocked    */ ( action.blocked ? !!userData.blockid : true ) &&
+        /* they're blocked    */ ( action.blocked !== undefined ? !!userData.blockid === action.blocked : true ) &&
         /* can change groups  */ ( action.addRemoveGroups ? canAddRemoveGroups( userData.groups, userData.rights ) : true ) &&
         /* IP                 */ ( action.ipOnly ? userData.invalid === '' : true );
     }
@@ -610,7 +622,7 @@
 
     if( isUserSpace ) {
       promises[0] = apiGet( {
-        list : 'users',
+        list : 'users|blocks',
         ususers : userName,
         bkusers : userName,
         usprop : 'blockinfo|groups|rights',
@@ -645,6 +657,9 @@
         } else if ( userData.invalid === '' ) {
           userData.groups = [];
           userData.rights = [];
+          if ( data[0].query.blocks.length ) {
+            userData.blockid = data[0].query.blocks[0].id;
+          }
         }
       }
 
