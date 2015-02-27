@@ -1,6 +1,6 @@
 //<nowiki>
 // Script:         MoreMenu.js
-// Version:        4.1.0
+// Version:        4.1.2
 // Author:         MusikAnimal
 // Documentation:  [[User:MusikAnimal/MoreMenu]]
 // GitHub:         https://github.com/MusikAnimal/MoreMenu
