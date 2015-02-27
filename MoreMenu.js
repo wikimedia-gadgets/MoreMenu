@@ -275,7 +275,7 @@
           pageExists : true
         },
         'Analysis – XTools' : {
-          url : '//tools.wmflabs.org/xtools/articleinfo/?article=' + escapedPageName + '&project=' + serverName,
+          url : '//tools.wmflabs.org/xtools-articleinfo/?article=' + escapedPageName + '&project=' + serverName,
           pageExists : true
         },
         'Basic statistics' : {
