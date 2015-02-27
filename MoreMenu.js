@@ -1,6 +1,6 @@
 //<nowiki>
 // Script:         MoreMenu.js
-// Version:        4.0.2
+// Version:        4.1.0
 // Author:         MusikAnimal
 // Documentation:  [[User:MusikAnimal/MoreMenu]]
 // GitHub:         https://github.com/MusikAnimal/MoreMenu
@@ -279,7 +279,7 @@
           pageExists : true
         },
         'Basic statistics' : {
-          url : mw.util.getUrl( pageName, { action: 'info' } ),
+          url : '/w/index.php?title=' + pageName + '&action=info',
           pageExists : true
         },
         'Search by contributor' : {
@@ -327,22 +327,22 @@
         url : 'javascrit:void(0)'
       },
       'Change protection' : {
-        url : mw.util.getUrl( pageName, { action: 'protect' } ),
+        url : '/w/index.php?title=' + pageName + '&action=protect',
         userPermissions : [ 'protect', 'stablesettings' ],
         isProtected : true
       },
       'Delete page' : {
-        url : mw.util.getUrl( pageName, { action: 'delete' } ) + ( $( '#delete-reason' ).text() ? '&wpReason=' + $( '#delete-reason' ).text() : ''),
+        url : '/w/index.php?title=' + pageName + '&action=delete' + ( $( '#delete-reason' ).text() ? '&wpReason=' + $( '#delete-reason' ).text() : ''),
         userPermissions : [ 'delete' ],
         pageExists : true
       },
       'Edit intro' : {
-        url : mw.util.getUrl( pageName, { action: 'edit', section: 0 } ),
+        url : '/w/index.php?title=' + pageName + '&action=edit&section=0',
         namespaceRestrict : [ 0, 1, 2, 3, 4, 5, 118 ],
         pageExists : true
       },
       'Latest diff' : {
-        url : mw.util.getUrl( pageName, { action: 'view', diff: mw.config.get( 'wgCurRevisionId' ) } ),
+        url : '/w/index.php?title=' + pageName + '&action=view&diff=' + mw.config.get( 'wgCurRevisionId' ),
         pageExists : true
       },
       'Merge page' : {
@@ -356,11 +356,11 @@
         pageExists : true
       },
       'Protect page' : {
-        url : mw.util.getUrl( pageName, { action: 'protect' } ),
-        userPermissions : [ 'protect' ]
+        url : '/w/index.php?title=' + pageName + '&action=protect',
+        userPermissions : [ 'protect', 'stablesettings' ]
       },
       'Purge cache' : {
-        url : mw.util.getUrl( pageName, { action: 'purge', forcelinkupdate: true } ),
+        url : '/w/index.php?title=' + pageName + '&action=purge&forcelinkupdate=true',
         pageExists : true
       },
       'Subpages' : {
