@@ -574,6 +574,7 @@
 				$( this ).find( '.submenu' ).hide();
 			} );
 		} );
+		
 	}
 
 	function apiGet( params ) {
@@ -782,6 +783,25 @@
 					$( html ).insertAfter( $( '#p-views' ) );
 				}
 				addListeners();
+			}
+			
+			if ($('.client-js .skin-vector #p-cactions').length) {
+				var menu = $('#p-cactions .menu');
+				var parent = $('#p-cactions');
+				parent.hide();
+				new MutationObserver(function (mutations) {
+					mutations.forEach(function (mutation) {
+						if (mutation.addedNodes.length) {
+							parent.show();
+						} else if (mutation.removedNodes.length) {
+							if (menu.html().trim() === '') {
+								parent.hide();
+							}
+						}
+					});    
+				}).observe(menu.get(0), {
+					childList: true 
+				});
 			}
 			
 			$('.client-js .skin-vector.ns-2 #p-search').css('padding-left', 'inherit');
