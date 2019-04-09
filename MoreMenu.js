@@ -573,7 +573,7 @@
 			} ).on( 'mouseleave', function() {
 				$( this ).find( '.submenu' ).hide();
 			} );
-		} );	
+		} );
 	}
 
 	function apiGet( params ) {
