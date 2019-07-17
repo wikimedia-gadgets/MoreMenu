@@ -784,7 +784,7 @@
 				addListeners();
 			}
 			
-			if ($('.client-js .skin-vector #p-cactions').length) {
+			if ($('.client-js .skin-vector #p-cactions').length && typeof MutationObserver === 'function') {
 				var menu = $('#p-cactions .menu');
 				var parent = $('#p-cactions');
 				parent.hide();
