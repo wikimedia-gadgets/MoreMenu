@@ -350,7 +350,7 @@
 			},
 			'Tools' : {
 				'Check external links' : {
-					url : 'https://dispenser.info.tm/~dispenser/cgi-bin/webchecklinks.py?page=' + encodedPageName + '&lang=' + contentLanguage,
+					url : 'https://dispenser.info.tm/~dispenser/cgi-bin/webchecklinks.py?page=' + encodedPageName + '&hostname=' + contentLanguage,
 					pageExists : true,
 					noticeProjectRestrict : [ 'wikipedia' ],
 					databaseExclude : [ 'enwiki', 'svwiki' ]
@@ -659,34 +659,34 @@
 	}
 
 	function linkId( tabName, name, parent ) {
-		return 'c2-' + sanitize( tabName.toLowerCase() ) + '-' + ( parent ? sanitize( parent ) + '-' : '') + sanitize( name );
+		return 'c2-' + sanitize(tabName.toLowerCase()) + '-' + ( parent ? sanitize( parent ) + '-' : '') + sanitize( name );
 	}
 
 	function linkHtml( tabName, name, action, parent, userData, userPermissions ) {
-		var namespaceExclusion = action.namespaceExclude ? !hasConditional( action.namespaceExclude, namespaceNumber ) : true
-			databaseExclusion = action.databaseExclude ? !hasConditional( action.databaseExclude, mwDBname ) : true;
+		var namespaceExclusion = action.namespaceExclude ? !hasConditional(action.namespaceExclude, namespaceNumber) : true
+			databaseExclusion = action.databaseExclude ? !hasConditional(action.databaseExclude, mwDBname) : true;
 		var validations =
-			/* namespace          */ ( hasConditional( action.namespaceRestrict, namespaceNumber ) && namespaceExclusion ) &&
-			/* existence          */ ( ( action.pageExists && articleId > 0 ) || ( !action.pageExists ) ) &&
-			/* deleted            */ ( action.pageDeleted ? articleId === 0 && mw.config.get( 'wgIsArticle' ) === false : true ) &&
-			/* protected          */ ( action.isProtected ? isPageProtected : true ) &&
-			/* notice project     */ hasConditional( action.noticeProjectRestrict, noticeProject ) &&
-			/* database           */ ( hasConditional( action.databaseRestrict, mwDBname ) && databaseExclusion ) &&
-			/* user's user groups */ hasConditional( action.userGroups, userGroups ) &&
-			/* user's permissions */ hasConditional( action.userPermissions, userPermissions ) &&
-			/* can change groups  */ ( action.userAddRemoveGroups ? canAddRemoveGroups( userGroups, userPermissions ) : true );
+			/* namespace          */ (hasConditional(action.namespaceRestrict, namespaceNumber) && namespaceExclusion) &&
+			/* existence          */ ((action.pageExists && articleId > 0) || (!action.pageExists)) &&
+			/* deleted            */ (action.pageDeleted ? articleId === 0 && mw.config.get('wgIsArticle') === false : true) &&
+			/* protected          */ (action.isProtected ? isPageProtected : true) &&
+			/* notice project     */ hasConditional(action.noticeProjectRestrict, noticeProject) &&
+			/* database           */ (hasConditional(action.databaseRestrict, mwDBname) && databaseExclusion) &&
+			/* user's user groups */ hasConditional(action.userGroups, userGroups) &&
+			/* user's permissions */ hasConditional(action.userPermissions, userPermissions) &&
+			/* can change groups  */ (action.userAddRemoveGroups ? canAddRemoveGroups(userGroups, userPermissions) : true);
 
-		if ( isUserSpace ) {
+		if (isUserSpace) {
 			// FIXME: find something better than userData.invalid === '' for checking if IP
 			validations &=
-				/* their user groups  */ hasConditional( action.groups, userData.groups ) &&
-				/* their permissions  */ hasConditional( action.permissions, userData.rights ) &&
-				/* they're blocked    */ ( action.blocked !== undefined ? !!userData.blockid === action.blocked : true ) &&
-				/* can change groups  */ ( action.addRemoveGroups ? canAddRemoveGroups( userData.groups, userData.rights ) : true ) &&
-				/* IP                 */ ( action.ipOnly ? userData.invalid === '' : true );
+				/* their user groups  */ hasConditional(action.groups, userData.groups) &&
+				/* their permissions  */ hasConditional(action.permissions, userData.rights) &&
+				/* they're blocked    */ (action.blocked !== undefined ? !!userData.blockid === action.blocked : true) &&
+				/* can change groups  */ (action.addRemoveGroups ? canAddRemoveGroups(userData.groups, userData.rights) : true) &&
+				/* IP                 */ (action.ipOnly ? userData.invalid === '' : true);
 		}
 
-		if ( !!validations ) {
+		if (!!validations) {
 			return '<li id=' + linkId( tabName, name, parent ) + '><a href="' + action.url + '" title="' + ( action.title || '' ) + '" ' + ( action.style ? 'style="' + action.style + '"' : '' ) + '>' + name + '</a></li>';
 		} else {
 			return '';
@@ -766,7 +766,7 @@
 				mw.storage.set( 'mmCacheDate', newDate.setDate( newDate.getDate() + 1 ) );
 			}
 
-			for ( var i=0; i<menus.length; i++ ) {
+			for (var i=0; i<menus.length; i++) {
 				var tabName = Object.keys( menus[i] )[0];
 				var html =  '<div id="p-' + tabName.toLowerCase() + '2" class="vectorMenu" style="z-index: 99;">' +
 							'<h3>' +
@@ -783,7 +783,7 @@
 				}
 				addListeners();
 			}
-			
+
 			$('.client-js .skin-vector.ns-2 #p-search').css('padding-left', 'inherit');
 			$('.client-js .skin-vector.ns-3 #p-search').css('padding-left', 'inherit');
 			$('.client-js .skin-vector #p-cactions').addClass('mm-loaded');
