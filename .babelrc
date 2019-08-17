@@ -1,0 +1,24 @@
+{
+  "presets": ["@babel/preset-env"],
+  "plugins": [
+    [
+      "add-header-comment", {
+        "header": [
+          "WARNING: GLOBAL GADGET FILE",
+          "Please submit code changes as a pull request to the source repository at https://github.com/MusikAnimal/MoreMenu",
+          "See [[meta:MoreMenu#Localization]] on how to add translations.",
+          "Only critical, urgent changes should be made to this file directly.",
+          "",
+          "Script:         MoreMenu.js",
+          "Version:        5.0.0",
+          "Author:         MusikAnimal",
+          "License:        MIT",
+          "Documentation:  [[meta:MoreMenu]]",
+          "GitHub:         https://github.com/MusikAnimal/MoreMenu",
+          "Skins:          Vector, Timeless, Monobook, Modern",
+          "Browsers:       All modern browsers and IE 11+"
+        ]
+      }
+    ]
+  ]
+}

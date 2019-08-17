@@ -2,7 +2,7 @@
   "name" : "moremenu",
   "title" : "MoreMenu",
   "description" : "Dropdown menus with links to common tasks, user and page analytic tools and logs.",
-  "url" : "http://en.wikipedia.org/User:MusikAnimal/MoreMenu",
+  "url" : "http://meta.wikimedia.org/MoreMenu",
   "keywords" : "menu, menus, links, dropdown, tools, analytics, logs, MoreMenu",
   "author" : "MusikAnimal",
   "repository" : "https://github.com/MusikAnimal/MoreMenu.git"
