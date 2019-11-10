@@ -131,9 +131,11 @@ window.MoreMenu.page = config => ({
             url: `//${config.serverName}/w/index.php?title=${config.encodedPageName}&action=edit&section=0`,
             namespaceRestrict: [0, 1, 2, 3, 4, 5, 118],
             pageExists: true,
+            // Don't show the 'Edit intro' link if the edittop gadget is enabled or there is only one section.
+            visible: '1' !== mw.user.options.get('gadget-edittop') && $('.mw-editsection').length,
         },
         'latest-diff': {
-            url: mw.util.getUrl(config.pageName, { diff: mw.config.get('wgCurRevisionId') }),
+            url: mw.util.getUrl(config.pageName, { diff: 'cur', oldid: 'prev' }),
             pageExists: true,
         },
         'merge-page': {
@@ -146,7 +148,9 @@ window.MoreMenu.page = config => ({
             url: mw.util.getUrl(`Special:MovePage/${config.pageName}`),
             userPermissions: ['move'],
             pageExists: true,
-            visible: !mw.config.get('wgIsMainPage'),
+            // No cheap way to see if a page is movable, so we just look for the
+            // native Move link (which will later be removed).
+            visible: !mw.config.get('wgIsMainPage') && !!$('#ca-move').length,
         },
         [config.isProtected ? 'change-protection' : 'protect-page']: {
             url: mw.util.getUrl(config.pageName, { action: 'protect' }),

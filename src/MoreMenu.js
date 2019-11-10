@@ -123,14 +123,15 @@ $(() => {
     /**
      * Generate a unique ID for a menu item.
      * @param {String} parentKey The message key for the parent menu ('user' or 'page').
-     * @param {String} itemKey The message key for the link itself.
+     * @param {String} [itemKey] The message key for the link itself.
      * @param {String} [submenuKey] The message key for the submenu that the item is within, if applicable.
-     * @returns {String} For example, 'c-user-user-logs-block-log'.
+     * @returns {String} For example, 'c-user-user-logs-block-log' for User > User logs > Block log.
      */
     function getItemId(parentKey, itemKey, submenuKey = null) {
-        return `mm-${normalizeId(parentKey)}-${
-            submenuKey ? `${normalizeId(submenuKey)}-` : ''
-        }${normalizeId(itemKey)}`;
+        /* eslint-disable prefer-template */
+        return `mm-${normalizeId(parentKey)}`
+            + (submenuKey ? `-${normalizeId(submenuKey)}` : '')
+            + (itemKey ? `-${normalizeId(itemKey)}` : '');
     }
 
     /**
@@ -568,11 +569,7 @@ $(() => {
             + `<ul class="menu mm-menu">${html}</ul>`
             + '</div>';
 
-        if ($('#p-cactions').length) {
-            $(html).insertAfter($('#p-cactions'));
-        } else {
-            $(html).insertAfter($('#p-views'));
-        }
+        $(html).insertAfter($('#p-views'));
     }
 
     /**
@@ -702,13 +699,18 @@ $(() => {
     }
 
     /**
-     * Remove redundant links from the native More menu.
+     * Remove redundant links from the native menu.
      */
     function removeNavLinks() {
         $('#ca-protect,#ca-unprotect,#ca-delete,#ca-undelete').remove();
         if (config.dbName !== 'commonswiki') {
             // Do not do this for Commons, where the move file gadget has a listener on the native move link.
             $('#ca-move').remove();
+        }
+
+        // For Vector. This is done here because it takes place after links are removed from the More menu.
+        if (0 === $('#p-cactions li').length) {
+            $('#p-cactions').remove();
         }
     }
 
@@ -784,8 +786,8 @@ $(() => {
                 mw.storage.set('mmCacheDate', newDate.setDate(newDate.getDate() + 1));
             }
 
-            removeNavLinks();
             drawMenus();
+            removeNavLinks();
             removeBlockLogLink();
 
             mw.hook('moremenu.ready').fire(config);
