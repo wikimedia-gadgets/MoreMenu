@@ -6,7 +6,8 @@
         "header": [
           "WARNING: GLOBAL GADGET FILE",
           "Please submit code changes as a pull request to the source repository at https://github.com/MusikAnimal/MoreMenu",
-          "See [[meta:MoreMenu#Localization]] on how to add translations.",
+          "Are there missing translations? See [[meta:MoreMenu#Localization]].",
+          "Want to add custom links? See [[meta:MoreMenu#Customization]].",
           "Only critical, urgent changes should be made to this file directly.",
           "",
           "Script:         MoreMenu.js",

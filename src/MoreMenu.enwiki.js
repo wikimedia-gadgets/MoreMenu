@@ -50,7 +50,7 @@ $(() => {
             });
 
             if (Object.keys(links).length) {
-                MoreMenu.addItem('user', { RfXs: links }, 'user-logs');
+                MoreMenu.addItem('user', { RfXs: links }, 'analysis');
             }
         });
     }
@@ -78,9 +78,9 @@ $(() => {
 
                 switch (page.title.split('/')[0]) {
                 case 'Wikipedia:Miscellany for deletion':
-                    return MoreMenu.addItem('page', { MfDs: { url: link } });
+                    return MoreMenu.addLink('page', 'MfDs', link);
                 case 'Wikipedia:Articles for deletion':
-                    return MoreMenu.addItem('page', { AfDs: { url: link } });
+                    return MoreMenu.addLink('page', 'AfDs', link);
                 default:
                     return false;
                 }
@@ -97,5 +97,13 @@ $(() => {
         if (config.pageName) {
             addXfD(api, config);
         }
+
+        // Add link to BLP edits in the 'Analysis' menu.
+        MoreMenu.addSubmenuLink(
+            'user',
+            'analysis',
+            'BLP Edits',
+            `https://xtools.wmflabs.org/categoryedits/${config.serverName}/${config.encodedUserName}/Living people`
+        );
     });
 });

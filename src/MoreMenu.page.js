@@ -5,24 +5,24 @@ window.MoreMenu.page = config => ({
     page: {
         'page-logs': {
             'all-logs': {
-                url: mw.util.getUrl('Special:Log', { action: 'view', page: config.pageName }),
+                url: mw.util.getUrl('Special:Log', { page: config.pageName }),
                 insertAfter: false,
             },
             'abusefilter-log': {
                 url: mw.util.getUrl('Special:AbuseLog', { wpSearchTitle: config.pageName }),
             },
             'deletion-log': {
-                url: mw.util.getUrl('Special:Log', { action: 'view', page: config.pageName, type: 'delete' }),
+                url: mw.util.getUrl('Special:Log', { page: config.pageName, type: 'delete' }),
             },
             'move-log': {
-                url: mw.util.getUrl('Special:Log', { action: 'view', page: config.pageName, type: 'move' }),
+                url: mw.util.getUrl('Special:Log', { page: config.pageName, type: 'move' }),
             },
             'pending-changes-log': {
-                url: mw.util.getUrl('Special:Log', { action: 'view', page: config.pageName, type: 'stable' }),
+                url: mw.util.getUrl('Special:Log', { page: config.pageName, type: 'stable' }),
                 databaseRestrict: ['bnwiki', 'ckbwiki', 'enwiki', 'fawiki', 'hiwiki', 'ptwiki'],
             },
             'protection-log': {
-                url: mw.util.getUrl('Special:Log', { action: 'view', page: config.pageName, type: 'protect' }),
+                url: mw.util.getUrl('Special:Log', { page: config.pageName, type: 'protect' }),
             },
         },
         // Tools and links that provide meaningful statistics.
@@ -48,7 +48,6 @@ window.MoreMenu.page = config => ({
             'copyvio-detector': {
                 url: `https://tools.wmflabs.org/copyvios?lang=${config.serverName.split('.')[0]}&project=${config.serverName.split('.')[1]}&title=${config.encodedPageName}&oldid=&action=search&use_engine=1&use_links=1`,
                 pageExists: true,
-                title: 'Queries search engine for copyright violations. Could take a while, so be patient.',
             },
             'search-by-contributor': {
                 url: `https://xtools.wmflabs.org/topedits/${config.serverName}?namespace=${config.nsId}&page=${encodeURIComponent(mw.config.get('wgTitle'))}`,
@@ -117,15 +116,12 @@ window.MoreMenu.page = config => ({
             pageExists: true,
             namespaceRestrict: [2, 4, 8, 100, 108, 828],
         },
-        'change-protection': {
-            url: mw.util.getUrl(config.pageName, { action: 'protect' }),
-            userPermissions: ['protect', 'stablesettings'],
-            isProtected: true,
-        },
         'delete-page': {
-            url: `//${config.serverName}/w/index.php?title=${config.encodedPageName}&action=delete${$('#delete-reason').text() ? `&wpReason=${$('#delete-reason').text()}` : ''}`,
+            // NOTE: must use `decodeURIComponent` because mw.util.getUrl will otherwise double-escape. This should be safe.
+            url: mw.util.getUrl(null, { action: 'delete', 'wpReason': decodeURIComponent($('#delete-reason').text()).replace(/\+/g, ' ') }),
             userPermissions: ['delete'],
             pageExists: true,
+            visible: !mw.config.get('wgIsMainPage'),
         },
         'edit-intro': {
             url: `//${config.serverName}/w/index.php?title=${config.encodedPageName}&action=edit&section=0`,
@@ -133,21 +129,23 @@ window.MoreMenu.page = config => ({
             pageExists: true,
         },
         'latest-diff': {
-            url: mw.util.getUrl(config.pageName, { action: 'view', diff: mw.config.get('wgCurRevisionId') }),
+            url: mw.util.getUrl(config.pageName, { diff: mw.config.get('wgCurRevisionId') }),
             pageExists: true,
         },
         'merge-page': {
             url: mw.util.getUrl('Special:MergeHistory', { target: config.pageName }),
             userPermissions: ['mergehistory'],
             pageExists: true,
+            visible: !mw.config.get('wgIsMainPage'),
         },
         'move-page': {
             url: mw.util.getUrl(`Special:MovePage/${config.pageName}`),
             userPermissions: ['move'],
             pageExists: true,
+            visible: !mw.config.get('wgIsMainPage'),
         },
-        'protect-page': {
-            url: `//${config.serverName}/w/index.php?title=${config.encodedPageName}&action=protect`,
+        [config.isProtected ? 'change-protection' : 'protect-page']: {
+            url: mw.util.getUrl(config.pageName, { action: 'protect' }),
             userPermissions: ['protect', 'stablesettings'],
         },
         'purge-cache': {

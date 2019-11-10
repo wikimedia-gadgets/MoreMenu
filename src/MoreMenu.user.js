@@ -5,11 +5,14 @@ window.MoreMenu.user = config => ({
     user: {
         'user-logs': {
             'all-logs': {
-                url: mw.util.getUrl('Special:Log', { action: 'view', user: config.userName }),
+                url: mw.util.getUrl('Special:Log', { user: config.userName }),
                 insertAfter: false,
             },
+            'abusefilter-log': {
+                url: mw.util.getUrl('Special:AbuseLog', { wpSearchUser: config.userName }),
+            },
             'block-log': {
-                url: mw.util.getUrl('Special:Log', { action: 'view', user: config.userName, type: 'block' }),
+                url: mw.util.getUrl('Special:Log', { user: config.userName, type: 'block' }),
                 permissions: ['block'],
             },
             'checkuser-log': {
@@ -18,52 +21,58 @@ window.MoreMenu.user = config => ({
                 userPermissions: ['checkuser-log'],
             },
             'deletion-log': {
-                url: mw.util.getUrl('Special:Log', { action: 'view', user: config.userName, type: 'delete' }),
+                url: mw.util.getUrl('Special:Log', { user: config.userName, type: 'delete' }),
                 permissions: ['delete'],
             },
-            'abusefilter-log': {
-                url: mw.util.getUrl('Special:AbuseLog', { wpSearchUser: config.userName }),
+            'global-account-log': {
+                url: mw.util.getUrl('Special:Log', { user: config.userName, type: 'globalauth' }),
+                permissions: ['centralauth-lock'],
+            },
+            'global-block-log': {
+                url: mw.util.getUrl('Special:Log', { user: config.userName, type: 'gblblock' }),
+                permissions: ['globalblock'],
             },
             'mass-message-log': {
-                url: mw.util.getUrl('Special:Log', { action: 'view', user: config.userName, type: 'massmessage' }),
+                url: mw.util.getUrl('Special:Log', { user: config.userName, type: 'massmessage' }),
                 permissions: ['massmessage'],
             },
             'move-log': {
-                url: mw.util.getUrl('Special:Log', { action: 'view', user: config.userName, type: 'move' }),
+                url: mw.util.getUrl('Special:Log', { user: config.userName, type: 'move' }),
                 permissions: ['move'],
             },
             'pending-changes-log': {
-                url: mw.util.getUrl('Special:Log', { action: 'view', user: config.userName, type: 'stable' }),
+                url: mw.util.getUrl('Special:Log', { user: config.userName, type: 'stable' }),
                 permissions: ['stablesettings'],
             },
             'protection-log': {
-                url: mw.util.getUrl('Special:Log', { action: 'view', user: config.userName, type: 'protect' }),
+                url: mw.util.getUrl('Special:Log', { user: config.userName, type: 'protect' }),
                 permissions: ['protect'],
             },
+            'rename-log': {
+                url: mw.util.getUrl('Special:Log', { user: config.userName, type: 'gblrename' }),
+                permissions: ['centralauth-rename'],
+            },
             'review-log': {
-                url: mw.util.getUrl('Special:Log', { action: 'view', user: config.userName, type: 'review' }),
+                url: mw.util.getUrl('Special:Log', { user: config.userName, type: 'review' }),
                 permissions: ['review'],
             },
             'spam-blacklist-log': {
-                url: mw.util.getUrl('Special:Log', { action: 'view', user: config.userName, type: 'spamblacklist' }),
+                url: mw.util.getUrl('Special:Log', { user: config.userName, type: 'spamblacklist' }),
             },
             'thanks-log': {
-                url: mw.util.getUrl('Special:Log', { action: 'view', user: config.userName, type: 'thanks' }),
+                url: mw.util.getUrl('Special:Log', { user: config.userName, type: 'thanks' }),
                 groups: ['user'],
             },
-            'title-blacklist-log': {
-                url: mw.util.getUrl('Special:Log', { action: 'view', user: config.userName, type: 'titleblacklist' }),
-            },
             'upload-log': {
-                url: mw.util.getUrl('Special:Log', { action: 'view', user: config.userName, type: 'upload' }),
+                url: mw.util.getUrl('Special:Log', { user: config.userName, type: 'upload' }),
                 permissions: ['upload'],
             },
             'user-creation-log': {
-                url: mw.util.getUrl('Special:Log', { action: 'view', user: config.userName, type: 'newusers' }),
+                url: mw.util.getUrl('Special:Log', { user: config.userName, type: 'newusers' }),
                 groups: ['user'], // any user can create new accounts at [[Special:CreateAccount]]
             },
             'user-rights-log': {
-                url: mw.util.getUrl('Special:Log', { action: 'view', user: config.userName, type: 'rights' }),
+                url: mw.util.getUrl('Special:Log', { user: config.userName, type: 'rights' }),
                 addRemoveGroups: true,
             },
         },
@@ -98,7 +107,7 @@ window.MoreMenu.user = config => ({
                 style: 'color:#EE1111',
             },
             'view-block-log': {
-                url: mw.util.getUrl('Special:Log', { action: 'view', page: config.userName, type: 'block' }),
+                url: mw.util.getUrl('Special:Log', { page: config.userName, type: 'block' }),
             },
         },
         'analysis': {

@@ -1,3 +1,4 @@
+// FIXME: Add MutationObserver thing
 $(() => {
     window.MoreMenu = window.MoreMenu || {};
 
@@ -31,7 +32,7 @@ $(() => {
 
         // Page-level
         this.nsId = mw.config.get('wgNamespaceNumber');
-        this.isPageProtected = (!!mw.config.get('wgRestrictionEdit') && mw.config.get('wgRestrictionEdit').length)
+        this.isProtected = (!!mw.config.get('wgRestrictionEdit') && mw.config.get('wgRestrictionEdit').length)
             || (!!mw.config.get('wgRestrictionCreate') && mw.config.get('wgRestrictionCreate').length);
         this.pageId = mw.config.get('wgArticleId');
         this.pageName = mw.config.get('wgPageName');
@@ -57,19 +58,21 @@ $(() => {
     /**
      * Log a message to the console.
      * @param {String} message
-     * @param {String} [level] One of 'debug', 'info', 'log', 'warn', 'error'.
+     * @param {String} [level] Level accepted by `console`, e.g. 'debug', 'info', 'log', 'warn', 'error'.
      */
     function log(message, level = 'debug') {
-        if (MoreMenu.debug || 'debug' !== level) {
-            message = `[MoreMenu] ${message}`;
-
-            if (['', 'warn', 'error'].indexOf(level) >= 0) {
-                message += '\nSee https://w.wiki/9Se for documentation.';
-            }
-
-            /* eslint-disable no-console */
-            console[level](`[MoreMenu] ${message}`);
+        if (!MoreMenu.debug && 'debug' === level) {
+            return;
         }
+
+        message = `[MoreMenu] ${message}`;
+
+        if (['', 'warn', 'error'].indexOf(level) >= 0) {
+            message += '\nSee https://w.wiki/9Se for documentation.';
+        }
+
+        /* eslint-disable no-console */
+        console[level](message);
     }
 
     /**
@@ -100,18 +103,34 @@ $(() => {
     }
 
     /**
+     * Check whether the message exists.
+     * @param {String} key
+     * @returns {Boolean}
+     */
+    function msgExists(key) {
+        return undefined !== getModule('messages')[key];
+    }
+
+    /**
+     * Normalize the given ID into the expected format.
+     * @param {String} id
+     * @returns {string}
+     */
+    function normalizeId(id) {
+        return id.toLowerCase().replace(/\s+/g, '-');
+    }
+
+    /**
      * Generate a unique ID for a menu item.
      * @param {String} parentKey The message key for the parent menu ('user' or 'page').
      * @param {String} itemKey The message key for the link itself.
      * @param {String} [submenuKey] The message key for the submenu that the item is within, if applicable.
-     * @returns {String} For example, 'c-user-user_logs-block-log'.
+     * @returns {String} For example, 'c-user-user-logs-block-log'.
      */
     function getItemId(parentKey, itemKey, submenuKey = null) {
-        const sanitize = name => name.toLowerCase()
-            .replace(/\s+/g, '_');
-        return `mm-${sanitize(parentKey.toLowerCase())}-${
-            submenuKey ? `${sanitize(submenuKey)}-` : ''
-        }${sanitize(itemKey.toLowerCase())}`;
+        return `mm-${normalizeId(parentKey)}-${
+            submenuKey ? `${normalizeId(submenuKey)}-` : ''
+        }${normalizeId(itemKey)}`;
     }
 
     /**
@@ -245,7 +264,7 @@ $(() => {
             /* namespace          */    (hasConditional(itemData.namespaceRestrict, config.nsId) && namespaceExclusion)
             /* existence          */ && ((itemData.pageExists && config.pageId > 0) || !itemData.pageExists)
             /* deleted            */ && (itemData.pageDeleted ? 0 === config.pageId && false === mw.config.get('wgIsArticle') : true)
-            /* protected          */ && (itemData.isProtected ? config.isPageProtected : true)
+            /* protected          */ && (itemData.isProtected ? config.isProtected : true)
             /* notice project     */ && hasConditional(itemData.noticeProjectRestrict, config.noticeProject)
             /* database           */ && (hasConditional(itemData.databaseRestrict, config.dbName) && databaseExclusion)
             /* user's user groups */ && hasConditional(itemData.userGroups, config.userGroups)
@@ -264,11 +283,14 @@ $(() => {
 
         if (validations) {
             // Markup for the menu item.
+            const titleAttr = msgExists(`${itemKey}-desc`)
+                ? ` title="${msg(`${itemKey}-desc`)}"`
+                : '';
+            const styleAttr = itemData.style ? ` style="${itemData.style}"` : '';
             return `
                 <li id="${getItemId(parentKey, itemKey, submenuKey)}" class="mm-item">
-                    <a href="${itemData.url}" title="${msg(itemData.title, true) || ''}"
-                        ${(itemData.style ? ` style="${itemData.style}"` : '')}>
-                        ${msg(itemKey)}
+                    <a href="${itemData.url}"${titleAttr}${styleAttr}>
+                        ${msg(itemData.title || itemKey)}
                     </a>
                 </li>`;
         }
@@ -320,6 +342,9 @@ $(() => {
                     margin: 0;
                     position: absolute;
                     z-index: 99;
+                }
+                .mm-menu ~ a {
+                    z-index: 99 !important;
                 }
                 .mm-submenu {
                     background: #fff;
@@ -510,8 +535,8 @@ $(() => {
                     <a style="font-weight: bold">${msg(itemKey)}&hellip;</a>
                     <ul class="menu mm-submenu" style="display: none; position: absolute;">`;
 
-                sortItems(item).forEach(submenuKey => {
-                    itemHtml += getItemHtml(parentKey, submenuKey, item[submenuKey]);
+                sortItems(item).forEach(submenuItemKey => {
+                    itemHtml += getItemHtml(parentKey, submenuItemKey, item[submenuItemKey], itemKey);
                 });
 
                 itemHtml += '</ul></li>';
@@ -536,7 +561,7 @@ $(() => {
      * @param {String} html As generated by getMenuHtml().
      */
     function drawMenuVector(parentKey, html) {
-        html = `<div id="p-${parentKey}" role="navigation" class="vectorMenu mm-${parentKey}" `
+        html = `<div id="p-${parentKey}" role="navigation" class="vectorMenu mm-${parentKey} mm-tab" `
             + `aria-labelledby="p-${parentKey}-label" style="z-index: 99">`
             + `<input type="checkbox" class="vectorMenuCheckbox" aria-labelledby="p-${parentKey}-label">`
             + `<h3 id="p-${parentKey}-label"><span>${msg(parentKey)}</span><a href="#"></a></h3>`
@@ -556,7 +581,7 @@ $(() => {
      * @param {String} html As generated by getMenuHtml().
      */
     function drawMenuTimeless(parentKey, html) {
-        html = `<div role="navigation" class="mw-portlet mm-${parentKey}" id="p-${parentKey}" aria-labelledby="p-${parentKey}-label">`
+        html = `<div role="navigation" class="mw-portlet mm-${parentKey} mm-tab" id="p-${parentKey}" aria-labelledby="p-${parentKey}-label">`
             + `<h3 id="p-${parentKey}-label">${msg(parentKey)}</h3>`
             + `<div class="mw-portlet-body"><ul class="mm-menu">${html}</ul></div></div>`;
 
@@ -582,7 +607,7 @@ $(() => {
      * @param {String} html As generated by getMenuHtml().
      */
     function drawMenuMonobook(parentKey, html) {
-        html = `<li id="ca-${parentKey}" class="mm-${parentKey}">`
+        html = `<li id="ca-${parentKey}" class="mm-${parentKey} mm-tab">`
             + `<a href="javascript:void(0)">${msg(parentKey)}</a>`
             + `<ul class="mm-menu" style="display:none">${html}</ul>`
             + '</li>';
@@ -599,8 +624,10 @@ $(() => {
         // Add hover listeners.
         $tab.on('mouseenter', () => {
             $menu.show();
+            $tab.find('> a').css({ 'z-index': 99 });
         }).on('mouseleave', () => {
             $menu.hide();
+            $tab.find('> a').css({ 'z-index': 'inherit' });
         });
     }
 
@@ -610,7 +637,7 @@ $(() => {
      * @param {String} html As generated by getMenuHtml().
      */
     function drawMenuModern(parentKey, html) {
-        html = `<li id="ca-${parentKey}" class="mm-${parentKey}">`
+        html = `<li id="ca-${parentKey}" class="mm-${parentKey} mm-tab">`
             + `<a href="javascript:void(0)">${msg(parentKey)}</a>`
             + `<ul class="mm-menu" style="display:none">${html}</ul>`
             + '</li>';
@@ -772,16 +799,20 @@ $(() => {
      */
 
     /**
-     * Add an item (or submenu + its items) to a menu.
+     * Add an item (or submenu + its items) to a menu, given the full config hash for the item.
      * @param {String} menu The parent menu to append to, either 'user' or 'page'.
      * @param {Object} items A single item/submenu with structure matching config at MoreMenu.user or MoreMenu.page.
      * @param {String} [insertAfter] Insert the item/submenu after the item with this ID.
+     * @param {String} [submenu] Insert into this submenu.
      */
-    MoreMenu.addItem = (menu, items, insertAfter) => {
-        const $menu = $(`.mm-${menu}`);
+    MoreMenu.addItem = (menu, items, insertAfter, submenu) => {
+        const menuId = submenu
+            ? `#mm-${menu}-${submenu}`
+            : `.mm-${menu}`; // FYI the element has skin-defined IDs, so we use a CSS class instead.
+        const $menu = $(menuId);
 
         if (!$menu.length) {
-            log(`'${menu}' menu with class .mm-${menu} not found.`, 'error');
+            log(`'${menu}${submenu ? ` ${submenu}` : ''}' menu with selector ${menuId} not found.`, 'error');
             return;
         }
 
@@ -795,18 +826,18 @@ $(() => {
             items = items[Object.keys(items)[0]];
         }
 
-        // `items` could be a submenu. getMenuHtml() will work on single items, or submenus and their items.
-        const $html = getMenuHtml(menu, items);
+        // `items` could be a submenu. getMenuHtml() will work on single items, or a submenu and its items.
+        const $html = $(getMenuHtml(menu, items));
 
         // Check if insertAfter ID is valid.
-        const beforeItemKey = getItemId(menu, insertAfter || '');
+        const beforeItemKey = getItemId(menu, insertAfter || '', submenu);
         const $beforeItem = $(`#${beforeItemKey}`);
         if ($beforeItem.length) {
             // insertAfter ID is valid.
             $beforeItem.after($html);
         } else {
-            const newI18nKey = Object.keys(items)[0].toLowerCase();
-            const newId = getItemId(menu, newI18nKey);
+            const newI18nKey = normalizeId(Object.keys(items)[0]);
+            const newId = getItemId(menu, newI18nKey, submenu);
 
             // insertAfter ID was either invalid or not found.
             if (!$beforeItem.length && insertAfter) {
@@ -814,11 +845,11 @@ $(() => {
             }
 
             // Grab IDs of the visible top-level items (excluding submenus) and append the new item ID.
-            const ids = $.map($menu.find('> .mm-menu > .mm-item'), el => el.id)
+            const ids = $.map($(menuId).find('> .mm-item, .mm-submenu > .mm-item'), el => el.id)
                 .concat([newId]);
             // Extract the i18n keys and sort alphabetically by translation.
             const i18nKeys = sortByTranslation(
-                ids.map(id => id.replace(new RegExp(`^mm-${menu}-`), ''))
+                ids.map(id => id.replace(new RegExp(`^mm-${menu}-${submenu ? `${submenu}-` : ''}`), ''))
             );
 
             // Get the index of the preceding item.
@@ -829,9 +860,8 @@ $(() => {
                 $(`#${ids[0]}`).before($html);
             } else {
                 // Insert HTML after the would-be previous item in the menu.
-                $beforeItem.after(
-                    $(`#${getItemId(menu, i18nKeys[Math.min(0, i18nKeys.indexOf(newI18nKey) - 1)])}`)
-                );
+                $(`#${getItemId(menu, i18nKeys[Math.max(0, i18nKeys.indexOf(newI18nKey) - 1)], submenu)}`)
+                    .after($html);
             }
         }
 
@@ -839,6 +869,33 @@ $(() => {
 
         // Reset flag to surface warnings about missing translations.
         ignoreI18nWarnings = false;
+    };
+
+    /**
+     * Add a top-level item to the given menu.
+     * @param {String} menu Either 'page' or 'user'.
+     * @param {String} name Title for the link. Can either be a normal string or an i18n key.
+     * @param {String} url URL to point to.
+     * @param {String} [insertAfter] Insert the link after the link with this ID.
+     */
+    MoreMenu.addLink = (menu, name, url, insertAfter) => {
+        MoreMenu.addItem(menu, {
+            [name]: { url },
+        }, insertAfter);
+    };
+
+    /**
+     * Add a top-level item to the given menu.
+     * @param {String} menu Either 'page' or 'user'.
+     * @param {String} submenu ID for the submenu (such as 'user-logs' or 'analysis').
+     * @param {String} name Title for the link. Can either be a normal string or an i18n key.
+     * @param {String} url URL to point to.
+     * @param {String} [insertAfter] Insert the link after the link with this ID.
+     */
+    MoreMenu.addSubmenuLink = (menu, submenu, name, url, insertAfter) => {
+        MoreMenu.addItem(menu, {
+            [name]: { url },
+        }, insertAfter, submenu);
     };
 });
 // </nowiki>
