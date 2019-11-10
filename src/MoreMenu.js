@@ -792,8 +792,6 @@ $(() => {
         });
     }
 
-    init();
-
     /**
      * PUBLIC METHODS
      */
@@ -806,6 +804,11 @@ $(() => {
      * @param {String} [submenu] Insert into this submenu.
      */
     MoreMenu.addItem = (menu, items, insertAfter, submenu) => {
+        if (!$(`.mm-${menu}`).length) {
+            // Menu not shown.
+            return;
+        }
+
         const menuId = submenu
             ? `#mm-${menu}-${submenu}`
             : `.mm-${menu}`; // FYI the element has skin-defined IDs, so we use a CSS class instead.
@@ -845,7 +848,10 @@ $(() => {
             }
 
             // Grab IDs of the visible top-level items (excluding submenus) and append the new item ID.
-            const ids = $.map($(menuId).find('> .mm-item, .mm-submenu > .mm-item'), el => el.id)
+            const $topItems = submenu
+                ? $(menuId).find('.mm-submenu > .mm-item')
+                : $(menuId).find('.mm-menu > .mm-item');
+            const ids = $.map($topItems, el => el.id)
                 .concat([newId]);
             // Extract the i18n keys and sort alphabetically by translation.
             const i18nKeys = sortByTranslation(
@@ -872,7 +878,7 @@ $(() => {
     };
 
     /**
-     * Add a top-level item to the given menu.
+     * Add a link to the given menu.
      * @param {String} menu Either 'page' or 'user'.
      * @param {String} name Title for the link. Can either be a normal string or an i18n key.
      * @param {String} url URL to point to.
@@ -885,7 +891,7 @@ $(() => {
     };
 
     /**
-     * Add a top-level item to the given menu.
+     * Add a link to the given submenu.
      * @param {String} menu Either 'page' or 'user'.
      * @param {String} submenu ID for the submenu (such as 'user-logs' or 'analysis').
      * @param {String} name Title for the link. Can either be a normal string or an i18n key.
@@ -897,5 +903,8 @@ $(() => {
             [name]: { url },
         }, insertAfter, submenu);
     };
+
+    // Entry point.
+    init();
 });
 // </nowiki>

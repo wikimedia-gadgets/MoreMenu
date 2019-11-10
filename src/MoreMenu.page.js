@@ -30,16 +30,19 @@ window.MoreMenu.page = config => ({
             'analysis-xtools': {
                 url: `https://xtools.wmflabs.org/articleinfo/${config.serverName}/${config.escapedPageName}`,
                 pageExists: true,
+                insertAfter: false,
             },
             'analysis-wikihistory': {
                 url: `https://tools.wmflabs.org/wikihistory/wh.php?page_title=${config.escapedPageName}&wiki=${config.dbName}`,
                 databaseRestrict: ['enwiki', 'dewiki'],
                 namespaceRestrict: [0],
                 pageExists: true,
+                insertAfter: 'analysis-xtools',
             },
             'analysis-sigma': {
                 url: `https://tools.wmflabs.org/sigma/articleinfo.py?page=${config.encodedPageName}&server=${config.dbName}`,
                 pageExists: true,
+                insertAfter: 'analysis-xtools',
             },
             'basic-statistics': {
                 url: mw.util.getUrl(config.pageName, { action: 'info' }),
@@ -76,7 +79,7 @@ window.MoreMenu.page = config => ({
                 namespaceRestrict: [2, 4, 5, 10, 11, 12, 13, 100, 101],
             },
         },
-        // Tools used to semi-automate editing
+        // Tools used to semi-automate editing.
         'tools': {
             'check-external-links': {
                 url: `https://dispenser.info.tm/~dispenser/cgi-bin/webchecklinks.py?page=${config.encodedPageName}&hostname=${config.serverName}`,
@@ -110,6 +113,7 @@ window.MoreMenu.page = config => ({
                 namespaceRestrict: [0, 2, 118],
             },
         },
+        // Actions the current user can take on the page.
         'change-model': {
             url: mw.util.getUrl(`Special:ChangeContentModel/${config.pageName}`),
             userPermissions: ['editcontentmodel'],

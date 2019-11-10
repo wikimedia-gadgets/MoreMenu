@@ -78,9 +78,9 @@ $(() => {
 
                 switch (page.title.split('/')[0]) {
                 case 'Wikipedia:Miscellany for deletion':
-                    return MoreMenu.addLink('page', 'MfDs', link);
+                    return MoreMenu.addItem('page', { MfDs: { url: link } });
                 case 'Wikipedia:Articles for deletion':
-                    return MoreMenu.addLink('page', 'AfDs', link);
+                    return MoreMenu.addItem('page', { AfDs: { url: link } });
                 default:
                     return false;
                 }
@@ -104,6 +104,15 @@ $(() => {
             'analysis',
             'BLP Edits',
             `https://xtools.wmflabs.org/categoryedits/${config.serverName}/${config.encodedUserName}/Living people`
+        );
+
+        // Add link to AfD stats.
+        MoreMenu.addSubmenuLink(
+            'user',
+            'analysis',
+            'AfD stats',
+            `https://tools.wmflabs.org/afdstats/afdstats.py?name=${config.encodedUserName}`,
+            'analysis'
         );
     });
 });
