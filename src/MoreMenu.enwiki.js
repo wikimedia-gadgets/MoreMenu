@@ -115,7 +115,6 @@ $(() => {
             'analysis'
         );
 
-        // FIXME: !!!!!!!!!!
         // Add link to Peer reviewer tool under 'Tools'.
         MoreMenu.addItem('page', {
             'peer-reviewer': {
@@ -124,6 +123,6 @@ $(() => {
                 databaseRestrict: ['enwiki'],
                 namespaceRestrict: [0, 2, 118],
             },
-        }, null, 'analysis');
+        }, null, 'tools');
     });
 });

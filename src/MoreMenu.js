@@ -505,12 +505,13 @@ $(() => {
             } else {
                 newIndex = newItemKeys.indexOf(target);
                 // Insert at end if target wasn't found.
-                newIndex = -1 === newIndex ? newItemKeys.length : newIndex;
+                // The +1 is because it goes after the target.
+                newIndex = -1 === newIndex ? newItemKeys.length : newIndex + 1;
             }
 
             // Remove the original placement, and insert after the target.
             newItemKeys.splice(newItemKeys.indexOf(itemKey), 1);
-            newItemKeys.splice(newIndex + 1, 0, itemKey);
+            newItemKeys.splice(newIndex, 0, itemKey);
         });
 
         // Combine and return, with the submenus coming first.
