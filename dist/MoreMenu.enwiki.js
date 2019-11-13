@@ -1,7 +1,8 @@
 /**
 * WARNING: GLOBAL GADGET FILE
 * Please submit code changes as a pull request to the source repository at https://github.com/MusikAnimal/MoreMenu
-* See [[meta:MoreMenu#Localization]] on how to add translations.
+* Are there missing translations? See [[meta:MoreMenu#Localization]].
+* Want to add custom links? See [[meta:MoreMenu#Customization]].
 * Only critical, urgent changes should be made to this file directly.
 * 
 * Script:         MoreMenu.js
@@ -67,7 +68,7 @@ $(function () {
       if (Object.keys(links).length) {
         MoreMenu.addItem('user', {
           RfXs: links
-        }, 'user-logs');
+        }, 'analysis');
       }
     });
   }
@@ -122,6 +123,21 @@ $(function () {
 
     if (config.pageName) {
       addXfD(api, config);
-    }
+    } // Add link to BLP edits in the 'Analysis' menu.
+
+
+    MoreMenu.addSubmenuLink('user', 'analysis', 'BLP Edits', "https://xtools.wmflabs.org/categoryedits/".concat(config.serverName, "/").concat(config.encodedUserName, "/Living people")); // Add link to AfD stats.
+
+    MoreMenu.addSubmenuLink('user', 'analysis', 'AfD stats', "https://tools.wmflabs.org/afdstats/afdstats.py?name=".concat(config.encodedUserName), 'analysis'); // FIXME: !!!!!!!!!!
+    // Add link to Peer reviewer tool under 'Tools'.
+
+    MoreMenu.addItem('page', {
+      'peer-reviewer': {
+        url: "https://dispenser.info.tm/~dispenser/view/Peer_reviewer#page:".concat(config.encodedPageName),
+        pageExists: true,
+        databaseRestrict: ['enwiki'],
+        namespaceRestrict: [0, 2, 118]
+      }
+    }, null, 'analysis');
   });
 });

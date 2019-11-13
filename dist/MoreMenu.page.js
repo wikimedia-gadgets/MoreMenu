@@ -1,7 +1,8 @@
 /**
 * WARNING: GLOBAL GADGET FILE
 * Please submit code changes as a pull request to the source repository at https://github.com/MusikAnimal/MoreMenu
-* See [[meta:MoreMenu#Localization]] on how to add translations.
+* Are there missing translations? See [[meta:MoreMenu#Localization]].
+* Want to add custom links? See [[meta:MoreMenu#Customization]].
 * Only critical, urgent changes should be made to this file directly.
 * 
 * Script:         MoreMenu.js
@@ -15,18 +16,21 @@
 **/
 "use strict";
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 /* eslint-disable quote-props */
 
 /* eslint-disable max-len */
 window.MoreMenu = window.MoreMenu || {};
 
 window.MoreMenu.page = function (config) {
+  var _page;
+
   return {
-    page: {
+    page: (_page = {
       'page-logs': {
         'all-logs': {
           url: mw.util.getUrl('Special:Log', {
-            action: 'view',
             page: config.pageName
           }),
           insertAfter: false
@@ -38,21 +42,18 @@ window.MoreMenu.page = function (config) {
         },
         'deletion-log': {
           url: mw.util.getUrl('Special:Log', {
-            action: 'view',
             page: config.pageName,
             type: 'delete'
           })
         },
         'move-log': {
           url: mw.util.getUrl('Special:Log', {
-            action: 'view',
             page: config.pageName,
             type: 'move'
           })
         },
         'pending-changes-log': {
           url: mw.util.getUrl('Special:Log', {
-            action: 'view',
             page: config.pageName,
             type: 'stable'
           }),
@@ -60,7 +61,6 @@ window.MoreMenu.page = function (config) {
         },
         'protection-log': {
           url: mw.util.getUrl('Special:Log', {
-            action: 'view',
             page: config.pageName,
             type: 'protect'
           })
@@ -70,17 +70,20 @@ window.MoreMenu.page = function (config) {
       'analysis': {
         'analysis-xtools': {
           url: "https://xtools.wmflabs.org/articleinfo/".concat(config.serverName, "/").concat(config.escapedPageName),
-          pageExists: true
+          pageExists: true,
+          insertAfter: false
         },
         'analysis-wikihistory': {
           url: "https://tools.wmflabs.org/wikihistory/wh.php?page_title=".concat(config.escapedPageName, "&wiki=").concat(config.dbName),
           databaseRestrict: ['enwiki', 'dewiki'],
           namespaceRestrict: [0],
-          pageExists: true
+          pageExists: true,
+          insertAfter: 'analysis-xtools'
         },
         'analysis-sigma': {
           url: "https://tools.wmflabs.org/sigma/articleinfo.py?page=".concat(config.encodedPageName, "&server=").concat(config.dbName),
-          pageExists: true
+          pageExists: true,
+          insertAfter: 'analysis-xtools'
         },
         'basic-statistics': {
           url: mw.util.getUrl(config.pageName, {
@@ -90,8 +93,7 @@ window.MoreMenu.page = function (config) {
         },
         'copyvio-detector': {
           url: "https://tools.wmflabs.org/copyvios?lang=".concat(config.serverName.split('.')[0], "&project=").concat(config.serverName.split('.')[1], "&title=").concat(config.encodedPageName, "&oldid=&action=search&use_engine=1&use_links=1"),
-          pageExists: true,
-          title: 'Queries search engine for copyright violations. Could take a while, so be patient.'
+          pageExists: true
         },
         'search-by-contributor': {
           url: "https://xtools.wmflabs.org/topedits/".concat(config.serverName, "?namespace=").concat(config.nsId, "&page=").concat(encodeURIComponent(mw.config.get('wgTitle'))),
@@ -120,7 +122,7 @@ window.MoreMenu.page = function (config) {
           namespaceRestrict: [2, 4, 5, 10, 11, 12, 13, 100, 101]
         }
       },
-      // Tools used to semi-automate editing
+      // Tools used to semi-automate editing.
       'tools': {
         'check-external-links': {
           url: "https://dispenser.info.tm/~dispenser/cgi-bin/webchecklinks.py?page=".concat(config.encodedPageName, "&hostname=").concat(config.serverName),
@@ -146,41 +148,36 @@ window.MoreMenu.page = function (config) {
           url: "https://tools.wmflabs.org/iabot/index.php?page=runbotsingle&pagesearch=".concat(config.encodedPageName, "&wiki=").concat(config.dbName),
           pageExists: true,
           databaseRestrict: ['alswiki', 'barwiki', 'ckbwiki', 'dewiki', 'enwiki', 'eswiki', 'frwiki', 'huwiki', 'itwiki', 'jawiki', 'kowiki', 'lvwiki', 'nlwiki', 'nowiki', 'ptwiki', 'ruwiki', 'svwiki', 'zhwiki']
-        },
-        'peer-reviewer': {
-          url: "https://dispenser.info.tm/~dispenser/view/Peer_reviewer#page:".concat(config.encodedPageName),
-          pageExists: true,
-          databaseRestrict: ['enwiki'],
-          namespaceRestrict: [0, 2, 118]
         }
       },
+      // Actions the current user can take on the page.
       'change-model': {
         url: mw.util.getUrl("Special:ChangeContentModel/".concat(config.pageName)),
         userPermissions: ['editcontentmodel'],
         pageExists: true,
         namespaceRestrict: [2, 4, 8, 100, 108, 828]
       },
-      'change-protection': {
-        url: mw.util.getUrl(config.pageName, {
-          action: 'protect'
-        }),
-        userPermissions: ['protect', 'stablesettings'],
-        isProtected: true
-      },
       'delete-page': {
-        url: "//".concat(config.serverName, "/w/index.php?title=").concat(config.encodedPageName, "&action=delete").concat($('#delete-reason').text() ? "&wpReason=".concat($('#delete-reason').text()) : ''),
+        // NOTE: must use `decodeURIComponent` because mw.util.getUrl will otherwise double-escape. This should be safe.
+        url: mw.util.getUrl(null, {
+          action: 'delete',
+          'wpReason': decodeURIComponent($('#delete-reason').text()).replace(/\+/g, ' ')
+        }),
         userPermissions: ['delete'],
-        pageExists: true
+        pageExists: true,
+        visible: !mw.config.get('wgIsMainPage')
       },
       'edit-intro': {
         url: "//".concat(config.serverName, "/w/index.php?title=").concat(config.encodedPageName, "&action=edit&section=0"),
         namespaceRestrict: [0, 1, 2, 3, 4, 5, 118],
-        pageExists: true
+        pageExists: true,
+        // Don't show the 'Edit intro' link if the edittop gadget is enabled or there is only one section.
+        visible: '1' !== mw.user.options.get('gadget-edittop') && $('.mw-editsection').length
       },
       'latest-diff': {
         url: mw.util.getUrl(config.pageName, {
-          action: 'view',
-          diff: mw.config.get('wgCurRevisionId')
+          diff: 'cur',
+          oldid: 'prev'
         }),
         pageExists: true
       },
@@ -189,32 +186,34 @@ window.MoreMenu.page = function (config) {
           target: config.pageName
         }),
         userPermissions: ['mergehistory'],
-        pageExists: true
+        pageExists: true,
+        visible: !mw.config.get('wgIsMainPage')
       },
       'move-page': {
         url: mw.util.getUrl("Special:MovePage/".concat(config.pageName)),
         userPermissions: ['move'],
-        pageExists: true
-      },
-      'protect-page': {
-        url: "//".concat(config.serverName, "/w/index.php?title=").concat(config.encodedPageName, "&action=protect"),
-        userPermissions: ['protect', 'stablesettings']
-      },
-      'purge-cache': {
-        url: mw.util.getUrl(config.pageName, {
-          action: 'purge',
-          forcelinkupdate: true
-        }),
-        pageExists: true
-      },
-      'subpages': {
-        url: mw.util.getUrl("Special:PrefixIndex/".concat(config.pageName, "/"))
-      },
-      'undelete-page': {
-        url: mw.util.getUrl("Special:Undelete/".concat(config.pageName)),
-        userPermissions: ['undelete'],
-        pageDeleted: true
+        pageExists: true,
+        // No cheap way to see if a page is movable, so we just look for the
+        // native Move link (which will later be removed).
+        visible: !mw.config.get('wgIsMainPage') && !!$('#ca-move').length
       }
-    }
+    }, _defineProperty(_page, config.isProtected ? 'change-protection' : 'protect-page', {
+      url: mw.util.getUrl(config.pageName, {
+        action: 'protect'
+      }),
+      userPermissions: ['protect', 'stablesettings']
+    }), _defineProperty(_page, 'purge-cache', {
+      url: mw.util.getUrl(config.pageName, {
+        action: 'purge',
+        forcelinkupdate: true
+      }),
+      pageExists: true
+    }), _defineProperty(_page, 'subpages', {
+      url: mw.util.getUrl("Special:PrefixIndex/".concat(config.pageName, "/"))
+    }), _defineProperty(_page, 'undelete-page', {
+      url: mw.util.getUrl("Special:Undelete/".concat(config.pageName)),
+      userPermissions: ['undelete'],
+      pageDeleted: true
+    }), _page)
   };
 };

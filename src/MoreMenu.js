@@ -1,4 +1,3 @@
-// FIXME: Add MutationObserver thing
 $(() => {
     window.MoreMenu = window.MoreMenu || {};
 
@@ -316,6 +315,9 @@ $(() => {
             `);
         case 'timeless':
             return mw.util.addCSS(`
+                .mm-submenu-wrapper {
+                    cursor: default;
+                }
                 .mm-submenu {
                     background: #f8f9fa;
                     border: 1px solid rgb(200, 204, 209);
@@ -499,14 +501,14 @@ $(() => {
                 // Nothing to do.
                 return;
             } else {
-                newIndex = itemKeys.indexOf(target);
+                newIndex = newItemKeys.indexOf(target);
                 // Insert at end if target wasn't found.
-                newIndex = -1 === newIndex ? itemKeys.length : newIndex;
+                newIndex = -1 === newIndex ? newItemKeys.length : newIndex;
             }
 
             // Remove the original placement, and insert after the target.
             newItemKeys.splice(newItemKeys.indexOf(itemKey), 1);
-            newItemKeys.splice(newIndex, 0, itemKey);
+            newItemKeys.splice(newIndex + 1, 0, itemKey);
         });
 
         // Combine and return, with the submenus coming first.
@@ -726,10 +728,11 @@ $(() => {
             lelimit: 1,
         }).done(data => {
             if (!data.query.logevents.length) {
-                $('#mm-user-view-block-log').remove();
+                $('#mm-user-blocks-view-block-log').remove();
             }
+
             // Remove the 'Blocks' submenu if it's empty.
-            if (!$('#mm-user-blocks').find('li').length) {
+            if (!$('#mm-user-blocks').find('.mm-item').length) {
                 $('#mm-user-blocks').remove();
             }
         });
@@ -786,8 +789,8 @@ $(() => {
                 mw.storage.set('mmCacheDate', newDate.setDate(newDate.getDate() + 1));
             }
 
-            drawMenus();
             removeNavLinks();
+            drawMenus();
             removeBlockLogLink();
 
             mw.hook('moremenu.ready').fire(config);
@@ -837,7 +840,8 @@ $(() => {
         // Check if insertAfter ID is valid.
         const beforeItemKey = getItemId(menu, insertAfter || '', submenu);
         const $beforeItem = $(`#${beforeItemKey}`);
-        if ($beforeItem.length) {
+        const isSubmenuItem = $beforeItem.parents('.mm-submenu').length;
+        if ($beforeItem.length && (!submenu || (submenu && isSubmenuItem))) {
             // insertAfter ID is valid.
             $beforeItem.after($html);
         } else {

@@ -106,12 +106,6 @@ window.MoreMenu.page = config => ({
                 pageExists: true,
                 databaseRestrict: ['alswiki', 'barwiki', 'ckbwiki', 'dewiki', 'enwiki', 'eswiki', 'frwiki', 'huwiki', 'itwiki', 'jawiki', 'kowiki', 'lvwiki', 'nlwiki', 'nowiki', 'ptwiki', 'ruwiki', 'svwiki', 'zhwiki'],
             },
-            'peer-reviewer': {
-                url: `https://dispenser.info.tm/~dispenser/view/Peer_reviewer#page:${config.encodedPageName}`,
-                pageExists: true,
-                databaseRestrict: ['enwiki'],
-                namespaceRestrict: [0, 2, 118],
-            },
         },
         // Actions the current user can take on the page.
         'change-model': {

@@ -1,7 +1,8 @@
 /**
 * WARNING: GLOBAL GADGET FILE
 * Please submit code changes as a pull request to the source repository at https://github.com/MusikAnimal/MoreMenu
-* See [[meta:MoreMenu#Localization]] on how to add translations.
+* Are there missing translations? See [[meta:MoreMenu#Localization]].
+* Want to add custom links? See [[meta:MoreMenu#Customization]].
 * Only critical, urgent changes should be made to this file directly.
 * 
 * Script:         MoreMenu.js
@@ -26,14 +27,17 @@ window.MoreMenu.user = function (config) {
       'user-logs': {
         'all-logs': {
           url: mw.util.getUrl('Special:Log', {
-            action: 'view',
             user: config.userName
           }),
           insertAfter: false
         },
+        'abusefilter-log': {
+          url: mw.util.getUrl('Special:AbuseLog', {
+            wpSearchUser: config.userName
+          })
+        },
         'block-log': {
           url: mw.util.getUrl('Special:Log', {
-            action: 'view',
             user: config.userName,
             type: 'block'
           }),
@@ -49,20 +53,27 @@ window.MoreMenu.user = function (config) {
         },
         'deletion-log': {
           url: mw.util.getUrl('Special:Log', {
-            action: 'view',
             user: config.userName,
             type: 'delete'
           }),
           permissions: ['delete']
         },
-        'abusefilter-log': {
-          url: mw.util.getUrl('Special:AbuseLog', {
-            wpSearchUser: config.userName
-          })
+        'global-account-log': {
+          url: mw.util.getUrl('Special:Log', {
+            user: config.userName,
+            type: 'globalauth'
+          }),
+          permissions: ['centralauth-lock']
+        },
+        'global-block-log': {
+          url: mw.util.getUrl('Special:Log', {
+            user: config.userName,
+            type: 'gblblock'
+          }),
+          permissions: ['globalblock']
         },
         'mass-message-log': {
           url: mw.util.getUrl('Special:Log', {
-            action: 'view',
             user: config.userName,
             type: 'massmessage'
           }),
@@ -70,7 +81,6 @@ window.MoreMenu.user = function (config) {
         },
         'move-log': {
           url: mw.util.getUrl('Special:Log', {
-            action: 'view',
             user: config.userName,
             type: 'move'
           }),
@@ -78,7 +88,6 @@ window.MoreMenu.user = function (config) {
         },
         'pending-changes-log': {
           url: mw.util.getUrl('Special:Log', {
-            action: 'view',
             user: config.userName,
             type: 'stable'
           }),
@@ -86,15 +95,20 @@ window.MoreMenu.user = function (config) {
         },
         'protection-log': {
           url: mw.util.getUrl('Special:Log', {
-            action: 'view',
             user: config.userName,
             type: 'protect'
           }),
           permissions: ['protect']
         },
+        'rename-log': {
+          url: mw.util.getUrl('Special:Log', {
+            user: config.userName,
+            type: 'gblrename'
+          }),
+          permissions: ['centralauth-rename']
+        },
         'review-log': {
           url: mw.util.getUrl('Special:Log', {
-            action: 'view',
             user: config.userName,
             type: 'review'
           }),
@@ -102,29 +116,19 @@ window.MoreMenu.user = function (config) {
         },
         'spam-blacklist-log': {
           url: mw.util.getUrl('Special:Log', {
-            action: 'view',
             user: config.userName,
             type: 'spamblacklist'
           })
         },
         'thanks-log': {
           url: mw.util.getUrl('Special:Log', {
-            action: 'view',
             user: config.userName,
             type: 'thanks'
           }),
           groups: ['user']
         },
-        'title-blacklist-log': {
-          url: mw.util.getUrl('Special:Log', {
-            action: 'view',
-            user: config.userName,
-            type: 'titleblacklist'
-          })
-        },
         'upload-log': {
           url: mw.util.getUrl('Special:Log', {
-            action: 'view',
             user: config.userName,
             type: 'upload'
           }),
@@ -132,7 +136,6 @@ window.MoreMenu.user = function (config) {
         },
         'user-creation-log': {
           url: mw.util.getUrl('Special:Log', {
-            action: 'view',
             user: config.userName,
             type: 'newusers'
           }),
@@ -141,7 +144,6 @@ window.MoreMenu.user = function (config) {
         },
         'user-rights-log': {
           url: mw.util.getUrl('Special:Log', {
-            action: 'view',
             user: config.userName,
             type: 'rights'
           }),
@@ -182,7 +184,6 @@ window.MoreMenu.user = function (config) {
         },
         'view-block-log': {
           url: mw.util.getUrl('Special:Log', {
-            action: 'view',
             page: config.userName,
             type: 'block'
           })
@@ -238,6 +239,7 @@ window.MoreMenu.user = function (config) {
           ipOnly: true
         }
       },
+      // Actions the current user can take on the target user.
       'change-rights': {
         url: mw.util.getUrl('Special:UserRights', {
           user: "User:".concat(config.userName)

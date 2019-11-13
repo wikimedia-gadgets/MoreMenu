@@ -1,7 +1,8 @@
 /**
 * WARNING: GLOBAL GADGET FILE
 * Please submit code changes as a pull request to the source repository at https://github.com/MusikAnimal/MoreMenu
-* See [[meta:MoreMenu#Localization]] on how to add translations.
+* Are there missing translations? See [[meta:MoreMenu#Localization]].
+* Want to add custom links? See [[meta:MoreMenu#Customization]].
 * Only critical, urgent changes should be made to this file directly.
 * 
 * Script:         MoreMenu.js
@@ -56,6 +57,8 @@ Object.assign(window.MoreMenu.messages, {
   "expand-bare-references": "Expand bare references",
   "fix-dead-links": "Fix dead links",
   "geolocate": "Geolocate",
+  "global-account-log": "Global account log",
+  "global-block-log": "Global block log",
   "global-contributions-guc": "Global edits – GUC",
   "global-contributions-xtools": "Global edits – XTools",
   "ip-lookup": "IP lookup",
@@ -74,6 +77,7 @@ Object.assign(window.MoreMenu.messages, {
   "proxy-check": "Proxy check",
   "purge-cache": "Purge cache",
   "rdns": "rDNS",
+  "rename-log": "Rename log",
   "review-log": "Review log",
   "search-by-contributor": "Search by contributor",
   "search-history-wikiblame": "Search history – WikiBlame",
@@ -83,7 +87,6 @@ Object.assign(window.MoreMenu.messages, {
   "sul": "SUL",
   "suppressed-contribs": "Suppressed contribs",
   "thanks-log": "Thanks log",
-  "title-blacklist-log": "Title blacklist log",
   "tools": "Tools",
   "top-edited-pages": "Top edited pages",
   "traffic-report": "Traffic report",

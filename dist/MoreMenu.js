@@ -1,7 +1,8 @@
 /**
 * WARNING: GLOBAL GADGET FILE
 * Please submit code changes as a pull request to the source repository at https://github.com/MusikAnimal/MoreMenu
-* See [[meta:MoreMenu#Localization]] on how to add translations.
+* Are there missing translations? See [[meta:MoreMenu#Localization]].
+* Want to add custom links? See [[meta:MoreMenu#Customization]].
 * Only critical, urgent changes should be made to this file directly.
 * 
 * Script:         MoreMenu.js
@@ -52,7 +53,7 @@ $(function () {
     this.skin = mw.config.get('skin'); // Page-level
 
     this.nsId = mw.config.get('wgNamespaceNumber');
-    this.isPageProtected = !!mw.config.get('wgRestrictionEdit') && mw.config.get('wgRestrictionEdit').length || !!mw.config.get('wgRestrictionCreate') && mw.config.get('wgRestrictionCreate').length;
+    this.isProtected = !!mw.config.get('wgRestrictionEdit') && mw.config.get('wgRestrictionEdit').length || !!mw.config.get('wgRestrictionCreate') && mw.config.get('wgRestrictionCreate').length;
     this.pageId = mw.config.get('wgArticleId');
     this.pageName = mw.config.get('wgPageName');
     this.isUserSpace = [2, 3].indexOf(this.nsId) >= 0 || 'Contributions' === mw.config.get('wgCanonicalSpecialPageName') || !!mw.util.getParamValue('user');
@@ -73,23 +74,25 @@ $(function () {
   /**
    * Log a message to the console.
    * @param {String} message
-   * @param {String} [level] One of 'debug', 'info', 'log', 'warn', 'error'.
+   * @param {String} [level] Level accepted by `console`, e.g. 'debug', 'info', 'log', 'warn', 'error'.
    */
 
   function log(message) {
     var level = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'debug';
 
-    if (MoreMenu.debug || 'debug' !== level) {
-      message = "[MoreMenu] ".concat(message);
-
-      if (['', 'warn', 'error'].indexOf(level) >= 0) {
-        message += '\nSee https://w.wiki/9Se for documentation.';
-      }
-      /* eslint-disable no-console */
-
-
-      console[level]("[MoreMenu] ".concat(message));
+    if (!MoreMenu.debug && 'debug' === level) {
+      return;
     }
+
+    message = "[MoreMenu] ".concat(message);
+
+    if (['', 'warn', 'error'].indexOf(level) >= 0) {
+      message += '\nSee https://w.wiki/9Se for documentation.';
+    }
+    /* eslint-disable no-console */
+
+
+    console[level](message);
   }
   /**
    * Get a MoreMenu module.
@@ -125,22 +128,39 @@ $(function () {
     return getModule('messages')[key] || key;
   }
   /**
+   * Check whether the message exists.
+   * @param {String} key
+   * @returns {Boolean}
+   */
+
+
+  function msgExists(key) {
+    return undefined !== getModule('messages')[key];
+  }
+  /**
+   * Normalize the given ID into the expected format.
+   * @param {String} id
+   * @returns {string}
+   */
+
+
+  function normalizeId(id) {
+    return id.toLowerCase().replace(/\s+/g, '-');
+  }
+  /**
    * Generate a unique ID for a menu item.
    * @param {String} parentKey The message key for the parent menu ('user' or 'page').
-   * @param {String} itemKey The message key for the link itself.
+   * @param {String} [itemKey] The message key for the link itself.
    * @param {String} [submenuKey] The message key for the submenu that the item is within, if applicable.
-   * @returns {String} For example, 'c-user-user_logs-block-log'.
+   * @returns {String} For example, 'c-user-user-logs-block-log' for User > User logs > Block log.
    */
 
 
   function getItemId(parentKey, itemKey) {
     var submenuKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
-    var sanitize = function sanitize(name) {
-      return name.toLowerCase().replace(/\s+/g, '_');
-    };
-
-    return "mm-".concat(sanitize(parentKey.toLowerCase()), "-").concat(submenuKey ? "".concat(sanitize(submenuKey), "-") : '').concat(sanitize(itemKey.toLowerCase()));
+    /* eslint-disable prefer-template */
+    return "mm-".concat(normalizeId(parentKey)) + (submenuKey ? "-".concat(normalizeId(submenuKey)) : '') + (itemKey ? "-".concat(normalizeId(itemKey)) : '');
   }
   /**
    * Load translations if viewing in non-English. MoreMenu first looks for translations on Meta,
@@ -290,7 +310,7 @@ $(function () {
     /* deleted            */
     && (itemData.pageDeleted ? 0 === config.pageId && false === mw.config.get('wgIsArticle') : true)
     /* protected          */
-    && (itemData.isProtected ? config.isPageProtected : true)
+    && (itemData.isProtected ? config.isProtected : true)
     /* notice project     */
     && hasConditional(itemData.noticeProjectRestrict, config.noticeProject)
     /* database           */
@@ -320,7 +340,9 @@ $(function () {
 
     if (validations) {
       // Markup for the menu item.
-      return "\n                <li id=\"".concat(getItemId(parentKey, itemKey, submenuKey), "\" class=\"mm-item\">\n                    <a href=\"").concat(itemData.url, "\" title=\"").concat(msg(itemData.title, true) || '', "\"\n                        ").concat(itemData.style ? " style=\"".concat(itemData.style, "\"") : '', ">\n                        ").concat(msg(itemKey), "\n                    </a>\n                </li>");
+      var titleAttr = msgExists("".concat(itemKey, "-desc")) ? " title=\"".concat(msg("".concat(itemKey, "-desc")), "\"") : '';
+      var styleAttr = itemData.style ? " style=\"".concat(itemData.style, "\"") : '';
+      return "\n                <li id=\"".concat(getItemId(parentKey, itemKey, submenuKey), "\" class=\"mm-item\">\n                    <a href=\"").concat(itemData.url, "\"").concat(titleAttr).concat(styleAttr, ">\n                        ").concat(msg(itemData.title || itemKey), "\n                    </a>\n                </li>");
     } // Validations failed, so no markup to return.
 
 
@@ -339,10 +361,10 @@ $(function () {
         return mw.util.addCSS("\n                .mm-submenu {\n                    border-top-width: 1px !important;\n                    top: -1px !important;\n                }\n            ");
 
       case 'timeless':
-        return mw.util.addCSS("\n                .mm-submenu {\n                    background: #f8f9fa;\n                    border: 1px solid rgb(200, 204, 209);\n                    box-shadow: 0 2px 3px 1px rgba(0, 0, 0, 0.05);\n                    padding: 1.2em 1.5em !important;\n                    top: -1.2em;\n                    white-space: nowrap;\n                    z-index: 95;\n                }\n                .mm-submenu-triangle {\n                    border-bottom: 8px solid transparent;\n                    border-top: 8px solid transparent;\n                    display: none;\n                    height: 0;\n                    position: absolute;\n                    top: 4;\n                    width: 0;\n                }\n            ");
+        return mw.util.addCSS("\n                .mm-submenu-wrapper {\n                    cursor: default;\n                }\n                .mm-submenu {\n                    background: #f8f9fa;\n                    border: 1px solid rgb(200, 204, 209);\n                    box-shadow: 0 2px 3px 1px rgba(0, 0, 0, 0.05);\n                    padding: 1.2em 1.5em !important;\n                    top: -1.2em;\n                    white-space: nowrap;\n                    z-index: 95;\n                }\n                .mm-submenu-triangle {\n                    border-bottom: 8px solid transparent;\n                    border-top: 8px solid transparent;\n                    display: none;\n                    height: 0;\n                    position: absolute;\n                    top: 4;\n                    width: 0;\n                }\n            ");
 
       case 'monobook':
-        return mw.util.addCSS("\n                .mm-menu {\n                    background: #fff;\n                    border-bottom: 1px solid #aaa;\n                    margin: 0;\n                    position: absolute;\n                    z-index: 99;\n                }\n                .mm-submenu {\n                    background: #fff;\n                    border-bottom: 1px solid #aaa;\n                    border-top: 1px solid #aaa;\n                    font-size: inherit;\n                    margin: 0;\n                    top: -1px;\n                    z-index: 95;\n                }\n                .mm-item, .mm-submenu-wrapper {\n                    background: transparent !important;\n                    border-top: 0 !important;\n                    display: block !important;\n                    margin: 0 !important;\n                    padding: 0 !important;\n                }\n                .mm-item a, .mm-submenu-wrapper a {\n                    background: transparent !important;\n                    text-transform: none !important;\n                }\n                .mm-menu a:hover {\n                    text-decoration: underline !important;\n                }\n            ");
+        return mw.util.addCSS("\n                .mm-menu {\n                    background: #fff;\n                    border-bottom: 1px solid #aaa;\n                    margin: 0;\n                    position: absolute;\n                    z-index: 99;\n                }\n                .mm-menu ~ a {\n                    z-index: 99 !important;\n                }\n                .mm-submenu {\n                    background: #fff;\n                    border-bottom: 1px solid #aaa;\n                    border-top: 1px solid #aaa;\n                    font-size: inherit;\n                    margin: 0;\n                    top: -1px;\n                    z-index: 95;\n                }\n                .mm-item, .mm-submenu-wrapper {\n                    background: transparent !important;\n                    border-top: 0 !important;\n                    display: block !important;\n                    margin: 0 !important;\n                    padding: 0 !important;\n                }\n                .mm-item a, .mm-submenu-wrapper a {\n                    background: transparent !important;\n                    text-transform: none !important;\n                }\n                .mm-menu a:hover {\n                    text-decoration: underline !important;\n                }\n            ");
 
       case 'modern':
         return mw.util.addCSS("\n                .mm-menu, .mm-submenu {\n                    background: #f0f0f0 !important;\n                    border: solid 1px #666;\n                }\n                .mm-menu {\n                    border-top: none;\n                    position: absolute;\n                    z-index: 99;\n                }\n                .mm-submenu-wrapper > a {\n                    cursor: default !important;\n                }\n                .mm-item, .mm-submenu-wrapper {\n                    display: block !important;\n                    float: none !important;\n                    height: inherit !important;\n                    margin: 0 !important;\n                    padding: 0 !important;\n                }\n                .mm-menu a {\n                    display: inline-block;\n                    padding: 3px 10px !important;\n                    text-transform: none !important;\n                    text-decoration: none !important;\n                    white-space: nowrap;\n                    width: 100%;\n                }\n                .mm-menu a:hover {\n                    text-decoration: underline !important;\n                }\n                .mm-submenu {\n                    left: 100%;\n                    top: 0;\n                }\n            ");
@@ -445,14 +467,14 @@ $(function () {
         // Nothing to do.
         return;
       } else {
-        newIndex = itemKeys.indexOf(target); // Insert at end if target wasn't found.
+        newIndex = newItemKeys.indexOf(target); // Insert at end if target wasn't found.
 
-        newIndex = -1 === newIndex ? itemKeys.length : newIndex;
+        newIndex = -1 === newIndex ? newItemKeys.length : newIndex;
       } // Remove the original placement, and insert after the target.
 
 
       newItemKeys.splice(newItemKeys.indexOf(itemKey), 1);
-      newItemKeys.splice(newIndex, 0, itemKey);
+      newItemKeys.splice(newIndex + 1, 0, itemKey);
     }); // Combine and return, with the submenus coming first.
 
     return submenus.concat(newItemKeys);
@@ -477,8 +499,8 @@ $(function () {
         // This is a submenu.
         log('getMenusHtml - (submenu)');
         itemHtml += "\n                    <li style=\"position:relative;\" id=\"".concat(getItemId(parentKey, itemKey), "\" class=\"mm-submenu-wrapper\">\n                    <a style=\"font-weight: bold\">").concat(msg(itemKey), "&hellip;</a>\n                    <ul class=\"menu mm-submenu\" style=\"display: none; position: absolute;\">");
-        sortItems(item).forEach(function (submenuKey) {
-          itemHtml += getItemHtml(parentKey, submenuKey, item[submenuKey]);
+        sortItems(item).forEach(function (submenuItemKey) {
+          itemHtml += getItemHtml(parentKey, submenuItemKey, item[submenuItemKey], itemKey);
         });
         itemHtml += '</ul></li>';
 
@@ -502,13 +524,8 @@ $(function () {
 
 
   function drawMenuVector(parentKey, html) {
-    html = "<div id=\"p-".concat(parentKey, "\" role=\"navigation\" class=\"vectorMenu mm-").concat(parentKey, "\" ") + "aria-labelledby=\"p-".concat(parentKey, "-label\" style=\"z-index: 99\">") + "<input type=\"checkbox\" class=\"vectorMenuCheckbox\" aria-labelledby=\"p-".concat(parentKey, "-label\">") + "<h3 id=\"p-".concat(parentKey, "-label\"><span>").concat(msg(parentKey), "</span><a href=\"#\"></a></h3>") + "<ul class=\"menu mm-menu\">".concat(html, "</ul>") + '</div>';
-
-    if ($('#p-cactions').length) {
-      $(html).insertAfter($('#p-cactions'));
-    } else {
-      $(html).insertAfter($('#p-views'));
-    }
+    html = "<div id=\"p-".concat(parentKey, "\" role=\"navigation\" class=\"vectorMenu mm-").concat(parentKey, " mm-tab\" ") + "aria-labelledby=\"p-".concat(parentKey, "-label\" style=\"z-index: 99\">") + "<input type=\"checkbox\" class=\"vectorMenuCheckbox\" aria-labelledby=\"p-".concat(parentKey, "-label\">") + "<h3 id=\"p-".concat(parentKey, "-label\"><span>").concat(msg(parentKey), "</span><a href=\"#\"></a></h3>") + "<ul class=\"menu mm-menu\">".concat(html, "</ul>") + '</div>';
+    $(html).insertAfter($('#p-views'));
   }
   /**
    * Draw menu for the Timeless skin.
@@ -520,7 +537,7 @@ $(function () {
   function drawMenuTimeless(parentKey, html) {
     var _$$css;
 
-    html = "<div role=\"navigation\" class=\"mw-portlet mm-".concat(parentKey, "\" id=\"p-").concat(parentKey, "\" aria-labelledby=\"p-").concat(parentKey, "-label\">") + "<h3 id=\"p-".concat(parentKey, "-label\">").concat(msg(parentKey), "</h3>") + "<div class=\"mw-portlet-body\"><ul class=\"mm-menu\">".concat(html, "</ul></div></div>");
+    html = "<div role=\"navigation\" class=\"mw-portlet mm-".concat(parentKey, " mm-tab\" id=\"p-").concat(parentKey, "\" aria-labelledby=\"p-").concat(parentKey, "-label\">") + "<h3 id=\"p-".concat(parentKey, "-label\">").concat(msg(parentKey), "</h3>") + "<div class=\"mw-portlet-body\"><ul class=\"mm-menu\">".concat(html, "</ul></div></div>");
 
     if ($('#p-cactions').length) {
       $(html).insertAfter($('#p-cactions'));
@@ -540,7 +557,7 @@ $(function () {
 
 
   function drawMenuMonobook(parentKey, html) {
-    html = "<li id=\"ca-".concat(parentKey, "\" class=\"mm-").concat(parentKey, "\">") + "<a href=\"javascript:void(0)\">".concat(msg(parentKey), "</a>") + "<ul class=\"mm-menu\" style=\"display:none\">".concat(html, "</ul>") + '</li>';
+    html = "<li id=\"ca-".concat(parentKey, "\" class=\"mm-").concat(parentKey, " mm-tab\">") + "<a href=\"javascript:void(0)\">".concat(msg(parentKey), "</a>") + "<ul class=\"mm-menu\" style=\"display:none\">".concat(html, "</ul>") + '</li>';
     var $tab = $(html).appendTo('#p-cactions ul:first-child');
     var $menu = $tab.find('.mm-menu'); // Position the menu.
 
@@ -551,8 +568,14 @@ $(function () {
 
     $tab.on('mouseenter', function () {
       $menu.show();
+      $tab.find('> a').css({
+        'z-index': 99
+      });
     }).on('mouseleave', function () {
       $menu.hide();
+      $tab.find('> a').css({
+        'z-index': 'inherit'
+      });
     });
   }
   /**
@@ -563,7 +586,7 @@ $(function () {
 
 
   function drawMenuModern(parentKey, html) {
-    html = "<li id=\"ca-".concat(parentKey, "\" class=\"mm-").concat(parentKey, "\">") + "<a href=\"javascript:void(0)\">".concat(msg(parentKey), "</a>") + "<ul class=\"mm-menu\" style=\"display:none\">".concat(html, "</ul>") + '</li>';
+    html = "<li id=\"ca-".concat(parentKey, "\" class=\"mm-").concat(parentKey, " mm-tab\">") + "<a href=\"javascript:void(0)\">".concat(msg(parentKey), "</a>") + "<ul class=\"mm-menu\" style=\"display:none\">".concat(html, "</ul>") + '</li>';
     var $tab = $(html).appendTo('#p-cactions ul:first-child');
     var $menu = $tab.find('.mm-menu'); // Position the menu.
 
@@ -624,7 +647,7 @@ $(function () {
     addListeners();
   }
   /**
-   * Remove redundant links from the native More menu.
+   * Remove redundant links from the native menu.
    */
 
 
@@ -634,6 +657,11 @@ $(function () {
     if (config.dbName !== 'commonswiki') {
       // Do not do this for Commons, where the move file gadget has a listener on the native move link.
       $('#ca-move').remove();
+    } // For Vector. This is done here because it takes place after links are removed from the More menu.
+
+
+    if (0 === $('#p-cactions li').length) {
+      $('#p-cactions').remove();
     }
   }
   /**
@@ -650,11 +678,11 @@ $(function () {
       lelimit: 1
     }).done(function (data) {
       if (!data.query.logevents.length) {
-        $('#mm-user-view-block-log').remove();
+        $('#mm-user-blocks-view-block-log').remove();
       } // Remove the 'Blocks' submenu if it's empty.
 
 
-      if (!$('#mm-user-blocks').find('li').length) {
+      if (!$('#mm-user-blocks').find('.mm-item').length) {
         $('#mm-user-blocks').remove();
       }
     });
@@ -721,24 +749,31 @@ $(function () {
       mw.hook('moremenu.ready').fire(config);
     });
   }
-
-  init();
   /**
    * PUBLIC METHODS
    */
 
   /**
-   * Add an item (or submenu + its items) to a menu.
+   * Add an item (or submenu + its items) to a menu, given the full config hash for the item.
    * @param {String} menu The parent menu to append to, either 'user' or 'page'.
    * @param {Object} items A single item/submenu with structure matching config at MoreMenu.user or MoreMenu.page.
    * @param {String} [insertAfter] Insert the item/submenu after the item with this ID.
+   * @param {String} [submenu] Insert into this submenu.
    */
 
-  MoreMenu.addItem = function (menu, items, insertAfter) {
-    var $menu = $(".mm-".concat(menu));
+
+  MoreMenu.addItem = function (menu, items, insertAfter, submenu) {
+    if (!$(".mm-".concat(menu)).length) {
+      // Menu not shown.
+      return;
+    }
+
+    var menuId = submenu ? "#mm-".concat(menu, "-").concat(submenu) : ".mm-".concat(menu); // FYI the element has skin-defined IDs, so we use a CSS class instead.
+
+    var $menu = $(menuId);
 
     if (!$menu.length) {
-      log("'".concat(menu, "' menu with class .mm-").concat(menu, " not found."), 'error');
+      log("'".concat(menu).concat(submenu ? " ".concat(submenu) : '', "' menu with selector ").concat(menuId, " not found."), 'error');
       return;
     } // Suppress "translation not found" warnings, since the user-provided `items`
     // may intentionally not have definitions in MoreMenu.messages.
@@ -749,32 +784,34 @@ $(function () {
     if (Object.keys(items).length !== 1) {
       log('MoreMenu.addItem() was given multiple items. Ignoring all but the first.', 'warn');
       items = items[Object.keys(items)[0]];
-    } // `items` could be a submenu. getMenuHtml() will work on single items, or submenus and their items.
+    } // `items` could be a submenu. getMenuHtml() will work on single items, or a submenu and its items.
 
 
-    var $html = getMenuHtml(menu, items); // Check if insertAfter ID is valid.
+    var $html = $(getMenuHtml(menu, items)); // Check if insertAfter ID is valid.
 
-    var beforeItemKey = getItemId(menu, insertAfter || '');
+    var beforeItemKey = getItemId(menu, insertAfter || '', submenu);
     var $beforeItem = $("#".concat(beforeItemKey));
+    var isSubmenuItem = $beforeItem.parents('.mm-submenu').length;
 
-    if ($beforeItem.length) {
+    if ($beforeItem.length && (!submenu || submenu && isSubmenuItem)) {
       // insertAfter ID is valid.
       $beforeItem.after($html);
     } else {
-      var newI18nKey = Object.keys(items)[0].toLowerCase();
-      var newId = getItemId(menu, newI18nKey); // insertAfter ID was either invalid or not found.
+      var newI18nKey = normalizeId(Object.keys(items)[0]);
+      var newId = getItemId(menu, newI18nKey, submenu); // insertAfter ID was either invalid or not found.
 
       if (!$beforeItem.length && insertAfter) {
         log('getMenuHtml() was given an invalid `insertAfter`.');
       } // Grab IDs of the visible top-level items (excluding submenus) and append the new item ID.
 
 
-      var ids = $.map($menu.find('> .mm-menu > .mm-item'), function (el) {
+      var $topItems = submenu ? $(menuId).find('.mm-submenu > .mm-item') : $(menuId).find('.mm-menu > .mm-item');
+      var ids = $.map($topItems, function (el) {
         return el.id;
       }).concat([newId]); // Extract the i18n keys and sort alphabetically by translation.
 
       var i18nKeys = sortByTranslation(ids.map(function (id) {
-        return id.replace(new RegExp("^mm-".concat(menu, "-")), '');
+        return id.replace(new RegExp("^mm-".concat(menu, "-").concat(submenu ? "".concat(submenu, "-") : '')), '');
       })); // Get the index of the preceding item.
 
       var beforeItemIndex = i18nKeys.indexOf(newI18nKey) - 1;
@@ -784,7 +821,7 @@ $(function () {
         $("#".concat(ids[0])).before($html);
       } else {
         // Insert HTML after the would-be previous item in the menu.
-        $beforeItem.after($("#".concat(getItemId(menu, i18nKeys[Math.min(0, i18nKeys.indexOf(newI18nKey) - 1)]))));
+        $("#".concat(getItemId(menu, i18nKeys[Math.max(0, i18nKeys.indexOf(newI18nKey) - 1)], submenu))).after($html);
       }
     }
 
@@ -792,4 +829,36 @@ $(function () {
 
     ignoreI18nWarnings = false;
   };
+  /**
+   * Add a link to the given menu.
+   * @param {String} menu Either 'page' or 'user'.
+   * @param {String} name Title for the link. Can either be a normal string or an i18n key.
+   * @param {String} url URL to point to.
+   * @param {String} [insertAfter] Insert the link after the link with this ID.
+   */
+
+
+  MoreMenu.addLink = function (menu, name, url, insertAfter) {
+    MoreMenu.addItem(menu, _defineProperty({}, name, {
+      url: url
+    }), insertAfter);
+  };
+  /**
+   * Add a link to the given submenu.
+   * @param {String} menu Either 'page' or 'user'.
+   * @param {String} submenu ID for the submenu (such as 'user-logs' or 'analysis').
+   * @param {String} name Title for the link. Can either be a normal string or an i18n key.
+   * @param {String} url URL to point to.
+   * @param {String} [insertAfter] Insert the link after the link with this ID.
+   */
+
+
+  MoreMenu.addSubmenuLink = function (menu, submenu, name, url, insertAfter) {
+    MoreMenu.addItem(menu, _defineProperty({}, name, {
+      url: url
+    }), insertAfter, submenu);
+  }; // Entry point.
+
+
+  init();
 }); // </nowiki>

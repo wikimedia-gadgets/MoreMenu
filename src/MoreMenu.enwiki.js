@@ -114,5 +114,16 @@ $(() => {
             `https://tools.wmflabs.org/afdstats/afdstats.py?name=${config.encodedUserName}`,
             'analysis'
         );
+
+        // FIXME: !!!!!!!!!!
+        // Add link to Peer reviewer tool under 'Tools'.
+        MoreMenu.addItem('page', {
+            'peer-reviewer': {
+                url: `https://dispenser.info.tm/~dispenser/view/Peer_reviewer#page:${config.encodedPageName}`,
+                pageExists: true,
+                databaseRestrict: ['enwiki'],
+                namespaceRestrict: [0, 2, 118],
+            },
+        }, null, 'analysis');
     });
 });
