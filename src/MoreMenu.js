@@ -327,14 +327,17 @@ $(() => {
                     white-space: nowrap;
                     z-index: 95;
                 }
-                .mm-submenu-triangle {
+                .mm-submenu::after {
                     border-bottom: 8px solid transparent;
                     border-top: 8px solid transparent;
-                    display: none;
+                    border-${leftKey}: 8px solid rgb(200, 204, 209);
+                    content: '';
                     height: 0;
+                    padding-${rightKey}: 4px;
                     position: absolute;
-                    top: 4;
+                    top: 20px;
                     width: 0;
+                    ${rightKey}: -13px;
                 }
             `);
         case 'monobook':
@@ -442,9 +445,8 @@ $(() => {
                 $(this).find('.mm-submenu')
                     .css(getSubmenuCss($(this)))
                     .show();
-                $(this).find('.mm-submenu-triangle').show();
             }).off('mouseleave').on('mouseleave', function hoverMenusMouseleave() {
-                $(this).find('.mm-submenu, .mm-submenu-triangle').hide();
+                $(this).find('.mm-submenu').hide();
             });
         });
     }
@@ -587,17 +589,8 @@ $(() => {
         if ($('#p-cactions').length) {
             $(html).insertAfter($('#p-cactions'));
         } else {
-            $('.sidebar-inner').append(html);
+            $('#page-tools .sidebar-inner').append(html);
         }
-
-        // Add arrow next to submenus.
-        const $triangle = $('<span class="mm-submenu-triangle">')
-            .css({
-                [`border-${leftKey}`]: '8px solid rgb(200, 204, 209)',
-                [leftKey]: -11,
-                [`padding-${rightKey}`]: 4,
-            });
-        $('.mm-submenu-wrapper').append($triangle);
     }
 
     /**
