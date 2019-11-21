@@ -25,7 +25,7 @@ window.MoreMenu.page = config => ({
                 url: mw.util.getUrl('Special:Log', { page: config.pageName, type: 'protect' }),
             },
         },
-        // Tools and links that provide meaningful statistics.
+        /** Tools and links that provide meaningful statistics. */
         'analysis': {
             'analysis-xtools': {
                 url: `https://xtools.wmflabs.org/articleinfo/${config.serverName}/${config.escapedPageName}`,
@@ -79,7 +79,7 @@ window.MoreMenu.page = config => ({
                 namespaceRestrict: [2, 4, 5, 10, 11, 12, 13, 100, 101],
             },
         },
-        // Tools used to semi-automate editing.
+        /** Tools used to semi-automate editing. */
         'tools': {
             'check-external-links': {
                 url: `https://dispenser.info.tm/~dispenser/cgi-bin/webchecklinks.py?page=${config.encodedPageName}&hostname=${config.serverName}`,
@@ -107,7 +107,7 @@ window.MoreMenu.page = config => ({
                 databaseRestrict: ['alswiki', 'barwiki', 'ckbwiki', 'dewiki', 'enwiki', 'eswiki', 'frwiki', 'huwiki', 'itwiki', 'jawiki', 'kowiki', 'lvwiki', 'nlwiki', 'nowiki', 'ptwiki', 'ruwiki', 'svwiki', 'zhwiki'],
             },
         },
-        // Actions the current user can take on the page.
+        /** Actions the current user can take on the page. */
         'change-model': {
             url: mw.util.getUrl(`Special:ChangeContentModel/${config.pageName}`),
             userPermissions: ['editcontentmodel'],
@@ -115,7 +115,7 @@ window.MoreMenu.page = config => ({
             namespaceRestrict: [2, 4, 8, 100, 108, 828],
         },
         'delete-page': {
-            // NOTE: must use `decodeURIComponent` because mw.util.getUrl will otherwise double-escape. This should be safe.
+            /** NOTE: must use `decodeURIComponent` because mw.util.getUrl will otherwise double-escape. This should be safe. */
             url: mw.util.getUrl(null, { action: 'delete', 'wpReason': decodeURIComponent($('#delete-reason').text()).replace(/\+/g, ' ') }),
             userPermissions: ['delete'],
             pageExists: true,
@@ -125,7 +125,7 @@ window.MoreMenu.page = config => ({
             url: `//${config.serverName}/w/index.php?title=${config.encodedPageName}&action=edit&section=0`,
             namespaceRestrict: [0, 1, 2, 3, 4, 5, 118],
             pageExists: true,
-            // Don't show the 'Edit intro' link if the edittop gadget is enabled or there is only one section.
+            /** Don't show the 'Edit intro' link if the edittop gadget is enabled or there is only one section. */
             visible: '1' !== mw.user.options.get('gadget-edittop') && $('.mw-editsection').length,
         },
         'latest-diff': {
@@ -142,11 +142,13 @@ window.MoreMenu.page = config => ({
             url: mw.util.getUrl(`Special:MovePage/${config.pageName}`),
             userPermissions: ['move'],
             pageExists: true,
-            // No cheap way to see if a page is movable, so we just look for the
-            // native Move link (which will later be removed).
+            /**
+             * No cheap way to see if a page is movable, so we just look for the
+             * native Move link (which will later be removed).
+             */
             visible: !mw.config.get('wgIsMainPage') && !!$('#ca-move').length,
         },
-        // Is the page already protected? Then use 'Change protection' as the name, otherwise 'Protect page'.
+        /** Is the page already protected? Then use 'Change protection' as the name, otherwise 'Protect page'. */
         [config.isProtected ? 'change-protection' : 'protect-page']: {
             url: mw.util.getUrl(config.pageName, { action: 'protect' }),
             userPermissions: ['protect', 'stablesettings'],

@@ -1,9 +1,9 @@
 /**
 * WARNING: GLOBAL GADGET FILE
+* Compiled from source at https://github.com/MusikAnimal/MoreMenu
 * Please submit code changes as a pull request to the source repository at https://github.com/MusikAnimal/MoreMenu
 * Are there missing translations? See [[meta:MoreMenu#Localization]].
 * Want to add custom links? See [[meta:MoreMenu#Customization]].
-* Only critical, urgent changes should be made to this file directly.
 * 
 * Script:         MoreMenu.js
 * Version:        5.0.0
@@ -12,7 +12,7 @@
 * Documentation:  [[meta:MoreMenu]]
 * GitHub:         https://github.com/MusikAnimal/MoreMenu
 * Skins:          Vector, Timeless, Monobook, Modern
-* Browsers:       All modern browsers and IE 11+
+* Browsers:       See [[mw:Compatibility#Browsers]]
 **/
 "use strict";
 

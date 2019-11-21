@@ -160,7 +160,7 @@ window.MoreMenu.user = config => ({
                 ipOnly: true,
             },
         },
-        // Actions the current user can take on the target user.
+        /** Actions the current user can take on the target user. */
         'change-rights': {
             url: mw.util.getUrl('Special:UserRights', { user: `User:${config.userName}` }),
             groups: ['user'],

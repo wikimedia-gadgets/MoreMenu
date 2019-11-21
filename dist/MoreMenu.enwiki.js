@@ -1,9 +1,9 @@
 /**
 * WARNING: GLOBAL GADGET FILE
+* Compiled from source at https://github.com/MusikAnimal/MoreMenu
 * Please submit code changes as a pull request to the source repository at https://github.com/MusikAnimal/MoreMenu
 * Are there missing translations? See [[meta:MoreMenu#Localization]].
 * Want to add custom links? See [[meta:MoreMenu#Customization]].
-* Only critical, urgent changes should be made to this file directly.
 * 
 * Script:         MoreMenu.js
 * Version:        5.0.0
@@ -12,7 +12,7 @@
 * Documentation:  [[meta:MoreMenu]]
 * GitHub:         https://github.com/MusikAnimal/MoreMenu
 * Skins:          Vector, Timeless, Monobook, Modern
-* Browsers:       All modern browsers and IE 11+
+* Browsers:       See [[mw:Compatibility#Browsers]]
 **/
 "use strict";
 
@@ -123,12 +123,15 @@ $(function () {
 
     if (config.pageName) {
       addXfD(api, config);
-    } // Add link to BLP edits in the 'Analysis' menu.
+    }
+    /** Add link to BLP edits in the 'Analysis' menu. */
 
 
-    MoreMenu.addSubmenuLink('user', 'analysis', 'BLP Edits', "https://xtools.wmflabs.org/categoryedits/".concat(config.serverName, "/").concat(config.encodedUserName, "/Living people")); // Add link to AfD stats.
+    MoreMenu.addSubmenuLink('user', 'analysis', 'BLP Edits', "https://xtools.wmflabs.org/categoryedits/".concat(config.serverName, "/").concat(config.encodedUserName, "/Living people"));
+    /** Add link to AfD stats. */
 
-    MoreMenu.addSubmenuLink('user', 'analysis', 'AfD stats', "https://tools.wmflabs.org/afdstats/afdstats.py?name=".concat(config.encodedUserName), 'analysis'); // Add link to Peer reviewer tool under 'Tools'.
+    MoreMenu.addSubmenuLink('user', 'analysis', 'AfD stats', "https://tools.wmflabs.org/afdstats/afdstats.py?name=".concat(config.encodedUserName), 'analysis');
+    /** Add link to Peer reviewer tool under 'Tools'. */
 
     MoreMenu.addItem('page', {
       'peer-reviewer': {

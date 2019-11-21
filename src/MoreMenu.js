@@ -10,18 +10,20 @@ $(() => {
 
     const api = new mw.Api();
 
-    // Flag to suppress warnings shown by the msg() function.
-    // This is set by the addItem() method, since user-provided messages may not be stored in `MoreMenu.messages`.
+    /**
+     * Flag to suppress warnings shown by the msg() function.
+     * This is set by the addItem() method, since user-provided messages may not be stored in `MoreMenu.messages`.
+     */
     let ignoreI18nWarnings = false;
 
-    // RTL helpers.
+    /** RTL helpers. */
     const isRtl = 'rtl' === $('html').prop('dir');
     const leftKey = isRtl ? 'right' : 'left';
     const rightKey = isRtl ? 'left' : 'right';
 
-    // Configuration to be passed to MoreMenu.user.js, MoreMenu.page.js, and handlers of the 'moremenu.ready' hook.
+    /** Configuration to be passed to MoreMenu.user.js, MoreMenu.page.js, and handlers of the 'moremenu.ready' hook. */
     const config = new function config() {
-        // Project-level
+        /** Project-level */
         this.serverName = mw.config.get('wgServerName');
         this.siteName = mw.config.get('wgSiteName');
         this.dbName = mw.config.get('wgDBname');
@@ -29,7 +31,7 @@ $(() => {
         this.contentLanguage = mw.config.get('wgContentLanguage');
         this.skin = mw.config.get('skin');
 
-        // Page-level
+        /** Page-level */
         this.nsId = mw.config.get('wgNamespaceNumber');
         this.isProtected = (!!mw.config.get('wgRestrictionEdit') && mw.config.get('wgRestrictionEdit').length)
             || (!!mw.config.get('wgRestrictionCreate') && mw.config.get('wgRestrictionCreate').length);
@@ -41,7 +43,7 @@ $(() => {
         this.escapedPageName = this.pageName.replace(/[!'"()*]/g, escape);
         this.encodedPageName = encodeURIComponent(this.pageName);
 
-        // User-level
+        /** User-level */
         this.userName = mw.config.get('wgRelevantUserName') || '';
         this.escapedUserName = this.userName.replace(/[?!'()*]/g, escape);
         this.encodedUserName = encodeURIComponent(this.userName);
@@ -49,8 +51,10 @@ $(() => {
         this.userGroupsData = {}; // With keys 'permissions' and 'addRemoveGroups' (which groups they can add/remove)
         this.userPermissions = [];
 
-        // Target user (when viewing user pages, Special:Contribs, etc.).
-        // Contains data retrieved from the API such as their user groups and block status.
+        /**
+         * Target user (when viewing user pages, Special:Contribs, etc.).
+         * Contains data retrieved from the API such as their user groups and block status.
+         */
         this.targetUser = {};
     }();
 
@@ -148,7 +152,7 @@ $(() => {
             return dfd.resolve();
         }
 
-        // First check Metawiki.
+        /** First check Metawiki. */
         mw.loader.getScript(
             'https://meta.wikimedia.org/w/index.php?action=raw&ctype=text/javascript'
                 + `&title=MediaWiki:Gadget-MoreMenu.messages.${lang}.js`
@@ -204,7 +208,7 @@ $(() => {
      */
     function canAddRemoveGroups(groups, permissions) {
         if (permissions && permissions.indexOf('userrights') >= 0) {
-            // User explicitly has rights to change user groups.
+            /** User explicitly has rights to change user groups. */
             return true;
         }
 
@@ -214,7 +218,7 @@ $(() => {
         });
 
         if (!valid) {
-            // Clear cache and fall back to false.
+            /** Clear cache and fall back to false. */
             mw.storage.remove('metaUserGroups');
         }
 
@@ -228,21 +232,21 @@ $(() => {
      * @returns {Boolean}
      */
     function hasConditional(permitted, given) {
-        // Convert to arrays if non-array.
+        /** Convert to arrays if non-array. */
         permitted = $.makeArray(permitted);
         given = $.makeArray(given);
 
         if (!permitted.length) {
-            // No requirements, so validations pass.
+            /** No requirements, so validations pass. */
             return true;
         }
 
         if (!given.length) {
-            // Nothing given to compare to the permitted values, so validations fail.
+            /** Nothing given to compare to the permitted values, so validations fail. */
             return false;
         }
 
-        // Loop through to see if a given value is present in the permitted values.
+        /** Loop through to see if a given value is present in the permitted values. */
         return given.some(item => permitted.indexOf(item) >= 0);
     }
 
@@ -282,7 +286,7 @@ $(() => {
         }
 
         if (validations) {
-            // Markup for the menu item.
+            /** Markup for the menu item. */
             const titleAttr = msgExists(`${itemKey}-desc`)
                 ? ` title="${msg(`${itemKey}-desc`)}"`
                 : '';
@@ -295,7 +299,7 @@ $(() => {
                 </li>`;
         }
 
-        // Validations failed, so no markup to return.
+        /** Validations failed, so no markup to return. */
         return '';
     }
 
@@ -481,40 +485,42 @@ $(() => {
     function sortItems(items) {
         const itemKeys = Object.keys(items);
 
-        // The labels for the submenus are not sorted.
+        /** The labels for the submenus are not sorted. */
         const submenus = itemKeys.filter(itemKey => !items[itemKey].url);
 
-        // All other menu items (top-level) are sorted alphabetically.
+        /** All other menu items (top-level) are sorted alphabetically. */
         const sortedItemKeys = sortByTranslation(itemKeys.filter(itemKey => !!items[itemKey].url));
 
-        // Loop through again, rearranging based on the 'insertAfter' option.
+        /** Loop through again, rearranging based on the 'insertAfter' option. */
         const newItemKeys = sortedItemKeys;
         sortedItemKeys.forEach(itemKey => {
             const target = items[itemKey].insertAfter;
             let newIndex;
 
             if (false === target) {
-                // False means put at the top.
+                /** False means put at the top. */
                 newIndex = 0;
             } else if (true === target) {
-                // True means put at the bottom.
+                /** True means put at the bottom. */
                 newIndex = itemKeys.length;
             } else if (!target) {
-                // Nothing to do.
+                /** Nothing to do. */
                 return;
             } else {
                 newIndex = newItemKeys.indexOf(target);
-                // Insert at end if target wasn't found.
-                // The +1 is because it goes after the target.
+                /**
+                 * Insert at end if target wasn't found.
+                 * The +1 is because it goes after the target.
+                 */
                 newIndex = -1 === newIndex ? newItemKeys.length : newIndex + 1;
             }
 
-            // Remove the original placement, and insert after the target.
+            /** Remove the original placement, and insert after the target. */
             newItemKeys.splice(newItemKeys.indexOf(itemKey), 1);
             newItemKeys.splice(newIndex, 0, itemKey);
         });
 
-        // Combine and return, with the submenus coming first.
+        /** Combine and return, with the submenus coming first. */
         return submenus.concat(newItemKeys);
     }
 
@@ -534,7 +540,7 @@ $(() => {
             let itemHtml = '';
 
             if (!item.url) {
-                // This is a submenu.
+                /** This is a submenu. */
                 log('getMenusHtml - (submenu)');
                 itemHtml += `
                     <li style="position:relative;" id="${getItemId(parentKey, itemKey)}" class="mm-submenu-wrapper">
@@ -548,7 +554,7 @@ $(() => {
                 itemHtml += '</ul></li>';
 
                 if (0 === $(itemHtml).last().find('.mm-submenu li').length) {
-                    // No items in the submenu, so don't show the submenu at all.
+                    /** No items in the submenu, so don't show the submenu at all. */
                     itemHtml = '';
                 }
             } else {
@@ -608,13 +614,13 @@ $(() => {
         const $tab = $(html).appendTo('#p-cactions ul:first-child');
         const $menu = $tab.find('.mm-menu');
 
-        // Position the menu.
+        /** Position the menu. */
         $menu.css({
             left: isRtl ? $(window).width() - $tab.offset().left : $tab.position().left,
             top: $tab.offset().top,
         });
 
-        // Add hover listeners.
+        /** Add hover listeners. */
         $tab.on('mouseenter', () => {
             $menu.show();
             $tab.find('> a').css({ 'z-index': 99 });
@@ -638,13 +644,13 @@ $(() => {
         const $tab = $(html).appendTo('#p-cactions ul:first-child');
         const $menu = $tab.find('.mm-menu');
 
-        // Position the menu.
+        /** Position the menu. */
         $menu.css({
             left: isRtl ? $(window).width() - $tab.offset().left : $tab.position().left,
             top: $tab.offset().top + $tab.outerHeight(),
         });
 
-        // Add hover listeners.
+        /** Add hover listeners. */
         $tab.on('mouseenter', () => {
             $menu.show();
         }).on('mouseleave', () => {
@@ -659,7 +665,7 @@ $(() => {
         log('drawMenus');
         const menus = {};
 
-        // Determine which menus to draw.
+        /** Determine which menus to draw. */
         if (config.isUserSpace) {
             Object.assign(menus, getModule('user')(config));
         }
@@ -667,7 +673,7 @@ $(() => {
             Object.assign(menus, getModule('page')(config));
         }
 
-        // Preemptively add the appropriate CSS.
+        /** Preemptively add the appropriate CSS. */
         addCSS();
 
         Object.keys(menus).forEach(key => {
@@ -700,11 +706,11 @@ $(() => {
     function removeNavLinks() {
         $('#ca-protect,#ca-unprotect,#ca-delete,#ca-undelete').remove();
         if (config.dbName !== 'commonswiki') {
-            // Do not do this for Commons, where the move file gadget has a listener on the native move link.
+            /** Do not do this for Commons, where the move file gadget has a listener on the native move link. */
             $('#ca-move').remove();
         }
 
-        // For Vector. This is done here because it takes place after links are removed from the More menu.
+        /** For Vector. This is done here because it takes place after links are removed from the More menu. */
         if (0 === $('#p-cactions li').length) {
             $('#p-cactions').remove();
         }
@@ -741,12 +747,12 @@ $(() => {
         const expired = cacheDate < new Date();
 
         $.when.apply(this, getPromises(expired)).done((targetUserData, userRightsData, metaData) => {
-            // Target user data.
+            /** Target user data. */
             if (targetUserData) {
                 log('Target user data');
                 [config.targetUser] = targetUserData[0].query.users;
 
-                // Logged out user.
+                /** Logged out user. */
                 if ('' === config.targetUser.invalid) {
                     config.targetUser.groups = [];
                     config.targetUser.rights = [];
@@ -756,14 +762,14 @@ $(() => {
                 }
             }
 
-            // Cache user rights of current user, if given.
+            /** Cache user rights of current user, if given. */
             if (userRightsData) {
                 log('caching user rights');
                 mw.storage.set('mmUserRights', JSON.stringify(userRightsData));
                 config.userPermissions = userRightsData.slice();
             }
 
-            // Cache global user groups of current user, if given.
+            /** Cache global user groups of current user, if given. */
             if (metaData) {
                 log('caching global user groups');
                 config.userGroupsData = {};
@@ -776,7 +782,7 @@ $(() => {
                 mw.storage.set('mmMetaUserGroups', JSON.stringify(config.userGroupsData));
             }
 
-            // Set expiry if cache is expired.
+            /** Set expiry if cache is expired. */
             if (expired) {
                 log('setting cache expiry');
                 const newDate = new Date();
@@ -804,7 +810,7 @@ $(() => {
      */
     MoreMenu.addItem = (menu, items, insertAfter, submenu) => {
         if (!$(`.mm-${menu}`).length) {
-            // Menu not shown.
+            /** Menu not shown. */
             return;
         }
 
@@ -818,54 +824,56 @@ $(() => {
             return;
         }
 
-        // Suppress "translation not found" warnings, since the user-provided `items`
-        // may intentionally not have definitions in MoreMenu.messages.
+        /**
+         * Suppress "translation not found" warnings, since the user-provided `items`
+         * may intentionally not have definitions in MoreMenu.messages.
+         */
         ignoreI18nWarnings = true;
 
-        // Ensure only one item (top-level menu item or submenu + items) is given.
+        /** Ensure only one item (top-level menu item or submenu + items) is given. */
         if (Object.keys(items).length !== 1) {
             log('MoreMenu.addItem() was given multiple items. Ignoring all but the first.', 'warn');
             items = items[Object.keys(items)[0]];
         }
 
-        // `items` could be a submenu. getMenuHtml() will work on single items, or a submenu and its items.
+        /** `items` could be a submenu. getMenuHtml() will work on single items, or a submenu and its items. */
         const $html = $(getMenuHtml(menu, items));
 
-        // Check if insertAfter ID is valid.
+        /** Check if insertAfter ID is valid. */
         const beforeItemKey = getItemId(menu, insertAfter || '', submenu);
         const $beforeItem = $(`#${beforeItemKey}`);
         const isSubmenuItem = $beforeItem.parents('.mm-submenu').length;
         if ($beforeItem.length && (!submenu || (submenu && isSubmenuItem))) {
-            // insertAfter ID is valid.
+            /** insertAfter ID is valid. */
             $beforeItem.after($html);
         } else {
             const newI18nKey = normalizeId(Object.keys(items)[0]);
             const newId = getItemId(menu, newI18nKey, submenu);
 
-            // insertAfter ID was either invalid or not found.
+            /** insertAfter ID was either invalid or not found. */
             if (!$beforeItem.length && insertAfter) {
                 log('getMenuHtml() was given an invalid `insertAfter`.');
             }
 
-            // Grab IDs of the visible top-level items (excluding submenus) and append the new item ID.
+            /** Grab IDs of the visible top-level items (excluding submenus) and append the new item ID. */
             const $topItems = submenu
                 ? $(menuId).find('.mm-submenu > .mm-item')
                 : $(menuId).find('.mm-menu > .mm-item');
             const ids = $.map($topItems, el => el.id)
                 .concat([newId]);
-            // Extract the i18n keys and sort alphabetically by translation.
+            /** Extract the i18n keys and sort alphabetically by translation. */
             const i18nKeys = sortByTranslation(
                 ids.map(id => id.replace(new RegExp(`^mm-${menu}-${submenu ? `${submenu}-` : ''}`), ''))
             );
 
-            // Get the index of the preceding item.
+            /** Get the index of the preceding item. */
             const beforeItemIndex = i18nKeys.indexOf(newI18nKey) - 1;
 
             if (beforeItemIndex < 0) {
-                // Alphabetically the new item goes first, so insert it before the existing first item.
+                /** Alphabetically the new item goes first, so insert it before the existing first item. */
                 $(`#${ids[0]}`).before($html);
             } else {
-                // Insert HTML after the would-be previous item in the menu.
+                /** Insert HTML after the would-be previous item in the menu. */
                 $(`#${getItemId(menu, i18nKeys[Math.max(0, i18nKeys.indexOf(newI18nKey) - 1)], submenu)}`)
                     .after($html);
             }
@@ -873,7 +881,7 @@ $(() => {
 
         addListeners();
 
-        // Reset flag to surface warnings about missing translations.
+        /** Reset flag to surface warnings about missing translations. */
         ignoreI18nWarnings = false;
     };
 
@@ -904,7 +912,6 @@ $(() => {
         }, insertAfter, submenu);
     };
 
-    // Entry point.
+    /** Entry point. */
     init();
 });
-// </nowiki>

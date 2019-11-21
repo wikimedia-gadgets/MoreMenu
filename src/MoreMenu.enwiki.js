@@ -98,7 +98,7 @@ $(() => {
             addXfD(api, config);
         }
 
-        // Add link to BLP edits in the 'Analysis' menu.
+        /** Add link to BLP edits in the 'Analysis' menu. */
         MoreMenu.addSubmenuLink(
             'user',
             'analysis',
@@ -106,7 +106,7 @@ $(() => {
             `https://xtools.wmflabs.org/categoryedits/${config.serverName}/${config.encodedUserName}/Living people`
         );
 
-        // Add link to AfD stats.
+        /** Add link to AfD stats. */
         MoreMenu.addSubmenuLink(
             'user',
             'analysis',
@@ -115,7 +115,7 @@ $(() => {
             'analysis'
         );
 
-        // Add link to Peer reviewer tool under 'Tools'.
+        /** Add link to Peer reviewer tool under 'Tools'. */
         MoreMenu.addItem('page', {
             'peer-reviewer': {
                 url: `https://dispenser.info.tm/~dispenser/view/Peer_reviewer#page:${config.encodedPageName}`,

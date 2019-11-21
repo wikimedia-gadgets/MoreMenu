@@ -1,9 +1,9 @@
 /**
 * WARNING: GLOBAL GADGET FILE
+* Compiled from source at https://github.com/MusikAnimal/MoreMenu
 * Please submit code changes as a pull request to the source repository at https://github.com/MusikAnimal/MoreMenu
 * Are there missing translations? See [[meta:MoreMenu#Localization]].
 * Want to add custom links? See [[meta:MoreMenu#Customization]].
-* Only critical, urgent changes should be made to this file directly.
 * 
 * Script:         MoreMenu.js
 * Version:        5.0.0
@@ -12,7 +12,7 @@
 * Documentation:  [[meta:MoreMenu]]
 * GitHub:         https://github.com/MusikAnimal/MoreMenu
 * Skins:          Vector, Timeless, Monobook, Modern
-* Browsers:       All modern browsers and IE 11+
+* Browsers:       See [[mw:Compatibility#Browsers]]
 **/
 "use strict";
 
@@ -34,23 +34,29 @@ $(function () {
     console.info('[MoreMenu] Debugging enabled. To disable, check your personal JS and remove `MoreMenu.debug = true;`.');
   }
 
-  var api = new mw.Api(); // Flag to suppress warnings shown by the msg() function.
-  // This is set by the addItem() method, since user-provided messages may not be stored in `MoreMenu.messages`.
+  var api = new mw.Api();
+  /**
+   * Flag to suppress warnings shown by the msg() function.
+   * This is set by the addItem() method, since user-provided messages may not be stored in `MoreMenu.messages`.
+   */
 
-  var ignoreI18nWarnings = false; // RTL helpers.
+  var ignoreI18nWarnings = false;
+  /** RTL helpers. */
 
   var isRtl = 'rtl' === $('html').prop('dir');
   var leftKey = isRtl ? 'right' : 'left';
-  var rightKey = isRtl ? 'left' : 'right'; // Configuration to be passed to MoreMenu.user.js, MoreMenu.page.js, and handlers of the 'moremenu.ready' hook.
+  var rightKey = isRtl ? 'left' : 'right';
+  /** Configuration to be passed to MoreMenu.user.js, MoreMenu.page.js, and handlers of the 'moremenu.ready' hook. */
 
   var config = new function config() {
-    // Project-level
+    /** Project-level */
     this.serverName = mw.config.get('wgServerName');
     this.siteName = mw.config.get('wgSiteName');
     this.dbName = mw.config.get('wgDBname');
     this.noticeProject = mw.config.get('wgNoticeProject');
     this.contentLanguage = mw.config.get('wgContentLanguage');
-    this.skin = mw.config.get('skin'); // Page-level
+    this.skin = mw.config.get('skin');
+    /** Page-level */
 
     this.nsId = mw.config.get('wgNamespaceNumber');
     this.isProtected = !!mw.config.get('wgRestrictionEdit') && mw.config.get('wgRestrictionEdit').length || !!mw.config.get('wgRestrictionCreate') && mw.config.get('wgRestrictionCreate').length;
@@ -58,7 +64,8 @@ $(function () {
     this.pageName = mw.config.get('wgPageName');
     this.isUserSpace = [2, 3].indexOf(this.nsId) >= 0 || 'Contributions' === mw.config.get('wgCanonicalSpecialPageName') || !!mw.util.getParamValue('user');
     this.escapedPageName = this.pageName.replace(/[!'"()*]/g, escape);
-    this.encodedPageName = encodeURIComponent(this.pageName); // User-level
+    this.encodedPageName = encodeURIComponent(this.pageName);
+    /** User-level */
 
     this.userName = mw.config.get('wgRelevantUserName') || '';
     this.escapedUserName = this.userName.replace(/[?!'()*]/g, escape);
@@ -66,8 +73,11 @@ $(function () {
     this.userGroups = mw.config.get('wgUserGroups');
     this.userGroupsData = {}; // With keys 'permissions' and 'addRemoveGroups' (which groups they can add/remove)
 
-    this.userPermissions = []; // Target user (when viewing user pages, Special:Contribs, etc.).
-    // Contains data retrieved from the API such as their user groups and block status.
+    this.userPermissions = [];
+    /**
+     * Target user (when viewing user pages, Special:Contribs, etc.).
+     * Contains data retrieved from the API such as their user groups and block status.
+     */
 
     this.targetUser = {};
   }();
@@ -177,7 +187,8 @@ $(function () {
 
     if ('en' === lang) {
       return dfd.resolve();
-    } // First check Metawiki.
+    }
+    /** First check Metawiki. */
 
 
     mw.loader.getScript('https://meta.wikimedia.org/w/index.php?action=raw&ctype=text/javascript' + "&title=MediaWiki:Gadget-MoreMenu.messages.".concat(lang, ".js")).then(function () {
@@ -237,7 +248,7 @@ $(function () {
 
   function canAddRemoveGroups(groups, permissions) {
     if (permissions && permissions.indexOf('userrights') >= 0) {
-      // User explicitly has rights to change user groups.
+      /** User explicitly has rights to change user groups. */
       return true;
     }
     /* eslint-disable arrow-body-style */
@@ -248,7 +259,7 @@ $(function () {
     });
 
     if (!valid) {
-      // Clear cache and fall back to false.
+      /** Clear cache and fall back to false. */
       mw.storage.remove('metaUserGroups');
     }
 
@@ -263,19 +274,20 @@ $(function () {
 
 
   function hasConditional(permitted, given) {
-    // Convert to arrays if non-array.
+    /** Convert to arrays if non-array. */
     permitted = $.makeArray(permitted);
     given = $.makeArray(given);
 
     if (!permitted.length) {
-      // No requirements, so validations pass.
+      /** No requirements, so validations pass. */
       return true;
     }
 
     if (!given.length) {
-      // Nothing given to compare to the permitted values, so validations fail.
+      /** Nothing given to compare to the permitted values, so validations fail. */
       return false;
-    } // Loop through to see if a given value is present in the permitted values.
+    }
+    /** Loop through to see if a given value is present in the permitted values. */
 
 
     return given.some(function (item) {
@@ -339,11 +351,12 @@ $(function () {
     }
 
     if (validations) {
-      // Markup for the menu item.
+      /** Markup for the menu item. */
       var titleAttr = msgExists("".concat(itemKey, "-desc")) ? " title=\"".concat(msg("".concat(itemKey, "-desc")), "\"") : '';
       var styleAttr = itemData.style ? " style=\"".concat(itemData.style, "\"") : '';
       return "\n                <li id=\"".concat(getItemId(parentKey, itemKey, submenuKey), "\" class=\"mm-item\">\n                    <a href=\"").concat(itemData.url, "\"").concat(titleAttr).concat(styleAttr, ">\n                        ").concat(msg(itemData.title || itemKey), "\n                    </a>\n                </li>");
-    } // Validations failed, so no markup to return.
+    }
+    /** Validations failed, so no markup to return. */
 
 
     return '';
@@ -441,15 +454,18 @@ $(function () {
 
 
   function sortItems(items) {
-    var itemKeys = Object.keys(items); // The labels for the submenus are not sorted.
+    var itemKeys = Object.keys(items);
+    /** The labels for the submenus are not sorted. */
 
     var submenus = itemKeys.filter(function (itemKey) {
       return !items[itemKey].url;
-    }); // All other menu items (top-level) are sorted alphabetically.
+    });
+    /** All other menu items (top-level) are sorted alphabetically. */
 
     var sortedItemKeys = sortByTranslation(itemKeys.filter(function (itemKey) {
       return !!items[itemKey].url;
-    })); // Loop through again, rearranging based on the 'insertAfter' option.
+    }));
+    /** Loop through again, rearranging based on the 'insertAfter' option. */
 
     var newItemKeys = sortedItemKeys;
     sortedItemKeys.forEach(function (itemKey) {
@@ -457,25 +473,30 @@ $(function () {
       var newIndex;
 
       if (false === target) {
-        // False means put at the top.
+        /** False means put at the top. */
         newIndex = 0;
       } else if (true === target) {
-        // True means put at the bottom.
+        /** True means put at the bottom. */
         newIndex = itemKeys.length;
       } else if (!target) {
-        // Nothing to do.
+        /** Nothing to do. */
         return;
       } else {
-        newIndex = newItemKeys.indexOf(target); // Insert at end if target wasn't found.
-        // The +1 is because it goes after the target.
+        newIndex = newItemKeys.indexOf(target);
+        /**
+         * Insert at end if target wasn't found.
+         * The +1 is because it goes after the target.
+         */
 
         newIndex = -1 === newIndex ? newItemKeys.length : newIndex + 1;
-      } // Remove the original placement, and insert after the target.
+      }
+      /** Remove the original placement, and insert after the target. */
 
 
       newItemKeys.splice(newItemKeys.indexOf(itemKey), 1);
       newItemKeys.splice(newIndex, 0, itemKey);
-    }); // Combine and return, with the submenus coming first.
+    });
+    /** Combine and return, with the submenus coming first. */
 
     return submenus.concat(newItemKeys);
   }
@@ -496,7 +517,7 @@ $(function () {
       var itemHtml = '';
 
       if (!item.url) {
-        // This is a submenu.
+        /** This is a submenu. */
         log('getMenusHtml - (submenu)');
         itemHtml += "\n                    <li style=\"position:relative;\" id=\"".concat(getItemId(parentKey, itemKey), "\" class=\"mm-submenu-wrapper\">\n                    <a style=\"font-weight: bold\">").concat(msg(itemKey), "&hellip;</a>\n                    <ul class=\"menu mm-submenu\" style=\"display: none; position: absolute;\">");
         sortItems(item).forEach(function (submenuItemKey) {
@@ -505,7 +526,7 @@ $(function () {
         itemHtml += '</ul></li>';
 
         if (0 === $(itemHtml).last().find('.mm-submenu li').length) {
-          // No items in the submenu, so don't show the submenu at all.
+          /** No items in the submenu, so don't show the submenu at all. */
           itemHtml = '';
         }
       } else {
@@ -553,12 +574,14 @@ $(function () {
   function drawMenuMonobook(parentKey, html) {
     html = "<li id=\"ca-".concat(parentKey, "\" class=\"mm-").concat(parentKey, " mm-tab\">") + "<a href=\"javascript:void(0)\">".concat(msg(parentKey), "</a>") + "<ul class=\"mm-menu\" style=\"display:none\">".concat(html, "</ul>") + '</li>';
     var $tab = $(html).appendTo('#p-cactions ul:first-child');
-    var $menu = $tab.find('.mm-menu'); // Position the menu.
+    var $menu = $tab.find('.mm-menu');
+    /** Position the menu. */
 
     $menu.css({
       left: isRtl ? $(window).width() - $tab.offset().left : $tab.position().left,
       top: $tab.offset().top
-    }); // Add hover listeners.
+    });
+    /** Add hover listeners. */
 
     $tab.on('mouseenter', function () {
       $menu.show();
@@ -582,12 +605,14 @@ $(function () {
   function drawMenuModern(parentKey, html) {
     html = "<li id=\"ca-".concat(parentKey, "\" class=\"mm-").concat(parentKey, " mm-tab\">") + "<a href=\"javascript:void(0)\">".concat(msg(parentKey), "</a>") + "<ul class=\"mm-menu\" style=\"display:none\">".concat(html, "</ul>") + '</li>';
     var $tab = $(html).appendTo('#p-cactions ul:first-child');
-    var $menu = $tab.find('.mm-menu'); // Position the menu.
+    var $menu = $tab.find('.mm-menu');
+    /** Position the menu. */
 
     $menu.css({
       left: isRtl ? $(window).width() - $tab.offset().left : $tab.position().left,
       top: $tab.offset().top + $tab.outerHeight()
-    }); // Add hover listeners.
+    });
+    /** Add hover listeners. */
 
     $tab.on('mouseenter', function () {
       $menu.show();
@@ -602,7 +627,8 @@ $(function () {
 
   function drawMenus() {
     log('drawMenus');
-    var menus = {}; // Determine which menus to draw.
+    var menus = {};
+    /** Determine which menus to draw. */
 
     if (config.isUserSpace) {
       Object.assign(menus, getModule('user')(config));
@@ -610,7 +636,8 @@ $(function () {
 
     if (config.nsId >= 0) {
       Object.assign(menus, getModule('page')(config));
-    } // Preemptively add the appropriate CSS.
+    }
+    /** Preemptively add the appropriate CSS. */
 
 
     addCSS();
@@ -649,9 +676,10 @@ $(function () {
     $('#ca-protect,#ca-unprotect,#ca-delete,#ca-undelete').remove();
 
     if (config.dbName !== 'commonswiki') {
-      // Do not do this for Commons, where the move file gadget has a listener on the native move link.
+      /** Do not do this for Commons, where the move file gadget has a listener on the native move link. */
       $('#ca-move').remove();
-    } // For Vector. This is done here because it takes place after links are removed from the More menu.
+    }
+    /** For Vector. This is done here because it takes place after links are removed from the More menu. */
 
 
     if (0 === $('#p-cactions li').length) {
@@ -691,7 +719,7 @@ $(function () {
     var cacheDate = mw.storage.get('mmCacheDate') ? parseInt(mw.storage.get('mmCacheDate'), 10) : 0;
     var expired = cacheDate < new Date();
     $.when.apply(this, getPromises(expired)).done(function (targetUserData, userRightsData, metaData) {
-      // Target user data.
+      /** Target user data. */
       if (targetUserData) {
         log('Target user data');
 
@@ -699,7 +727,7 @@ $(function () {
 
         config.targetUser = _targetUserData$0$que[0];
 
-        // Logged out user.
+        /** Logged out user. */
         if ('' === config.targetUser.invalid) {
           config.targetUser.groups = [];
           config.targetUser.rights = [];
@@ -708,14 +736,16 @@ $(function () {
             config.targetUser.blockid = targetUserData[0].query.blocks[0].id;
           }
         }
-      } // Cache user rights of current user, if given.
+      }
+      /** Cache user rights of current user, if given. */
 
 
       if (userRightsData) {
         log('caching user rights');
         mw.storage.set('mmUserRights', JSON.stringify(userRightsData));
         config.userPermissions = userRightsData.slice();
-      } // Cache global user groups of current user, if given.
+      }
+      /** Cache global user groups of current user, if given. */
 
 
       if (metaData) {
@@ -728,7 +758,8 @@ $(function () {
           };
         });
         mw.storage.set('mmMetaUserGroups', JSON.stringify(config.userGroupsData));
-      } // Set expiry if cache is expired.
+      }
+      /** Set expiry if cache is expired. */
 
 
       if (expired) {
@@ -758,7 +789,7 @@ $(function () {
 
   MoreMenu.addItem = function (menu, items, insertAfter, submenu) {
     if (!$(".mm-".concat(menu)).length) {
-      // Menu not shown.
+      /** Menu not shown. */
       return;
     }
 
@@ -769,57 +800,68 @@ $(function () {
     if (!$menu.length) {
       log("'".concat(menu).concat(submenu ? " ".concat(submenu) : '', "' menu with selector ").concat(menuId, " not found."), 'error');
       return;
-    } // Suppress "translation not found" warnings, since the user-provided `items`
-    // may intentionally not have definitions in MoreMenu.messages.
+    }
+    /**
+     * Suppress "translation not found" warnings, since the user-provided `items`
+     * may intentionally not have definitions in MoreMenu.messages.
+     */
 
 
-    ignoreI18nWarnings = true; // Ensure only one item (top-level menu item or submenu + items) is given.
+    ignoreI18nWarnings = true;
+    /** Ensure only one item (top-level menu item or submenu + items) is given. */
 
     if (Object.keys(items).length !== 1) {
       log('MoreMenu.addItem() was given multiple items. Ignoring all but the first.', 'warn');
       items = items[Object.keys(items)[0]];
-    } // `items` could be a submenu. getMenuHtml() will work on single items, or a submenu and its items.
+    }
+    /** `items` could be a submenu. getMenuHtml() will work on single items, or a submenu and its items. */
 
 
-    var $html = $(getMenuHtml(menu, items)); // Check if insertAfter ID is valid.
+    var $html = $(getMenuHtml(menu, items));
+    /** Check if insertAfter ID is valid. */
 
     var beforeItemKey = getItemId(menu, insertAfter || '', submenu);
     var $beforeItem = $("#".concat(beforeItemKey));
     var isSubmenuItem = $beforeItem.parents('.mm-submenu').length;
 
     if ($beforeItem.length && (!submenu || submenu && isSubmenuItem)) {
-      // insertAfter ID is valid.
+      /** insertAfter ID is valid. */
       $beforeItem.after($html);
     } else {
       var newI18nKey = normalizeId(Object.keys(items)[0]);
-      var newId = getItemId(menu, newI18nKey, submenu); // insertAfter ID was either invalid or not found.
+      var newId = getItemId(menu, newI18nKey, submenu);
+      /** insertAfter ID was either invalid or not found. */
 
       if (!$beforeItem.length && insertAfter) {
         log('getMenuHtml() was given an invalid `insertAfter`.');
-      } // Grab IDs of the visible top-level items (excluding submenus) and append the new item ID.
+      }
+      /** Grab IDs of the visible top-level items (excluding submenus) and append the new item ID. */
 
 
       var $topItems = submenu ? $(menuId).find('.mm-submenu > .mm-item') : $(menuId).find('.mm-menu > .mm-item');
       var ids = $.map($topItems, function (el) {
         return el.id;
-      }).concat([newId]); // Extract the i18n keys and sort alphabetically by translation.
+      }).concat([newId]);
+      /** Extract the i18n keys and sort alphabetically by translation. */
 
       var i18nKeys = sortByTranslation(ids.map(function (id) {
         return id.replace(new RegExp("^mm-".concat(menu, "-").concat(submenu ? "".concat(submenu, "-") : '')), '');
-      })); // Get the index of the preceding item.
+      }));
+      /** Get the index of the preceding item. */
 
       var beforeItemIndex = i18nKeys.indexOf(newI18nKey) - 1;
 
       if (beforeItemIndex < 0) {
-        // Alphabetically the new item goes first, so insert it before the existing first item.
+        /** Alphabetically the new item goes first, so insert it before the existing first item. */
         $("#".concat(ids[0])).before($html);
       } else {
-        // Insert HTML after the would-be previous item in the menu.
+        /** Insert HTML after the would-be previous item in the menu. */
         $("#".concat(getItemId(menu, i18nKeys[Math.max(0, i18nKeys.indexOf(newI18nKey) - 1)], submenu))).after($html);
       }
     }
 
-    addListeners(); // Reset flag to surface warnings about missing translations.
+    addListeners();
+    /** Reset flag to surface warnings about missing translations. */
 
     ignoreI18nWarnings = false;
   };
@@ -851,8 +893,9 @@ $(function () {
     MoreMenu.addItem(menu, _defineProperty({}, name, {
       url: url
     }), insertAfter, submenu);
-  }; // Entry point.
+  };
+  /** Entry point. */
 
 
   init();
-}); // </nowiki>
+});
