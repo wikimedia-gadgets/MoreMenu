@@ -711,6 +711,7 @@ $(() => {
         }
 
         /** For Vector. This is done here because it takes place after links are removed from the More menu. */
+        // FIXME: use MutationObserver.
         if (0 === $('#p-cactions li').length) {
             $('#p-cactions').remove();
         }

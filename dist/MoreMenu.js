@@ -4,7 +4,7 @@
 * Please submit code changes as a pull request to the source repository at https://github.com/MusikAnimal/MoreMenu
 * Are there missing translations? See [[meta:MoreMenu#Localization]].
 * Want to add custom links? See [[meta:MoreMenu#Customization]].
-* 
+*
 * Script:         MoreMenu.js
 * Version:        5.0.0
 * Author:         MusikAnimal
@@ -680,8 +680,7 @@ $(function () {
       $('#ca-move').remove();
     }
     /** For Vector. This is done here because it takes place after links are removed from the More menu. */
-
-
+    // FIXME: use MutationObserver.
     if (0 === $('#p-cactions li').length) {
       $('#p-cactions').remove();
     }
