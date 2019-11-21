@@ -128,8 +128,7 @@ $(function () {
 
     MoreMenu.addSubmenuLink('user', 'analysis', 'BLP Edits', "https://xtools.wmflabs.org/categoryedits/".concat(config.serverName, "/").concat(config.encodedUserName, "/Living people")); // Add link to AfD stats.
 
-    MoreMenu.addSubmenuLink('user', 'analysis', 'AfD stats', "https://tools.wmflabs.org/afdstats/afdstats.py?name=".concat(config.encodedUserName), 'analysis'); // FIXME: !!!!!!!!!!
-    // Add link to Peer reviewer tool under 'Tools'.
+    MoreMenu.addSubmenuLink('user', 'analysis', 'AfD stats', "https://tools.wmflabs.org/afdstats/afdstats.py?name=".concat(config.encodedUserName), 'analysis'); // Add link to Peer reviewer tool under 'Tools'.
 
     MoreMenu.addItem('page', {
       'peer-reviewer': {
@@ -138,6 +137,6 @@ $(function () {
         databaseRestrict: ['enwiki'],
         namespaceRestrict: [0, 2, 118]
       }
-    }, null, 'analysis');
+    }, null, 'tools');
   });
 });

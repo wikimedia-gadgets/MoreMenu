@@ -361,7 +361,7 @@ $(function () {
         return mw.util.addCSS("\n                .mm-submenu {\n                    border-top-width: 1px !important;\n                    top: -1px !important;\n                }\n            ");
 
       case 'timeless':
-        return mw.util.addCSS("\n                .mm-submenu-wrapper {\n                    cursor: default;\n                }\n                .mm-submenu {\n                    background: #f8f9fa;\n                    border: 1px solid rgb(200, 204, 209);\n                    box-shadow: 0 2px 3px 1px rgba(0, 0, 0, 0.05);\n                    padding: 1.2em 1.5em !important;\n                    top: -1.2em;\n                    white-space: nowrap;\n                    z-index: 95;\n                }\n                .mm-submenu-triangle {\n                    border-bottom: 8px solid transparent;\n                    border-top: 8px solid transparent;\n                    display: none;\n                    height: 0;\n                    position: absolute;\n                    top: 4;\n                    width: 0;\n                }\n            ");
+        return mw.util.addCSS("\n                .mm-submenu-wrapper {\n                    cursor: default;\n                }\n                .mm-submenu {\n                    background: #f8f9fa;\n                    border: 1px solid rgb(200, 204, 209);\n                    box-shadow: 0 2px 3px 1px rgba(0, 0, 0, 0.05);\n                    padding: 1.2em 1.5em !important;\n                    top: -1.2em;\n                    white-space: nowrap;\n                    z-index: 95;\n                }\n                .mm-submenu::after {\n                    border-bottom: 8px solid transparent;\n                    border-top: 8px solid transparent;\n                    border-".concat(leftKey, ": 8px solid rgb(200, 204, 209);\n                    content: '';\n                    height: 0;\n                    padding-").concat(rightKey, ": 4px;\n                    position: absolute;\n                    top: 20px;\n                    width: 0;\n                    ").concat(rightKey, ": -13px;\n                }\n            "));
 
       case 'monobook':
         return mw.util.addCSS("\n                .mm-menu {\n                    background: #fff;\n                    border-bottom: 1px solid #aaa;\n                    margin: 0;\n                    position: absolute;\n                    z-index: 99;\n                }\n                .mm-menu ~ a {\n                    z-index: 99 !important;\n                }\n                .mm-submenu {\n                    background: #fff;\n                    border-bottom: 1px solid #aaa;\n                    border-top: 1px solid #aaa;\n                    font-size: inherit;\n                    margin: 0;\n                    top: -1px;\n                    z-index: 95;\n                }\n                .mm-item, .mm-submenu-wrapper {\n                    background: transparent !important;\n                    border-top: 0 !important;\n                    display: block !important;\n                    margin: 0 !important;\n                    padding: 0 !important;\n                }\n                .mm-item a, .mm-submenu-wrapper a {\n                    background: transparent !important;\n                    text-transform: none !important;\n                }\n                .mm-menu a:hover {\n                    text-decoration: underline !important;\n                }\n            ");
@@ -404,9 +404,8 @@ $(function () {
     $('.mm-submenu-wrapper').each(function hoverMenus() {
       $(this).off('mouseenter').on('mouseenter', function hoverMenusMouseenter() {
         $(this).find('.mm-submenu').css(getSubmenuCss($(this))).show();
-        $(this).find('.mm-submenu-triangle').show();
       }).off('mouseleave').on('mouseleave', function hoverMenusMouseleave() {
-        $(this).find('.mm-submenu, .mm-submenu-triangle').hide();
+        $(this).find('.mm-submenu').hide();
       });
     });
   }
@@ -468,13 +467,14 @@ $(function () {
         return;
       } else {
         newIndex = newItemKeys.indexOf(target); // Insert at end if target wasn't found.
+        // The +1 is because it goes after the target.
 
-        newIndex = -1 === newIndex ? newItemKeys.length : newIndex;
+        newIndex = -1 === newIndex ? newItemKeys.length : newIndex + 1;
       } // Remove the original placement, and insert after the target.
 
 
       newItemKeys.splice(newItemKeys.indexOf(itemKey), 1);
-      newItemKeys.splice(newIndex + 1, 0, itemKey);
+      newItemKeys.splice(newIndex, 0, itemKey);
     }); // Combine and return, with the submenus coming first.
 
     return submenus.concat(newItemKeys);
@@ -535,19 +535,13 @@ $(function () {
 
 
   function drawMenuTimeless(parentKey, html) {
-    var _$$css;
-
     html = "<div role=\"navigation\" class=\"mw-portlet mm-".concat(parentKey, " mm-tab\" id=\"p-").concat(parentKey, "\" aria-labelledby=\"p-").concat(parentKey, "-label\">") + "<h3 id=\"p-".concat(parentKey, "-label\">").concat(msg(parentKey), "</h3>") + "<div class=\"mw-portlet-body\"><ul class=\"mm-menu\">".concat(html, "</ul></div></div>");
 
     if ($('#p-cactions').length) {
       $(html).insertAfter($('#p-cactions'));
     } else {
-      $('.sidebar-inner').append(html);
-    } // Add arrow next to submenus.
-
-
-    var $triangle = $('<span class="mm-submenu-triangle">').css((_$$css = {}, _defineProperty(_$$css, "border-".concat(leftKey), '8px solid rgb(200, 204, 209)'), _defineProperty(_$$css, leftKey, -11), _defineProperty(_$$css, "padding-".concat(rightKey), 4), _$$css));
-    $('.mm-submenu-wrapper').append($triangle);
+      $('#page-tools .sidebar-inner').append(html);
+    }
   }
   /**
    * Draw menu for the Monobook skin.
