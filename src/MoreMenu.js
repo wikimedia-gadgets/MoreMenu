@@ -1,3 +1,4 @@
+/** Script starts here, waiting for the DOM to be ready before calling init(). */
 $(() => {
     window.MoreMenu = window.MoreMenu || {};
 
@@ -39,7 +40,8 @@ $(() => {
         this.pageName = mw.config.get('wgPageName');
         this.isUserSpace = [2, 3].indexOf(this.nsId) >= 0
             || 'Contributions' === mw.config.get('wgCanonicalSpecialPageName')
-            || !!mw.util.getParamValue('user');
+            || !!mw.util.getParamValue('user')
+            || !!mw.config.get('wgRelevantUserName');
         this.escapedPageName = this.pageName.replace(/[!'"()*]/g, escape);
         this.encodedPageName = encodeURIComponent(this.pageName);
 
@@ -315,6 +317,13 @@ $(() => {
                 .mm-submenu {
                     border-top-width: 1px !important;
                     top: -1px !important;
+                }
+                #p-views {
+                    padding-left: inherit !important;
+                    padding-right: inherit !important;
+                }
+                #p-views::after {
+                    display: none !important;
                 }
             `);
         case 'timeless':
@@ -705,15 +714,9 @@ $(() => {
      */
     function removeNavLinks() {
         $('#ca-protect,#ca-unprotect,#ca-delete,#ca-undelete').remove();
-        if (config.dbName !== 'commonswiki') {
+        if ('commonswiki' !== config.dbName) {
             /** Do not do this for Commons, where the move file gadget has a listener on the native move link. */
             $('#ca-move').remove();
-        }
-
-        /** For Vector. This is done here because it takes place after links are removed from the More menu. */
-        // FIXME: use MutationObserver.
-        if (0 === $('#p-cactions li').length) {
-            $('#p-cactions').remove();
         }
     }
 

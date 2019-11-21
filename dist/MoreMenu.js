@@ -4,7 +4,7 @@
 * Please submit code changes as a pull request to the source repository at https://github.com/MusikAnimal/MoreMenu
 * Are there missing translations? See [[meta:MoreMenu#Localization]].
 * Want to add custom links? See [[meta:MoreMenu#Customization]].
-*
+* 
 * Script:         MoreMenu.js
 * Version:        5.0.0
 * Author:         MusikAnimal
@@ -26,6 +26,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+/** Script starts here, waiting for the DOM to be ready before calling init(). */
 $(function () {
   window.MoreMenu = window.MoreMenu || {};
 
@@ -62,7 +63,7 @@ $(function () {
     this.isProtected = !!mw.config.get('wgRestrictionEdit') && mw.config.get('wgRestrictionEdit').length || !!mw.config.get('wgRestrictionCreate') && mw.config.get('wgRestrictionCreate').length;
     this.pageId = mw.config.get('wgArticleId');
     this.pageName = mw.config.get('wgPageName');
-    this.isUserSpace = [2, 3].indexOf(this.nsId) >= 0 || 'Contributions' === mw.config.get('wgCanonicalSpecialPageName') || !!mw.util.getParamValue('user');
+    this.isUserSpace = [2, 3].indexOf(this.nsId) >= 0 || 'Contributions' === mw.config.get('wgCanonicalSpecialPageName') || !!mw.util.getParamValue('user') || !!mw.config.get('wgRelevantUserName');
     this.escapedPageName = this.pageName.replace(/[!'"()*]/g, escape);
     this.encodedPageName = encodeURIComponent(this.pageName);
     /** User-level */
@@ -371,7 +372,7 @@ $(function () {
   function addCSS() {
     switch (config.skin) {
       case 'vector':
-        return mw.util.addCSS("\n                .mm-submenu {\n                    border-top-width: 1px !important;\n                    top: -1px !important;\n                }\n            ");
+        return mw.util.addCSS("\n                .mm-submenu {\n                    border-top-width: 1px !important;\n                    top: -1px !important;\n                }\n                #p-views {\n                    padding-left: inherit !important;\n                    padding-right: inherit !important;\n                }\n                #p-views::after {\n                    display: none !important;\n                }\n            ");
 
       case 'timeless':
         return mw.util.addCSS("\n                .mm-submenu-wrapper {\n                    cursor: default;\n                }\n                .mm-submenu {\n                    background: #f8f9fa;\n                    border: 1px solid rgb(200, 204, 209);\n                    box-shadow: 0 2px 3px 1px rgba(0, 0, 0, 0.05);\n                    padding: 1.2em 1.5em !important;\n                    top: -1.2em;\n                    white-space: nowrap;\n                    z-index: 95;\n                }\n                .mm-submenu::after {\n                    border-bottom: 8px solid transparent;\n                    border-top: 8px solid transparent;\n                    border-".concat(leftKey, ": 8px solid rgb(200, 204, 209);\n                    content: '';\n                    height: 0;\n                    padding-").concat(rightKey, ": 4px;\n                    position: absolute;\n                    top: 20px;\n                    width: 0;\n                    ").concat(rightKey, ": -13px;\n                }\n            "));
@@ -675,14 +676,9 @@ $(function () {
   function removeNavLinks() {
     $('#ca-protect,#ca-unprotect,#ca-delete,#ca-undelete').remove();
 
-    if (config.dbName !== 'commonswiki') {
+    if ('commonswiki' !== config.dbName) {
       /** Do not do this for Commons, where the move file gadget has a listener on the native move link. */
       $('#ca-move').remove();
-    }
-    /** For Vector. This is done here because it takes place after links are removed from the More menu. */
-    // FIXME: use MutationObserver.
-    if (0 === $('#p-cactions li').length) {
-      $('#p-cactions').remove();
     }
   }
   /**

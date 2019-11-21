@@ -44,12 +44,35 @@ window.MoreMenu.page = config => ({
                 pageExists: true,
                 insertAfter: 'analysis-xtools',
             },
+            'authorship': {
+                url: `https://xtools.wmflabs.org/authorship/${config.serverName}/${config.escapedPageName}`,
+                pageExists: true,
+            },
             'basic-statistics': {
                 url: mw.util.getUrl(config.pageName, { action: 'info' }),
                 pageExists: true,
             },
             'copyvio-detector': {
                 url: `https://tools.wmflabs.org/copyvios?lang=${config.serverName.split('.')[0]}&project=${config.serverName.split('.')[1]}&title=${config.encodedPageName}&oldid=&action=search&use_engine=1&use_links=1`,
+                pageExists: true,
+            },
+            'traffic-report': {
+                url: `https://tools.wmflabs.org/pageviews?project=${config.serverName}&pages=${config.encodedPageName}`,
+                pageExists: true,
+            },
+            'transclusion-count': {
+                url: `https://tools.wmflabs.org/templatecount/index.php?lang=${config.contentLanguage}&name=${encodeURIComponent(mw.config.get('wgTitle'))}&namespace=${config.nsId}`,
+                namespaceRestrict: [2, 4, 5, 10, 11, 12, 13, 100, 101, 828],
+                noticeProjectRestrict: ['wikipedia'],
+            },
+            'transclusions': {
+                url: `https://${config.serverName}/w/index.php?title=Special:WhatLinksHere/${config.encodedPageName}&hidelinks=1&hideredirs=1`,
+                namespaceRestrict: [2, 4, 5, 10, 11, 12, 13, 100, 101],
+            },
+        },
+        'search': {
+            'latest-diff': {
+                url: mw.util.getUrl(config.pageName, { diff: 'cur', oldid: 'prev' }),
                 pageExists: true,
             },
             'search-by-contributor': {
@@ -65,18 +88,11 @@ window.MoreMenu.page = config => ({
                 pageExists: true,
                 databaseRestrict: ['dewiki', 'enwiki', 'eswiki', 'euwiki', 'trwiki'],
             },
-            'traffic-report': {
-                url: `https://tools.wmflabs.org/pageviews?project=${config.serverName}&pages=${config.encodedPageName}`,
-                pageExists: true,
-            },
-            'transclusion-count': {
-                url: `https://tools.wmflabs.org/templatecount/index.php?lang=${config.contentLanguage}&name=${encodeURIComponent(mw.config.get('wgTitle'))}&namespace=${config.nsId}`,
-                namespaceRestrict: [2, 4, 5, 10, 11, 12, 13, 100, 101, 828],
-                noticeProjectRestrict: ['wikipedia'],
-            },
-            'transclusions': {
-                url: `https://${config.serverName}/w/index.php?title=Special:WhatLinksHere/${config.encodedPageName}&hidelinks=1&hideredirs=1`,
-                namespaceRestrict: [2, 4, 5, 10, 11, 12, 13, 100, 101],
+            'search-subpages': {
+                url: mw.util.getUrl('Special:Search', {
+                    sort: 'relevance',
+                    prefix: config.pageName,
+                }),
             },
         },
         /** Tools used to semi-automate editing. */
@@ -127,10 +143,6 @@ window.MoreMenu.page = config => ({
             pageExists: true,
             /** Don't show the 'Edit intro' link if the edittop gadget is enabled or there is only one section. */
             visible: '1' !== mw.user.options.get('gadget-edittop') && $('.mw-editsection').length,
-        },
-        'latest-diff': {
-            url: mw.util.getUrl(config.pageName, { diff: 'cur', oldid: 'prev' }),
-            pageExists: true,
         },
         'merge-page': {
             url: mw.util.getUrl('Special:MergeHistory', { target: config.pageName }),
