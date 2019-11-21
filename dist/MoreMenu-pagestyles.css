@@ -1,0 +1,16 @@
+/*** VECTOR ***/
+
+/* User menu */
+.client-js .skin-vector.ns-2 #p-search,
+.client-js .skin-vector.ns-3 #p-search {
+    padding-left: 3.68em;
+}
+
+/* Page menu */
+.client-js .skin-vector:not(.ns-special) #p-cactions::after,
+.client-js > .skin-vector.mw-special-Contributions #p-cactions::after,
+.client-js > .skin-vector.mw-special-DeletedContributions #p-cactions::after {
+    content: '';
+    display: inline-block;
+    width: 3.85em;
+}
