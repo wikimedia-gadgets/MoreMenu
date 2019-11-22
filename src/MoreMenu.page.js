@@ -161,7 +161,7 @@ window.MoreMenu.page = config => ({
             visible: !mw.config.get('wgIsMainPage') && !!$('#ca-move').length,
         },
         /** Is the page already protected? Then use 'Change protection' as the name, otherwise 'Protect page'. */
-        [config.isProtected ? 'change-protection' : 'protect-page']: {
+        [config.pageProtected ? 'change-protection' : 'protect-page']: {
             url: mw.util.getUrl(config.page.name, { action: 'protect' }),
             currentUserRights: ['protect', 'stablesettings'],
         },

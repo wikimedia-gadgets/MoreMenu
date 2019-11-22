@@ -243,15 +243,15 @@ $(function () {
     return promises;
   }
   /**
-   * Do the given groups and/or permissions indicate the user is allowed to change and other user's groups?
+   * Do the given groups and/or rights indicate the user is allowed to change and other user's groups?
    * @param {Array} groups
-   * @param {Array} permissions
+   * @param {Array} rights
    * @returns {Boolean}
    */
 
 
-  function canAddRemoveGroups(groups, permissions) {
-    if (permissions && permissions.indexOf('userrights') >= 0) {
+  function canAddRemoveGroups(groups, rights) {
+    if (rights && rights.indexOf('userrights') >= 0) {
       /** User explicitly has rights to change user groups. */
       return true;
     }
@@ -326,37 +326,37 @@ $(function () {
     /* deleted            */
     && (itemData.pageDeleted ? 0 === config.pageId && false === mw.config.get('wgIsArticle') : true)
     /* protected          */
-    && (itemData.isProtected ? config.page.isProtected : true)
+    && (itemData.pageProtected ? config.page.isProtected : true)
     /* notice project     */
     && hasConditional(itemData.noticeProjectRestrict, config.project.noticeProject)
     /* database           */
     && hasConditional(itemData.databaseRestrict, config.project.dbName) && databaseExclusion
     /* user's user groups */
-    && hasConditional(itemData.targetUserGroups, config.currentUser.groups)
-    /* user's permissions */
+    && hasConditional(itemData.currentUserGroups, config.currentUser.groups)
+    /* user's rights      */
     && hasConditional(itemData.currentUserRights, config.currentUser.rights)
     /* can change groups  */
-    && (itemData.userAddRemoveGroups ? canAddRemoveGroups(config.currentUser.groups, config.currentUser.rights) : true)
+    && (itemData.currentUserChangeGroups ? canAddRemoveGroups(config.currentUser.groups, config.currentUser.rights) : true)
     /* visibility         */
     && (undefined !== itemData.visible ? !!itemData.visible : true);
 
     if (config.targetUser.name) {
       validations &=
       /* their user groups  */
-      hasConditional(itemData.groups, config.targetUser.groups)
-      /* their permissions  */
-      && hasConditional(itemData.permissions, config.targetUser.rights)
+      hasConditional(itemData.currentUserGroups, config.targetUser.groups)
+      /* their rights       */
+      && hasConditional(itemData.currentUserRights, config.targetUser.rights)
       /* they're blocked    */
-      && (itemData.blocked !== undefined ? !!config.targetUser.blockid === itemData.blocked : true)
+      && (itemData.targetUserBlocked !== undefined ? !!config.targetUser.blockid === itemData.blocked : true)
       /* can change groups  */
-      && (itemData.addRemoveGroups ? canAddRemoveGroups(config.targetUser.groups, config.targetUser.rights) : true)
+      && (itemData.targetUserChangeGroups ? canAddRemoveGroups(config.targetUser.groups, config.targetUser.rights) : true)
       /* IP                 */
-      && (itemData.ip ? mw.util.isIPAddress(config.targetUser.name) : true);
+      && (itemData.targetUserIp ? mw.util.isIPAddress(config.targetUser.name) : true);
     }
 
     if (validations) {
       /** Markup for the menu item. */
-      var titleAttr = msgExists("".concat(itemKey, "-desc")) ? " title=\"".concat(msg("".concat(itemKey, "-desc")), "\"") : '';
+      var titleAttr = msgExists("".concat(itemKey, "-desc")) || itemData.description ? " title=\"".concat(itemData.description ? itemData.description : msg("".concat(itemKey, "-desc")), "\"") : '';
       var styleAttr = itemData.style ? " style=\"".concat(itemData.style, "\"") : '';
       return "\n                <li id=\"".concat(getItemId(parentKey, itemKey, submenuKey), "\" class=\"mm-item\">\n                    <a href=\"").concat(itemData.url, "\"").concat(titleAttr).concat(styleAttr, ">\n                        ").concat(msg(itemData.title || itemKey), "\n                    </a>\n                </li>");
     }
@@ -782,7 +782,7 @@ $(function () {
    */
 
 
-  MoreMenu.addItem = function (menu, items, insertAfter, submenu) {
+  MoreMenu.addItemCore = function (menu, items, insertAfter, submenu) {
     if (!$(".mm-".concat(menu)).length) {
       /** Menu not shown. */
       return;
@@ -859,6 +859,43 @@ $(function () {
     /** Reset flag to surface warnings about missing translations. */
 
     ignoreI18nWarnings = false;
+  };
+  /**
+   * Add a single item to a menu.
+   * @param {String} menu Either 'page' or 'user'.
+   * @param {String} name Title for the link. Can either be a normal string or an i18n key.
+   * @param {Object} data Item data.
+   * @param {String} [insertAfter] Insert the link after the link with this ID.
+   */
+
+
+  MoreMenu.addItem = function (menu, name, data, insertAfter) {
+    MoreMenu.addItemCore(menu, _defineProperty({}, name, data), insertAfter);
+  };
+  /**
+   * Add a single item to a submenu.
+   * @param {String} menu Either 'page' or 'user'.
+   * @param {String} submenu ID for the submenu (such as 'user-logs' or 'analysis').
+   * @param {String} name Title for the link. Can either be a normal string or an i18n key.
+   * @param {Object} data Item data.
+   * @param {String} [insertAfter] Insert the link after the link with this ID.
+   */
+
+
+  MoreMenu.addSubmenuItem = function (menu, submenu, name, data, insertAfter) {
+    MoreMenu.addItemCore(menu, _defineProperty({}, name, data), insertAfter, submenu);
+  };
+  /**
+   * Add a new submenu.
+   * @param {String} menu Either 'page' or 'user'.
+   * @param {String} name Name for the submenu. Can either be a normal string or an i18n key.
+   * @param {Object} items Keys are the names for each link, and values are the item data.
+   * @param {String} [insertAfter] Insert the submenu after the link with this ID.
+   */
+
+
+  MoreMenu.addSubmenu = function (menu, name, items, insertAfter) {
+    MoreMenu.addItemCore(_defineProperty({}, name, items), insertAfter);
   };
   /**
    * Add a link to the given menu.

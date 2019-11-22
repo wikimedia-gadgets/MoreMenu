@@ -71,7 +71,6 @@ Object.assign(window.MoreMenu.messages, {
   "non-automated-edits": "Non-automated edits",
   "page": "Page",
   "page-logs": "Page logs",
-  "peer-reviewer": "Peer reviewer",
   "pending-changes-log": "Pending changes log",
   "protection-log": "Protection log",
   "protect-page": "Protect page",

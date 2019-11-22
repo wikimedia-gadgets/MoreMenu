@@ -80,17 +80,17 @@ window.MoreMenu.user = config => ({
             'block-user': {
                 url: mw.util.getUrl(`Special:Block/${config.targetUser.name}`),
                 currentUserRights: 'block',
-                blocked: false,
+                targetBlocked: false,
             },
             'block-globally': {
                 url: `https://meta.wikimedia.org/wiki/Special:GlobalBlock/${config.targetUser.name}`,
                 currentUserRights: 'globalblock',
-                ip: true,
+                targetIp: true,
             },
             'change-block': {
                 url: mw.util.getUrl(`Special:Block/${config.targetUser.name}`),
                 currentUserRights: 'block',
-                blocked: true,
+                targetBlocked: true,
             },
             'central-auth': {
                 url: `https://meta.wikimedia.org/wiki/Special:CentralAuth/${config.targetUser.name}`,
@@ -98,12 +98,12 @@ window.MoreMenu.user = config => ({
             },
             'unblock-user': {
                 url: mw.util.getUrl(`Special:Unblock/${config.targetUser.name}`),
-                blocked: true,
+                targetBlocked: true,
                 currentUserRights: 'block',
             },
             'view-block': {
                 url: mw.util.getUrl('Special:BlockList', { wpTarget: config.targetUser.name }),
-                blocked: true,
+                targetBlocked: true,
                 style: 'color:#EE1111',
             },
             'view-block-log': {
@@ -144,27 +144,27 @@ window.MoreMenu.user = config => ({
         'ip-lookup': {
             'whois': {
                 url: `https://tools.wmflabs.org/whois/gateway.py?lookup=true&ip=${config.targetUser.escapedName}`,
-                ip: true,
+                targetIp: true,
             },
             'proxy-check': {
                 url: `https://tools.wmflabs.org/ipcheck/?ip=${config.targetUser.escapedName}`,
-                ip: true,
+                targetIp: true,
                 currentUserRights: 'block',
             },
             'rdns': {
                 url: `https://www.robtex.com/ip/${config.targetUser.escapedName}.html`,
-                ip: true,
+                targetIp: true,
             },
             'geolocate': {
                 url: `https://whatismyipaddress.com/ip/${config.targetUser.escapedName}`,
-                ip: true,
+                targetIp: true,
             },
         },
         /** Actions the current user can take on the target user. */
         'change-rights': {
             url: mw.util.getUrl('Special:UserRights', { user: `User:${config.targetUser.name}` }),
             targetUserGroups: ['user'],
-            userAddRemoveGroups: true,
+            currentUserChangeGroups: true,
         },
         'checkuser': {
             url: mw.util.getUrl(`Special:CheckUser/${config.targetUser.name}`),

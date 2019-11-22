@@ -216,7 +216,7 @@ window.MoreMenu.page = function (config) {
          */
         visible: !mw.config.get('wgIsMainPage') && !!$('#ca-move').length
       }
-    }, _defineProperty(_page, config.isProtected ? 'change-protection' : 'protect-page', {
+    }, _defineProperty(_page, config.pageProtected ? 'change-protection' : 'protect-page', {
       url: mw.util.getUrl(config.page.name, {
         action: 'protect'
       }),

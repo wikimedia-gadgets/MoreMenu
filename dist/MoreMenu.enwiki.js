@@ -68,9 +68,7 @@ $(function () {
       });
 
       if (Object.keys(links).length) {
-        MoreMenu.addItem('user', {
-          RfXs: links
-        }, 'analysis');
+        MoreMenu.addSubmenu('user', 'RfXs', links, 'analysis');
       }
     });
   }
@@ -96,18 +94,10 @@ $(function () {
 
         switch (page.title.split('/')[0]) {
           case 'Wikipedia:Miscellany for deletion':
-            return MoreMenu.addItem('page', {
-              MfDs: {
-                url: link
-              }
-            });
+            return MoreMenu.addLink('page', 'MfDs', link);
 
           case 'Wikipedia:Articles for deletion':
-            return MoreMenu.addItem('page', {
-              AfDs: {
-                url: link
-              }
-            });
+            return MoreMenu.addLink('page', 'AfDs', link);
 
           default:
             return false;
@@ -135,13 +125,13 @@ $(function () {
     MoreMenu.addSubmenuLink('user', 'analysis', 'AfD stats', "https://tools.wmflabs.org/afdstats/afdstats.py?name=".concat(config.targetUser.encodedName), 'analysis');
     /** Add link to Peer reviewer tool under 'Tools'. */
 
-    MoreMenu.addItem('page', {
-      'peer-reviewer': {
+    MoreMenu.addItem('page', 'Peer reviewer', {
+      'Peer reviewer': {
         url: "https://dispenser.info.tm/~dispenser/view/Peer_reviewer#page:".concat(config.page.encodedName),
         pageExists: true,
         databaseRestrict: ['enwiki'],
         namespaceRestrict: [0, 2, 118]
       }
-    }, null, 'tools');
+    }, 'tools');
   });
 });

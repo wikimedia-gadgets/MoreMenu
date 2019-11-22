@@ -154,17 +154,17 @@ window.MoreMenu.user = function (config) {
         'block-user': {
           url: mw.util.getUrl("Special:Block/".concat(config.targetUser.name)),
           currentUserRights: 'block',
-          blocked: false
+          targetBlocked: false
         },
         'block-globally': {
           url: "https://meta.wikimedia.org/wiki/Special:GlobalBlock/".concat(config.targetUser.name),
           currentUserRights: 'globalblock',
-          ip: true
+          targetIp: true
         },
         'change-block': {
           url: mw.util.getUrl("Special:Block/".concat(config.targetUser.name)),
           currentUserRights: 'block',
-          blocked: true
+          targetBlocked: true
         },
         'central-auth': {
           url: "https://meta.wikimedia.org/wiki/Special:CentralAuth/".concat(config.targetUser.name),
@@ -172,14 +172,14 @@ window.MoreMenu.user = function (config) {
         },
         'unblock-user': {
           url: mw.util.getUrl("Special:Unblock/".concat(config.targetUser.name)),
-          blocked: true,
+          targetBlocked: true,
           currentUserRights: 'block'
         },
         'view-block': {
           url: mw.util.getUrl('Special:BlockList', {
             wpTarget: config.targetUser.name
           }),
-          blocked: true,
+          targetBlocked: true,
           style: 'color:#EE1111'
         },
         'view-block-log': {
@@ -223,20 +223,20 @@ window.MoreMenu.user = function (config) {
       'ip-lookup': {
         'whois': {
           url: "https://tools.wmflabs.org/whois/gateway.py?lookup=true&ip=".concat(config.targetUser.escapedName),
-          ip: true
+          targetIp: true
         },
         'proxy-check': {
           url: "https://tools.wmflabs.org/ipcheck/?ip=".concat(config.targetUser.escapedName),
-          ip: true,
+          targetIp: true,
           currentUserRights: 'block'
         },
         'rdns': {
           url: "https://www.robtex.com/ip/".concat(config.targetUser.escapedName, ".html"),
-          ip: true
+          targetIp: true
         },
         'geolocate': {
           url: "https://whatismyipaddress.com/ip/".concat(config.targetUser.escapedName),
-          ip: true
+          targetIp: true
         }
       },
 
@@ -246,7 +246,7 @@ window.MoreMenu.user = function (config) {
           user: "User:".concat(config.targetUser.name)
         }),
         targetUserGroups: ['user'],
-        userAddRemoveGroups: true
+        currentUserChangeGroups: true
       },
       'checkuser': {
         url: mw.util.getUrl("Special:CheckUser/".concat(config.targetUser.name)),
