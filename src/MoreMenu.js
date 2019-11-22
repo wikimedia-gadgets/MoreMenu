@@ -382,6 +382,21 @@ $(() => {
                     width: 0;
                     ${rightKey}: -13px;
                 }
+                @media screen and (max-width: 1339px) and (min-width: 1100px) {
+                    .mm-submenu::after {
+                        border-${leftKey}: none;
+                        border-${rightKey}: 8px solid rgb(200, 204, 209);
+                        padding-${leftKey}: 4px;
+                        padding-${rightKey}: inherit;
+                        ${rightKey}: inherit;
+                        ${leftKey}: -35px;
+                    }
+                }
+                @media screen and (max-width: 850px) {
+                    .mm-submenu {
+                        top: -2.2em;
+                    }
+                }
             `);
         case 'monobook':
             return mw.util.addCSS(`
@@ -471,7 +486,10 @@ $(() => {
         case 'vector':
             return { [leftKey]: $element.outerWidth() };
         case 'timeless':
-            return { [rightKey]: $element.outerWidth() + 11 };
+            return {
+                [$(window).width() <= 1339 && $(window).width() >= 1100 ? leftKey : rightKey]:
+                    $element.outerWidth() + 11,
+            };
         case 'monobook':
             return { [leftKey]: $element.outerWidth() - 2 };
         default:

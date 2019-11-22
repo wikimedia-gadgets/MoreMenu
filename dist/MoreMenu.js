@@ -385,7 +385,7 @@ $(function () {
         return mw.util.addCSS("\n                .mm-submenu {\n                    border-top-width: 1px !important;\n                    top: -1px !important;\n                }\n                #p-views {\n                    padding-left: inherit !important;\n                    padding-right: inherit !important;\n                }\n                #p-views::after {\n                    display: none !important;\n                }\n            ");
 
       case 'timeless':
-        return mw.util.addCSS("\n                .mm-submenu-wrapper {\n                    cursor: default;\n                }\n                .mm-submenu {\n                    background: #f8f9fa;\n                    border: 1px solid rgb(200, 204, 209);\n                    box-shadow: 0 2px 3px 1px rgba(0, 0, 0, 0.05);\n                    padding: 1.2em 1.5em !important;\n                    top: -1.2em;\n                    white-space: nowrap;\n                    z-index: 95;\n                }\n                .mm-submenu::after {\n                    border-bottom: 8px solid transparent;\n                    border-top: 8px solid transparent;\n                    border-".concat(leftKey, ": 8px solid rgb(200, 204, 209);\n                    content: '';\n                    height: 0;\n                    padding-").concat(rightKey, ": 4px;\n                    position: absolute;\n                    top: 20px;\n                    width: 0;\n                    ").concat(rightKey, ": -13px;\n                }\n            "));
+        return mw.util.addCSS("\n                .mm-submenu-wrapper {\n                    cursor: default;\n                }\n                .mm-submenu {\n                    background: #f8f9fa;\n                    border: 1px solid rgb(200, 204, 209);\n                    box-shadow: 0 2px 3px 1px rgba(0, 0, 0, 0.05);\n                    padding: 1.2em 1.5em !important;\n                    top: -1.2em;\n                    white-space: nowrap;\n                    z-index: 95;\n                }\n                .mm-submenu::after {\n                    border-bottom: 8px solid transparent;\n                    border-top: 8px solid transparent;\n                    border-".concat(leftKey, ": 8px solid rgb(200, 204, 209);\n                    content: '';\n                    height: 0;\n                    padding-").concat(rightKey, ": 4px;\n                    position: absolute;\n                    top: 20px;\n                    width: 0;\n                    ").concat(rightKey, ": -13px;\n                }\n                @media screen and (max-width: 1339px) and (min-width: 1100px) {\n                    .mm-submenu::after {\n                        border-").concat(leftKey, ": none;\n                        border-").concat(rightKey, ": 8px solid rgb(200, 204, 209);\n                        padding-").concat(leftKey, ": 4px;\n                        padding-").concat(rightKey, ": inherit;\n                        ").concat(rightKey, ": inherit;\n                        ").concat(leftKey, ": -35px;\n                    }\n                }\n                @media screen and (max-width: 850px) {\n                    .mm-submenu {\n                        top: -2.2em;\n                    }\n                }\n            "));
 
       case 'monobook':
         return mw.util.addCSS("\n                .mm-menu {\n                    background: #fff;\n                    border-bottom: 1px solid #aaa;\n                    margin: 0;\n                    position: absolute;\n                    z-index: 99;\n                }\n                .mm-menu ~ a {\n                    z-index: 99 !important;\n                }\n                .mm-submenu {\n                    background: #fff;\n                    border-bottom: 1px solid #aaa;\n                    border-top: 1px solid #aaa;\n                    font-size: inherit;\n                    margin: 0;\n                    top: -1px;\n                    z-index: 95;\n                }\n                .mm-item, .mm-submenu-wrapper {\n                    background: transparent !important;\n                    border-top: 0 !important;\n                    display: block !important;\n                    margin: 0 !important;\n                    padding: 0 !important;\n                }\n                .mm-item a, .mm-submenu-wrapper a {\n                    background: transparent !important;\n                    text-transform: none !important;\n                }\n                .mm-menu a:hover {\n                    text-decoration: underline !important;\n                }\n            ");
@@ -410,7 +410,7 @@ $(function () {
         return _defineProperty({}, leftKey, $element.outerWidth());
 
       case 'timeless':
-        return _defineProperty({}, rightKey, $element.outerWidth() + 11);
+        return _defineProperty({}, $(window).width() <= 1339 && $(window).width() >= 1100 ? leftKey : rightKey, $element.outerWidth() + 11);
 
       case 'monobook':
         return _defineProperty({}, leftKey, $element.outerWidth() - 2);
@@ -675,11 +675,11 @@ $(function () {
     addListeners();
   }
   /**
-   * Remove redundant links from the native menu.
+   * Hide redundant links from the native menu.
    */
 
 
-  function removeNavLinks() {
+  function hideNavLinks() {
     $('#ca-protect,#ca-unprotect,#ca-delete,#ca-undelete').hide();
 
     if ('commonswiki' !== config.project.dbName) {
@@ -765,7 +765,7 @@ $(function () {
         mw.storage.set('mmCacheDate', newDate.setDate(newDate.getDate() + 1));
       }
 
-      removeNavLinks();
+      hideNavLinks();
       drawMenus();
       removeBlockLogLink();
       mw.hook('moremenu.ready').fire(config);
