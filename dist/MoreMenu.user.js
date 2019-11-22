@@ -154,17 +154,17 @@ window.MoreMenu.user = function (config) {
         'block-user': {
           url: mw.util.getUrl("Special:Block/".concat(config.targetUser.name)),
           currentUserRights: 'block',
-          targetBlocked: false
+          targetUserBlocked: false
         },
         'block-globally': {
           url: "https://meta.wikimedia.org/wiki/Special:GlobalBlock/".concat(config.targetUser.name),
           currentUserRights: 'globalblock',
-          targetIp: true
+          targetUserIp: true
         },
         'change-block': {
           url: mw.util.getUrl("Special:Block/".concat(config.targetUser.name)),
           currentUserRights: 'block',
-          targetBlocked: true
+          targetUserBlocked: true
         },
         'central-auth': {
           url: "https://meta.wikimedia.org/wiki/Special:CentralAuth/".concat(config.targetUser.name),
@@ -172,14 +172,14 @@ window.MoreMenu.user = function (config) {
         },
         'unblock-user': {
           url: mw.util.getUrl("Special:Unblock/".concat(config.targetUser.name)),
-          targetBlocked: true,
+          targetUserBlocked: true,
           currentUserRights: 'block'
         },
         'view-block': {
           url: mw.util.getUrl('Special:BlockList', {
             wpTarget: config.targetUser.name
           }),
-          targetBlocked: true,
+          targetUserBlocked: true,
           style: 'color:#EE1111'
         },
         'view-block-log': {
@@ -223,20 +223,20 @@ window.MoreMenu.user = function (config) {
       'ip-lookup': {
         'whois': {
           url: "https://tools.wmflabs.org/whois/gateway.py?lookup=true&ip=".concat(config.targetUser.escapedName),
-          targetIp: true
+          targetUserIp: true
         },
         'proxy-check': {
           url: "https://tools.wmflabs.org/ipcheck/?ip=".concat(config.targetUser.escapedName),
-          targetIp: true,
+          targetUserIp: true,
           currentUserRights: 'block'
         },
         'rdns': {
           url: "https://www.robtex.com/ip/".concat(config.targetUser.escapedName, ".html"),
-          targetIp: true
+          targetUserIp: true
         },
         'geolocate': {
           url: "https://whatismyipaddress.com/ip/".concat(config.targetUser.escapedName),
-          targetIp: true
+          targetUserIp: true
         }
       },
 

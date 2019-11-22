@@ -117,13 +117,11 @@ $(() => {
         );
 
         /** Add link to Peer reviewer tool under 'Tools'. */
-        MoreMenu.addItem('page', 'Peer reviewer', {
-            'Peer reviewer': {
-                url: `https://dispenser.info.tm/~dispenser/view/Peer_reviewer#page:${config.page.encodedName}`,
-                pageExists: true,
-                databaseRestrict: ['enwiki'],
-                namespaceRestrict: [0, 2, 118],
-            },
-        }, 'tools');
+        MoreMenu.addSubmenuItem('page', 'tools', 'Peer reviewer', {
+            url: `https://dispenser.info.tm/~dispenser/view/Peer_reviewer#page:${config.page.encodedName}`,
+            pageExists: true,
+            databaseRestrict: ['enwiki'],
+            namespaceRestrict: [0, 2, 118],
+        });
     });
 });

@@ -22,7 +22,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 $(function () {
   window.MoreMenu = window.MoreMenu || {};
 
-  if (MoreMenu.debug) {
+  if (window.moreMenuDebug) {
     /* eslint-disable no-console */
     console.info('[MoreMenu] Debugging enabled. To disable, check your personal JS and remove `MoreMenu.debug = true;`.');
   }
@@ -60,7 +60,7 @@ $(function () {
       isProtected: !!mw.config.get('wgRestrictionEdit') && mw.config.get('wgRestrictionEdit').length || !!mw.config.get('wgRestrictionCreate') && mw.config.get('wgRestrictionCreate').length,
       id: mw.config.get('wgArticleId'),
       escapedName: this.page.name.replace(/[?!'"()*]/g, escape),
-      encodedName: encodeURIComponent(this.name)
+      encodedName: encodeURIComponent(this.page.name)
     });
     /** Currently viewing user (you). */
 
@@ -94,7 +94,7 @@ $(function () {
   function log(message) {
     var level = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'debug';
 
-    if (!MoreMenu.debug && 'debug' === level) {
+    if (!(window.moreMenuDebug || 'debug' !== level)) {
       return;
     }
 
@@ -209,7 +209,6 @@ $(function () {
 
   function getPromises() {
     var expired = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-    log('getPromises');
     var promises = new Array(4);
 
     if (config.targetUser.name) {
@@ -312,58 +311,66 @@ $(function () {
     var submenuKey = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
 
     /* eslint-disable max-len */
-
-    /* eslint-disable operator-linebreak */
-
-    /* eslint-disable no-multi-spaces */
     var namespaceExclusion = itemData.namespaceExclude ? !hasConditional(itemData.namespaceExclude, config.page.nsId) : true;
     var databaseExclusion = itemData.databaseExclude ? !hasConditional(itemData.databaseExclude, config.page.dbName) : true;
-    var validations =
-    /* namespace          */
-    hasConditional(itemData.namespaceRestrict, config.page.nsId) && namespaceExclusion && (
-    /* existence          */
-    itemData.pageExists && config.page.id > 0 || !itemData.pageExists)
-    /* deleted            */
-    && (itemData.pageDeleted ? 0 === config.pageId && false === mw.config.get('wgIsArticle') : true)
-    /* protected          */
-    && (itemData.pageProtected ? config.page.isProtected : true)
-    /* notice project     */
-    && hasConditional(itemData.noticeProjectRestrict, config.project.noticeProject)
-    /* database           */
-    && hasConditional(itemData.databaseRestrict, config.project.dbName) && databaseExclusion
-    /* user's user groups */
-    && hasConditional(itemData.currentUserGroups, config.currentUser.groups)
-    /* user's rights      */
-    && hasConditional(itemData.currentUserRights, config.currentUser.rights)
-    /* can change groups  */
-    && (itemData.currentUserChangeGroups ? canAddRemoveGroups(config.currentUser.groups, config.currentUser.rights) : true)
-    /* visibility         */
-    && (undefined !== itemData.visible ? !!itemData.visible : true);
+    /**
+     * Keys are the name of the check, values are the expressions.
+     * This system is used only to make for easier debugging.
+     * @type {Object}
+     */
+
+    var conditions = {
+      /** Project */
+      noticeProject: hasConditional(itemData.noticeProjectRestrict, config.project.noticeProject),
+      database: hasConditional(itemData.databaseRestrict, config.project.dbName) && databaseExclusion,
+
+      /** Page */
+      namespaceRestrict: hasConditional(itemData.namespaceRestrict, config.page.nsId) && namespaceExclusion,
+      pageExists: itemData.pageExists && config.page.id > 0 || !itemData.pageExists,
+      pageDeleted: itemData.pageDeleted ? 0 === config.pageId && false === mw.config.get('wgIsArticle') : true,
+      pageProtected: itemData.pageProtected ? config.page.isProtected : true,
+
+      /** Current user */
+      currentUserGroups: hasConditional(itemData.currentUserGroups, config.currentUser.groups),
+      currentUserRights: hasConditional(itemData.currentUserRights, config.currentUser.rights),
+      currentUserChangeGroups: itemData.currentUserChangeGroups ? canAddRemoveGroups(config.currentUser.groups, config.currentUser.rights) : true,
+
+      /** Other */
+      visibility: undefined !== itemData.visible ? !!itemData.visible : true
+    };
 
     if (config.targetUser.name) {
-      validations &=
-      /* their user groups  */
-      hasConditional(itemData.currentUserGroups, config.targetUser.groups)
-      /* their rights       */
-      && hasConditional(itemData.currentUserRights, config.targetUser.rights)
-      /* they're blocked    */
-      && (itemData.targetUserBlocked !== undefined ? !!config.targetUser.blockid === itemData.blocked : true)
-      /* can change groups  */
-      && (itemData.targetUserChangeGroups ? canAddRemoveGroups(config.targetUser.groups, config.targetUser.rights) : true)
-      /* IP                 */
-      && (itemData.targetUserIp ? mw.util.isIPAddress(config.targetUser.name) : true);
+      /** Target user */
+      Object.assign(conditions, {
+        targetUserGroups: hasConditional(itemData.targetUserGroups, config.targetUser.groups),
+        targetUserRights: hasConditional(itemData.targetUserRights, config.targetUser.rights),
+        targetUserBlocked: itemData.targetUserBlocked !== undefined ? config.targetUser.blocked === itemData.targetUserBlocked : true,
+        targetUserChangeGroups: itemData.targetUserChangeGroups ? canAddRemoveGroups(config.targetUser.groups, config.targetUser.rights) : true,
+        targetUserIp: itemData.targetUserIp ? mw.util.isIPAddress(config.targetUser.name) : true
+      });
     }
 
-    if (validations) {
-      /** Markup for the menu item. */
-      var titleAttr = msgExists("".concat(itemKey, "-desc")) || itemData.description ? " title=\"".concat(itemData.description ? itemData.description : msg("".concat(itemKey, "-desc")), "\"") : '';
-      var styleAttr = itemData.style ? " style=\"".concat(itemData.style, "\"") : '';
-      return "\n                <li id=\"".concat(getItemId(parentKey, itemKey, submenuKey), "\" class=\"mm-item\">\n                    <a href=\"").concat(itemData.url, "\"").concat(titleAttr).concat(styleAttr, ">\n                        ").concat(msg(itemData.title || itemKey), "\n                    </a>\n                </li>");
+    var passed = true;
+    /* eslint-disable no-restricted-syntax */
+
+    /* eslint-disable guard-for-in */
+
+    for (var condition in conditions) {
+      passed &= conditions[condition];
+
+      if (!passed) {
+        log("".concat(parentKey, "/").concat(itemKey, " failed on ").concat(condition));
+        /** Validations failed, no markup to return */
+
+        return '';
+      }
     }
-    /** Validations failed, so no markup to return. */
+    /** Markup for the menu item. */
 
 
-    return '';
+    var titleAttr = msgExists("".concat(itemKey, "-desc")) || itemData.description ? " title=\"".concat(itemData.description ? itemData.description : msg("".concat(itemKey, "-desc")), "\"") : '';
+    var styleAttr = itemData.style ? " style=\"".concat(itemData.style, "\"") : '';
+    return "\n            <li id=\"".concat(getItemId(parentKey, itemKey, submenuKey), "\" class=\"mm-item\">\n                <a href=\"").concat(itemData.url, "\"").concat(titleAttr).concat(styleAttr, ">\n                    ").concat(msg(itemData.title || itemKey), "\n                </a>\n            </li>");
   }
   /**
    * Apply CSS based on the skin. This is done here because it is fast enough,
@@ -513,16 +520,13 @@ $(function () {
 
 
   function getMenuHtml(parentKey, items) {
-    log('getMenuHtml');
     var html = '';
     sortItems(items).forEach(function (itemKey) {
-      log("getMenusHtml - ".concat(msg(itemKey, true)));
       var item = items[itemKey];
       var itemHtml = '';
 
       if (!item.url) {
         /** This is a submenu. */
-        log('getMenusHtml - (submenu)');
         itemHtml += "\n                    <li style=\"position:relative;\" id=\"".concat(getItemId(parentKey, itemKey), "\" class=\"mm-submenu-wrapper\">\n                    <a style=\"font-weight: bold\">").concat(msg(itemKey), "&hellip;</a>\n                    <ul class=\"menu mm-submenu\" style=\"display: none; position: absolute;\">");
         sortItems(item).forEach(function (submenuItemKey) {
           itemHtml += getItemHtml(parentKey, submenuItemKey, item[submenuItemKey], itemKey);
@@ -630,7 +634,6 @@ $(function () {
 
 
   function drawMenus() {
-    log('drawMenus');
     var menus = {};
     /** Determine which menus to draw. */
 
@@ -713,13 +716,11 @@ $(function () {
 
 
   function init() {
-    log('init');
     var cacheDate = mw.storage.get('mmCacheDate') ? parseInt(mw.storage.get('mmCacheDate'), 10) : 0;
     var expired = cacheDate < new Date();
     $.when.apply(this, getPromises(expired)).done(function (targetUserData, userRightsData, metaData) {
       /** Target user data. */
       if (targetUserData) {
-        log('Target user data');
         Object.assign(config.targetUser, targetUserData[0].query.users[0]);
         /** Logged out user. */
 
@@ -728,6 +729,7 @@ $(function () {
           config.targetUser.rights = [];
 
           if (targetUserData[0].query.blocks.length) {
+            config.targetUser.blocked = true;
             config.targetUser.blockid = targetUserData[0].query.blocks[0].id;
           }
         }
@@ -828,7 +830,7 @@ $(function () {
       /** insertAfter ID was either invalid or not found. */
 
       if (!$beforeItem.length && insertAfter) {
-        log('getMenuHtml() was given an invalid `insertAfter`.');
+        log('getMenuHtml() was given an invalid `insertAfter`.', 'warn');
       }
       /** Grab IDs of the visible top-level items (excluding submenus) and append the new item ID. */
 
@@ -895,7 +897,7 @@ $(function () {
 
 
   MoreMenu.addSubmenu = function (menu, name, items, insertAfter) {
-    MoreMenu.addItemCore(_defineProperty({}, name, items), insertAfter);
+    MoreMenu.addItemCore(menu, _defineProperty({}, name, items), insertAfter);
   };
   /**
    * Add a link to the given menu.
@@ -907,7 +909,7 @@ $(function () {
 
 
   MoreMenu.addLink = function (menu, name, url, insertAfter) {
-    MoreMenu.addItem(menu, _defineProperty({}, name, {
+    MoreMenu.addItemCore(menu, _defineProperty({}, name, {
       url: url
     }), insertAfter);
   };
@@ -922,7 +924,7 @@ $(function () {
 
 
   MoreMenu.addSubmenuLink = function (menu, submenu, name, url, insertAfter) {
-    MoreMenu.addItem(menu, _defineProperty({}, name, {
+    MoreMenu.addItemCore(menu, _defineProperty({}, name, {
       url: url
     }), insertAfter, submenu);
   };
