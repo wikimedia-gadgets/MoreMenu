@@ -25,39 +25,47 @@ $(() => {
     /** Configuration to be passed to MoreMenu.user.js, MoreMenu.page.js, and handlers of the 'moremenu.ready' hook. */
     const config = new function config() {
         /** Project-level */
-        this.serverName = mw.config.get('wgServerName');
-        this.siteName = mw.config.get('wgSiteName');
-        this.dbName = mw.config.get('wgDBname');
-        this.noticeProject = mw.config.get('wgNoticeProject');
-        this.contentLanguage = mw.config.get('wgContentLanguage');
-        this.skin = mw.config.get('skin');
+        this.project = {
+            domain: mw.config.get('wgServerName'),
+            siteName: mw.config.get('wgSiteName'),
+            dbName: mw.config.get('wgDBname'),
+            noticeProject: mw.config.get('wgNoticeProject'),
+            contentLanguage: mw.config.get('wgContentLanguage'),
+        };
 
         /** Page-level */
-        this.nsId = mw.config.get('wgNamespaceNumber');
-        this.isProtected = (!!mw.config.get('wgRestrictionEdit') && mw.config.get('wgRestrictionEdit').length)
-            || (!!mw.config.get('wgRestrictionCreate') && mw.config.get('wgRestrictionCreate').length);
-        this.pageId = mw.config.get('wgArticleId');
-        this.pageName = mw.config.get('wgPageName');
-        this.isUserSpace = [2, 3].indexOf(this.nsId) >= 0
-            || 'Contributions' === mw.config.get('wgCanonicalSpecialPageName')
-            || !!mw.util.getParamValue('user')
-            || !!mw.config.get('wgRelevantUserName');
-        this.escapedPageName = this.pageName.replace(/[!'"()*]/g, escape);
-        this.encodedPageName = encodeURIComponent(this.pageName);
+        this.page = {
+            name: mw.config.get('wgPageName'),
+        };
+        Object.assign(this.page, {
+            nsId: mw.config.get('wgNamespaceNumber'),
+            isProtected: (!!mw.config.get('wgRestrictionEdit') && mw.config.get('wgRestrictionEdit').length)
+                || (!!mw.config.get('wgRestrictionCreate') && mw.config.get('wgRestrictionCreate').length),
+            id: mw.config.get('wgArticleId'),
+            escapedName: this.page.name.replace(/[?!'"()*]/g, escape),
+            encodedName: encodeURIComponent(this.name),
+        });
 
-        /** User-level */
-        this.userName = mw.config.get('wgRelevantUserName') || '';
-        this.escapedUserName = this.userName.replace(/[?!'()*]/g, escape);
-        this.encodedUserName = encodeURIComponent(this.userName);
-        this.userGroups = mw.config.get('wgUserGroups');
-        this.userGroupsData = {}; // With keys 'permissions' and 'addRemoveGroups' (which groups they can add/remove)
-        this.userPermissions = [];
+        /** Currently viewing user (you). */
+        this.currentUser = {
+            skin: mw.config.get('skin'),
+            groups: mw.config.get('wgUserGroups'),
+            groupsData: {}, // Keyed by user group name, values have keys 'rights' and 'canAddRemoveGroups'.
+            rights: [],
+        };
 
         /**
          * Target user (when viewing user pages, Special:Contribs, etc.).
-         * Contains data retrieved from the API such as their user groups and block status.
+         * Also will contain data retrieved from the API such as their user groups and block status.
          */
-        this.targetUser = {};
+        this.targetUser = {
+            name: mw.config.get('wgRelevantUserName') || '',
+        };
+        Object.assign(this.targetUser, {
+            blocked: false,
+            escapedName: this.targetUser.name.replace(/[?!'"()*]/g, escape),
+            encodedName: encodeURIComponent(this.targetUser.name),
+        });
     }();
 
     /**
@@ -172,24 +180,24 @@ $(() => {
         log('getPromises');
         const promises = new Array(4);
 
-        if (config.isUserSpace) {
+        if (config.targetUser.name) {
             promises[0] = api.get({
                 action: 'query',
                 list: 'users|blocks',
-                ususers: config.userName,
-                bkusers: config.userName,
+                ususers: config.targetUser.name,
+                bkusers: config.targetUser.name,
                 usprop: 'blockinfo|groups|rights|emailable',
                 bkprop: 'id',
             });
         }
 
-        config.userPermissions = JSON.parse(mw.storage.get('mmUserRights'));
-        if (expired || !config.userPermissions) {
+        config.currentUser.rights = JSON.parse(mw.storage.get('mmUserRights'));
+        if (expired || !config.currentUser.rights) {
             promises[1] = mw.user.getRights();
         }
 
-        config.userGroupsData = JSON.parse(mw.storage.get('mmMetaUserGroups'));
-        if (expired || !config.userGroupsData) {
+        config.currentUser.groupsData = JSON.parse(mw.storage.get('mmMetaUserGroups'));
+        if (expired || !config.currentUser.groupsData) {
             promises[2] = api.get({
                 action: 'query',
                 meta: 'siteinfo',
@@ -216,7 +224,7 @@ $(() => {
 
         /* eslint-disable arrow-body-style */
         const valid = groups.some(group => {
-            return config.userGroupsData[group] && config.userGroupsData[group].addRemoveGroups;
+            return config.currentUser.groupsData[group] && config.currentUser.groupsData[group].addRemoveGroups;
         });
 
         if (!valid) {
@@ -264,27 +272,27 @@ $(() => {
         /* eslint-disable max-len */
         /* eslint-disable operator-linebreak */
         /* eslint-disable no-multi-spaces */
-        const namespaceExclusion = itemData.namespaceExclude ? !hasConditional(itemData.namespaceExclude, config.nsId) : true;
-        const databaseExclusion = itemData.databaseExclude ? !hasConditional(itemData.databaseExclude, config.dbName) : true;
+        const namespaceExclusion = itemData.namespaceExclude ? !hasConditional(itemData.namespaceExclude, config.page.nsId) : true;
+        const databaseExclusion = itemData.databaseExclude ? !hasConditional(itemData.databaseExclude, config.page.dbName) : true;
         let validations =
-            /* namespace          */    (hasConditional(itemData.namespaceRestrict, config.nsId) && namespaceExclusion)
-            /* existence          */ && ((itemData.pageExists && config.pageId > 0) || !itemData.pageExists)
+            /* namespace          */    (hasConditional(itemData.namespaceRestrict, config.page.nsId) && namespaceExclusion)
+            /* existence          */ && ((itemData.pageExists && config.page.id > 0) || !itemData.pageExists)
             /* deleted            */ && (itemData.pageDeleted ? 0 === config.pageId && false === mw.config.get('wgIsArticle') : true)
-            /* protected          */ && (itemData.isProtected ? config.isProtected : true)
-            /* notice project     */ && hasConditional(itemData.noticeProjectRestrict, config.noticeProject)
-            /* database           */ && (hasConditional(itemData.databaseRestrict, config.dbName) && databaseExclusion)
-            /* user's user groups */ && hasConditional(itemData.userGroups, config.userGroups)
-            /* user's permissions */ && hasConditional(itemData.userPermissions, config.userPermissions)
-            /* can change groups  */ && (itemData.userAddRemoveGroups ? canAddRemoveGroups(config.userGroups, config.userPermissions) : true)
+            /* protected          */ && (itemData.isProtected ? config.page.isProtected : true)
+            /* notice project     */ && hasConditional(itemData.noticeProjectRestrict, config.project.noticeProject)
+            /* database           */ && (hasConditional(itemData.databaseRestrict, config.project.dbName) && databaseExclusion)
+            /* user's user groups */ && hasConditional(itemData.targetUserGroups, config.currentUser.groups)
+            /* user's permissions */ && hasConditional(itemData.currentUserRights, config.currentUser.rights)
+            /* can change groups  */ && (itemData.userAddRemoveGroups ? canAddRemoveGroups(config.currentUser.groups, config.currentUser.rights) : true)
             /* visibility         */ && (undefined !== itemData.visible ? !!itemData.visible : true);
 
-        if (config.isUserSpace) {
+        if (config.targetUser.name) {
             validations &=
                 /* their user groups  */    hasConditional(itemData.groups, config.targetUser.groups)
                 /* their permissions  */ && hasConditional(itemData.permissions, config.targetUser.rights)
                 /* they're blocked    */ && (itemData.blocked !== undefined ? !!config.targetUser.blockid === itemData.blocked : true)
                 /* can change groups  */ && (itemData.addRemoveGroups ? canAddRemoveGroups(config.targetUser.groups, config.targetUser.rights) : true)
-                /* IP                 */ && (itemData.ipOnly ? mw.util.isIPAddress(config.userName) : true);
+                /* IP                 */ && (itemData.ip ? mw.util.isIPAddress(config.targetUser.name) : true);
         }
 
         if (validations) {
@@ -311,7 +319,7 @@ $(() => {
      * @returns {CSSStyleSheet|null}
      */
     function addCSS() {
-        switch (config.skin) {
+        switch (config.currentUser.skin) {
         case 'vector':
             return mw.util.addCSS(`
                 .mm-submenu {
@@ -437,7 +445,7 @@ $(() => {
      * @returns {Object} To be passed to $.css()
      */
     function getSubmenuCss($element) {
-        switch (config.skin) {
+        switch (config.currentUser.skin) {
         case 'vector':
             return { [leftKey]: $element.outerWidth() };
         case 'timeless':
@@ -675,10 +683,10 @@ $(() => {
         const menus = {};
 
         /** Determine which menus to draw. */
-        if (config.isUserSpace) {
+        if (config.targetUser.name) {
             Object.assign(menus, getModule('user')(config));
         }
-        if (config.nsId >= 0) {
+        if (config.page.nsId >= 0) {
             Object.assign(menus, getModule('page')(config));
         }
 
@@ -688,7 +696,7 @@ $(() => {
         Object.keys(menus).forEach(key => {
             const html = getMenuHtml(key, menus[key]);
 
-            switch (config.skin) {
+            switch (config.currentUser.skin) {
             case 'vector':
                 drawMenuVector(key, html);
                 break;
@@ -702,7 +710,7 @@ $(() => {
                 drawMenuTimeless(key, html);
                 break;
             default:
-                log(`'${config.skin}' is not a supported skin.`, 'error');
+                log(`'${config.currentUser.skin}' is not a supported skin.`, 'error');
             }
         });
 
@@ -714,7 +722,7 @@ $(() => {
      */
     function removeNavLinks() {
         $('#ca-protect,#ca-unprotect,#ca-delete,#ca-undelete').remove();
-        if ('commonswiki' !== config.dbName) {
+        if ('commonswiki' !== config.project.dbName) {
             /** Do not do this for Commons, where the move file gadget has a listener on the native move link. */
             $('#ca-move').remove();
         }
@@ -728,7 +736,7 @@ $(() => {
             action: 'query',
             list: 'logevents',
             letype: 'block',
-            letitle: `User:${config.userName}`,
+            letitle: `User:${config.targetUser.name}`,
             lelimit: 1,
         }).done(data => {
             if (!data.query.logevents.length) {
@@ -754,7 +762,7 @@ $(() => {
             /** Target user data. */
             if (targetUserData) {
                 log('Target user data');
-                [config.targetUser] = targetUserData[0].query.users;
+                Object.assign(config.targetUser, targetUserData[0].query.users[0]);
 
                 /** Logged out user. */
                 if ('' === config.targetUser.invalid) {
@@ -770,23 +778,23 @@ $(() => {
             if (userRightsData) {
                 log('caching user rights');
                 mw.storage.set('mmUserRights', JSON.stringify(userRightsData));
-                config.userPermissions = userRightsData.slice();
+                config.currentUser.rights = userRightsData.slice();
             }
 
             /** Cache global user groups of current user, if given. */
             if (metaData) {
                 log('caching global user groups');
-                config.userGroupsData = {};
+                config.currentUser.groupsData = {};
                 metaData[0].query.usergroups.forEach(el => {
-                    config.userGroupsData[el.name] = {
-                        permissions: el.rights,
-                        addRemoveGroups: !!el.add || !!el.remove,
+                    config.currentUser.groupsData[el.name] = {
+                        rights: el.rights,
+                        canAddRemoveGroups: !!el.add || !!el.remove,
                     };
                 });
-                mw.storage.set('mmMetaUserGroups', JSON.stringify(config.userGroupsData));
+                mw.storage.set('mmMetaUserGroups', JSON.stringify(config.currentUser.groupsData));
             }
 
-            /** Set expiry if cache is expired. */
+            /** Set expiry for +24 hours if cache is expired. */
             if (expired) {
                 log('setting cache expiry');
                 const newDate = new Date();

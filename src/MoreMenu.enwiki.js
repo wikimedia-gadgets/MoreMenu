@@ -2,6 +2,7 @@
  * Enwiki extension to MoreMenu.
  * This adds a menu item with RfAs/RfBs and an item for XfD where applicable.
  */
+/* eslint-disable max-len */
 $(() => {
     /**
      * Look for and add links to RfAs, RfBs, Arbitration cases, etc.
@@ -36,13 +37,13 @@ $(() => {
 
         api.get({
             titles: Object.keys(rfxs)
-                .map(rfx => `${rfx}/${config.userName}`)
+                .map(rfx => `${rfx}/${config.targetUser.name}`)
                 .join('|'),
             formatversion: 2,
         }).done(data => {
             data.query.pages.forEach(page => {
                 if (!page.missing) {
-                    const key = rfxs[page.title.replace(`/${config.userName}`, '')];
+                    const key = rfxs[page.title.replace(`/${config.targetUser.name}`, '')];
                     links[key] = {
                         url: mw.util.getUrl(`Special:PrefixIndex/${page.title}`),
                     };
@@ -63,8 +64,8 @@ $(() => {
     function addXfD(api, config) {
         api.get({
             titles: [
-                `Wikipedia:Articles for deletion/${config.pageName}`,
-                `Wikipedia:Miscellany for deletion/${config.pageName}`,
+                `Wikipedia:Articles for deletion/${config.page.name}`,
+                `Wikipedia:Miscellany for deletion/${config.page.name}`,
             ].join('|'),
             prop: 'info',
             formatversion: 2,
@@ -91,10 +92,10 @@ $(() => {
     mw.hook('moremenu.ready').add(config => {
         const api = new mw.Api();
 
-        if (config.userName) {
+        if (config.targetUser.name) {
             addRfXs(api, config);
         }
-        if (config.pageName) {
+        if (config.page.name) {
             addXfD(api, config);
         }
 
@@ -103,7 +104,7 @@ $(() => {
             'user',
             'analysis',
             'BLP Edits',
-            `https://xtools.wmflabs.org/categoryedits/${config.serverName}/${config.encodedUserName}/Living people`
+            `https://xtools.wmflabs.org/categoryedits/${config.project.serverName}/${config.targetUser.encodedName}/Living people`
         );
 
         /** Add link to AfD stats. */
@@ -111,14 +112,14 @@ $(() => {
             'user',
             'analysis',
             'AfD stats',
-            `https://tools.wmflabs.org/afdstats/afdstats.py?name=${config.encodedUserName}`,
+            `https://tools.wmflabs.org/afdstats/afdstats.py?name=${config.targetUser.encodedName}`,
             'analysis'
         );
 
         /** Add link to Peer reviewer tool under 'Tools'. */
         MoreMenu.addItem('page', {
             'peer-reviewer': {
-                url: `https://dispenser.info.tm/~dispenser/view/Peer_reviewer#page:${config.encodedPageName}`,
+                url: `https://dispenser.info.tm/~dispenser/view/Peer_reviewer#page:${config.page.encodedName}`,
                 pageExists: true,
                 databaseRestrict: ['enwiki'],
                 namespaceRestrict: [0, 2, 118],

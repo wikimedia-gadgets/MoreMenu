@@ -27,124 +27,124 @@ window.MoreMenu.user = function (config) {
       'user-logs': {
         'all-logs': {
           url: mw.util.getUrl('Special:Log', {
-            user: config.userName
+            user: config.targetUser.name
           }),
           insertAfter: false
         },
         'abusefilter-log': {
           url: mw.util.getUrl('Special:AbuseLog', {
-            wpSearchUser: config.userName
+            wpSearchUser: config.targetUser.name
           })
         },
         'block-log': {
           url: mw.util.getUrl('Special:Log', {
-            user: config.userName,
+            user: config.targetUser.name,
             type: 'block'
           }),
-          permissions: ['block']
+          targetUserRights: ['block']
         },
         'checkuser-log': {
           url: mw.util.getUrl('Special:CheckUserLog', {
-            cuSearch: config.userName,
+            cuSearch: config.targetUser.name,
             cuSearchType: 'initiator'
           }),
-          permissions: ['checkuser-log'],
-          userPermissions: ['checkuser-log']
+          targetUserRights: ['checkuser-log'],
+          currentUserRights: ['checkuser-log']
         },
         'deletion-log': {
           url: mw.util.getUrl('Special:Log', {
-            user: config.userName,
+            user: config.targetUser.name,
             type: 'delete'
           }),
-          permissions: ['delete']
+          targetUserRights: ['delete']
         },
         'global-account-log': {
           url: mw.util.getUrl('Special:Log', {
-            user: config.userName,
+            user: config.targetUser.name,
             type: 'globalauth'
           }),
-          permissions: ['centralauth-lock']
+          targetUserRights: ['centralauth-lock']
         },
         'global-block-log': {
           url: mw.util.getUrl('Special:Log', {
-            user: config.userName,
+            user: config.targetUser.name,
             type: 'gblblock'
           }),
-          permissions: ['globalblock']
+          targetUserRights: ['globalblock']
         },
         'mass-message-log': {
           url: mw.util.getUrl('Special:Log', {
-            user: config.userName,
+            user: config.targetUser.name,
             type: 'massmessage'
           }),
-          permissions: ['massmessage']
+          targetUserRights: ['massmessage']
         },
         'move-log': {
           url: mw.util.getUrl('Special:Log', {
-            user: config.userName,
+            user: config.targetUser.name,
             type: 'move'
           }),
-          permissions: ['move']
+          targetUserRights: ['move']
         },
         'pending-changes-log': {
           url: mw.util.getUrl('Special:Log', {
-            user: config.userName,
+            user: config.targetUser.name,
             type: 'stable'
           }),
-          permissions: ['stablesettings']
+          targetUserRights: ['stablesettings']
         },
         'protection-log': {
           url: mw.util.getUrl('Special:Log', {
-            user: config.userName,
+            user: config.targetUser.name,
             type: 'protect'
           }),
-          permissions: ['protect']
+          targetUserRights: ['protect']
         },
         'rename-log': {
           url: mw.util.getUrl('Special:Log', {
-            user: config.userName,
+            user: config.targetUser.name,
             type: 'gblrename'
           }),
-          permissions: ['centralauth-rename']
+          targetUserRights: ['centralauth-rename']
         },
         'review-log': {
           url: mw.util.getUrl('Special:Log', {
-            user: config.userName,
+            user: config.targetUser.name,
             type: 'review'
           }),
-          permissions: ['review']
+          targetUserRights: ['review']
         },
         'spam-blacklist-log': {
           url: mw.util.getUrl('Special:Log', {
-            user: config.userName,
+            user: config.targetUser.name,
             type: 'spamblacklist'
           })
         },
         'thanks-log': {
           url: mw.util.getUrl('Special:Log', {
-            user: config.userName,
+            user: config.targetUser.name,
             type: 'thanks'
           }),
-          groups: ['user']
+          targetUserGroups: ['user']
         },
         'upload-log': {
           url: mw.util.getUrl('Special:Log', {
-            user: config.userName,
+            user: config.targetUser.name,
             type: 'upload'
           }),
-          permissions: ['upload']
+          targetUserRights: ['upload']
         },
         'user-creation-log': {
           url: mw.util.getUrl('Special:Log', {
-            user: config.userName,
+            user: config.targetUser.name,
             type: 'newusers'
           }),
-          groups: ['user'] // any user can create new accounts at [[Special:CreateAccount]]
+          targetUserGroups: ['user'] // any user can create new accounts at [[Special:CreateAccount]]
 
         },
         'user-rights-log': {
           url: mw.util.getUrl('Special:Log', {
-            user: config.userName,
+            user: config.targetUser.name,
             type: 'rights'
           }),
           addRemoveGroups: true
@@ -152,151 +152,151 @@ window.MoreMenu.user = function (config) {
       },
       'blocks': {
         'block-user': {
-          url: mw.util.getUrl("Special:Block/".concat(config.userName)),
-          userPermissions: 'block',
+          url: mw.util.getUrl("Special:Block/".concat(config.targetUser.name)),
+          currentUserRights: 'block',
           blocked: false
         },
         'block-globally': {
-          url: "https://meta.wikimedia.org/wiki/Special:GlobalBlock/".concat(config.userName),
-          userPermissions: 'globalblock',
-          ipOnly: true
+          url: "https://meta.wikimedia.org/wiki/Special:GlobalBlock/".concat(config.targetUser.name),
+          currentUserRights: 'globalblock',
+          ip: true
         },
         'change-block': {
-          url: mw.util.getUrl("Special:Block/".concat(config.userName)),
-          userPermissions: 'block',
+          url: mw.util.getUrl("Special:Block/".concat(config.targetUser.name)),
+          currentUserRights: 'block',
           blocked: true
         },
         'central-auth': {
-          url: "https://meta.wikimedia.org/wiki/Special:CentralAuth/".concat(config.userName),
-          userPermissions: 'centralauth-lock'
+          url: "https://meta.wikimedia.org/wiki/Special:CentralAuth/".concat(config.targetUser.name),
+          currentUserRights: 'centralauth-lock'
         },
         'unblock-user': {
-          url: mw.util.getUrl("Special:Unblock/".concat(config.userName)),
+          url: mw.util.getUrl("Special:Unblock/".concat(config.targetUser.name)),
           blocked: true,
-          userPermissions: 'block'
+          currentUserRights: 'block'
         },
         'view-block': {
           url: mw.util.getUrl('Special:BlockList', {
-            wpTarget: config.userName
+            wpTarget: config.targetUser.name
           }),
           blocked: true,
           style: 'color:#EE1111'
         },
         'view-block-log': {
           url: mw.util.getUrl('Special:Log', {
-            page: config.userName,
+            page: config.targetUser.name,
             type: 'block'
           })
         }
       },
       'analysis': {
         'analysis': {
-          url: "https://xtools.wmflabs.org/ec/".concat(config.serverName, "/").concat(config.encodedUserName)
+          url: "https://xtools.wmflabs.org/ec/".concat(config.project.domain, "/").concat(config.targetUser.encodedName)
         },
         'articles-created': {
-          url: "https://xtools.wmflabs.org/pages/".concat(config.serverName, "/").concat(config.encodedUserName, "/0"),
-          groups: ['user']
+          url: "https://xtools.wmflabs.org/pages/".concat(config.project.domain, "/").concat(config.targetUser.encodedName, "/0"),
+          targetUserGroups: ['user']
         },
         'edit-summary-usage': {
-          url: "https://xtools.wmflabs.org/editsummary/".concat(config.serverName, "/").concat(config.encodedUserName)
+          url: "https://xtools.wmflabs.org/editsummary/".concat(config.project.domain, "/").concat(config.targetUser.encodedName)
         },
         'edit-summary-search': {
-          url: "https://tools.wmflabs.org/sigma/summary.py?server=".concat(config.dbName, "&name=").concat(config.encodedUserName)
+          url: "https://tools.wmflabs.org/sigma/summary.py?server=".concat(config.dbName, "&name=").concat(config.targetUser.encodedName)
         },
         'global-contributions-guc': {
-          url: "https://tools.wmflabs.org/guc/?user=".concat(config.encodedUserName, "&blocks=true")
+          url: "https://tools.wmflabs.org/guc/?user=".concat(config.targetUser.encodedName, "&blocks=true")
         },
         'global-contributions-xtools': {
-          url: "https://xtools.wmflabs.org/global-contribs/".concat(config.encodedUserName)
+          url: "https://xtools.wmflabs.org/global-contribs/".concat(config.targetUser.encodedName)
         },
         'non-automated-edits': {
-          url: "https://xtools.wmflabs.org/autoedits/".concat(config.serverName, "/").concat(config.encodedUserName)
+          url: "https://xtools.wmflabs.org/autoedits/".concat(config.project.domain, "/").concat(config.targetUser.encodedName)
         },
         'sul': {
-          url: mw.util.getUrl("Special:CentralAuth/".concat(config.userName)),
-          groups: ['user']
+          url: mw.util.getUrl("Special:CentralAuth/".concat(config.targetUser.name)),
+          targetUserGroups: ['user']
         },
         'top-edited-pages': {
-          url: "https://xtools.wmflabs.org/topedits/".concat(config.serverName, "/").concat(config.encodedUserName)
+          url: "https://xtools.wmflabs.org/topedits/".concat(config.project.domain, "/").concat(config.targetUser.encodedName)
         }
       },
       'ip-lookup': {
         'whois': {
-          url: "https://tools.wmflabs.org/whois/gateway.py?lookup=true&ip=".concat(config.escapedUserName),
-          ipOnly: true
+          url: "https://tools.wmflabs.org/whois/gateway.py?lookup=true&ip=".concat(config.targetUser.escapedName),
+          ip: true
         },
         'proxy-check': {
-          url: "https://tools.wmflabs.org/ipcheck/?ip=".concat(config.escapedUserName),
-          ipOnly: true,
-          userPermissions: 'block'
+          url: "https://tools.wmflabs.org/ipcheck/?ip=".concat(config.targetUser.escapedName),
+          ip: true,
+          currentUserRights: 'block'
         },
         'rdns': {
-          url: "https://www.robtex.com/ip/".concat(config.escapedUserName, ".html"),
-          ipOnly: true
+          url: "https://www.robtex.com/ip/".concat(config.targetUser.escapedName, ".html"),
+          ip: true
         },
         'geolocate': {
-          url: "https://whatismyipaddress.com/ip/".concat(config.escapedUserName),
-          ipOnly: true
+          url: "https://whatismyipaddress.com/ip/".concat(config.targetUser.escapedName),
+          ip: true
         }
       },
 
       /** Actions the current user can take on the target user. */
       'change-rights': {
         url: mw.util.getUrl('Special:UserRights', {
-          user: "User:".concat(config.userName)
+          user: "User:".concat(config.targetUser.name)
         }),
-        groups: ['user'],
+        targetUserGroups: ['user'],
         userAddRemoveGroups: true
       },
       'checkuser': {
-        url: mw.util.getUrl("Special:CheckUser/".concat(config.userName)),
-        userPermissions: ['checkuser']
+        url: mw.util.getUrl("Special:CheckUser/".concat(config.targetUser.name)),
+        currentUserRights: ['checkuser']
       },
       'contributions': {
-        url: mw.util.getUrl("Special:Contributions/".concat(config.userName))
+        url: mw.util.getUrl("Special:Contributions/".concat(config.targetUser.name))
       },
       'deleted-contributions': {
-        url: mw.util.getUrl("Special:DeletedContributions/".concat(config.userName)),
-        userPermissions: ['deletedhistory', 'deletedtext'],
+        url: mw.util.getUrl("Special:DeletedContributions/".concat(config.targetUser.name)),
+        currentUserRights: ['deletedhistory', 'deletedtext'],
         insertAfter: 'contributions'
       },
       'suppressed-contribs': {
         url: mw.util.getUrl('Special:Log/suppress', {
-          offender: config.userName
+          offender: config.targetUser.name
         }),
-        userPermissions: ['suppressionlog'],
+        currentUserRights: ['suppressionlog'],
         insertAfter: 'deleted-contributions'
       },
       'email-user': {
-        url: mw.util.getUrl("Special:EmailUser/".concat(config.userName)),
-        groups: ['user'],
+        url: mw.util.getUrl("Special:EmailUser/".concat(config.targetUser.name)),
+        targetUserGroups: ['user'],
         visible: undefined !== config.targetUser.emailable
       },
       'uploads': {
         url: mw.util.getUrl('Special:ListFiles', {
-          user: config.userName,
+          user: config.targetUser.name,
           ilshowall: '1'
         }),
-        groups: ['user']
+        targetUserGroups: ['user']
       },
       'user-groups': {
         url: mw.util.getUrl('Special:ListUsers', {
           limit: 1,
-          username: config.userName
+          username: config.targetUser.name
         }),
-        groups: ['user']
+        targetUserGroups: ['user']
       },
       'user-rights-changes': {
-        url: "https://xtools.wmflabs.org/ec-rightschanges/".concat(config.serverName, "/").concat(config.encodedUserName),
-        groups: ['user']
+        url: "https://xtools.wmflabs.org/ec-rightschanges/".concat(config.project.domain, "/").concat(config.targetUser.encodedName),
+        targetUserGroups: ['user']
       },
       'user-thanks-received': {
         url: mw.util.getUrl('Special:Log', {
           user: '',
-          page: "User:".concat(config.userName),
+          page: "User:".concat(config.targetUser.name),
           type: 'thanks'
         }),
-        groups: ['user']
+        targetUserGroups: ['user']
       }
     }
   };
