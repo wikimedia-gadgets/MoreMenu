@@ -680,11 +680,11 @@ $(function () {
 
 
   function removeNavLinks() {
-    $('#ca-protect,#ca-unprotect,#ca-delete,#ca-undelete').remove();
+    $('#ca-protect,#ca-unprotect,#ca-delete,#ca-undelete').hide();
 
     if ('commonswiki' !== config.project.dbName) {
       /** Do not do this for Commons, where the move file gadget has a listener on the native move link. */
-      $('#ca-move').remove();
+      $('#ca-move').hide();
     }
   }
   /**

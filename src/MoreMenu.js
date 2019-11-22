@@ -736,13 +736,13 @@ $(() => {
     }
 
     /**
-     * Remove redundant links from the native menu.
+     * Hide redundant links from the native menu.
      */
-    function removeNavLinks() {
-        $('#ca-protect,#ca-unprotect,#ca-delete,#ca-undelete').remove();
+    function hideNavLinks() {
+        $('#ca-protect,#ca-unprotect,#ca-delete,#ca-undelete').hide();
         if ('commonswiki' !== config.project.dbName) {
             /** Do not do this for Commons, where the move file gadget has a listener on the native move link. */
-            $('#ca-move').remove();
+            $('#ca-move').hide();
         }
     }
 
@@ -818,7 +818,7 @@ $(() => {
                 mw.storage.set('mmCacheDate', newDate.setDate(newDate.getDate() + 1));
             }
 
-            removeNavLinks();
+            hideNavLinks();
             drawMenus();
             removeBlockLogLink();
 
