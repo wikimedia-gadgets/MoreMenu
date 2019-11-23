@@ -209,12 +209,7 @@ window.MoreMenu.page = function (config) {
         url: mw.util.getUrl("Special:MovePage/".concat(config.page.name)),
         currentUserRights: ['move'],
         pageExists: true,
-
-        /**
-         * No cheap way to see if a page is movable, so we just look for the
-         * native Move link (which will later be removed).
-         */
-        visible: !mw.config.get('wgIsMainPage') && !!$('#ca-move').length
+        pageMovable: true
       }
     }, _defineProperty(_page, config.pageProtected ? 'change-protection' : 'protect-page', {
       url: mw.util.getUrl(config.page.name, {

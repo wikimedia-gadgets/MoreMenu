@@ -36,12 +36,13 @@ $(() => {
         /** Page-level */
         this.page = {
             name: mw.config.get('wgPageName'),
-        };
-        Object.assign(this.page, {
             nsId: mw.config.get('wgNamespaceNumber'),
-            isProtected: (!!mw.config.get('wgRestrictionEdit') && mw.config.get('wgRestrictionEdit').length)
+            protected: (!!mw.config.get('wgRestrictionEdit') && mw.config.get('wgRestrictionEdit').length)
                 || (!!mw.config.get('wgRestrictionCreate') && mw.config.get('wgRestrictionCreate').length),
             id: mw.config.get('wgArticleId'),
+            movable: !mw.config.get('wgIsMainPage') && !!$('#ca-move').length,
+        };
+        Object.assign(this.page, {
             escapedName: this.page.name.replace(/[?!'"()*]/g, escape),
             encodedName: encodeURIComponent(this.page.name),
         });
@@ -60,9 +61,9 @@ $(() => {
          */
         this.targetUser = {
             name: mw.config.get('wgRelevantUserName') || '',
+            blocked: false,
         };
         Object.assign(this.targetUser, {
-            blocked: false,
             escapedName: this.targetUser.name.replace(/[?!'"()*]/g, escape),
             encodedName: encodeURIComponent(this.targetUser.name),
         });
@@ -287,7 +288,8 @@ $(() => {
             namespaceRestrict: hasConditional(itemData.namespaceRestrict, config.page.nsId) && namespaceExclusion,
             pageExists: (itemData.pageExists && config.page.id > 0) || !itemData.pageExists,
             pageDeleted: itemData.pageDeleted ? 0 === config.pageId && false === mw.config.get('wgIsArticle') : true,
-            pageProtected: itemData.pageProtected ? config.page.isProtected : true,
+            pageProtected: itemData.pageProtected ? config.page.protected : true,
+            pageMovable: itemData.pageMovable ? config.page.movable : true,
 
             /** Current user */
             currentUserGroups: hasConditional(itemData.currentUserGroups, config.currentUser.groups),
@@ -754,14 +756,39 @@ $(() => {
     }
 
     /**
-     * Hide redundant links from the native menu.
+     * Remove redundant links from the native menu.
      */
-    function hideNavLinks() {
-        $('#ca-protect,#ca-unprotect,#ca-delete,#ca-undelete').hide();
+    function removeNavLinks() {
+        $('#ca-protect,#ca-unprotect,#ca-delete,#ca-undelete').remove();
         if ('commonswiki' !== config.project.dbName) {
             /** Do not do this for Commons, where the move file gadget has a listener on the native move link. */
-            $('#ca-move').hide();
+            $('#ca-move').remove();
         }
+
+        /**
+         * Hide the native More menu if it's empty, and un-hide it if items get added by other scripts.
+         */
+        if (-1 === ['vector', 'timeless'].indexOf(config.currentUser.skin)) {
+            return;
+        }
+        const $menu = $('#p-cactions ul');
+        const $parent = $('#p-cactions');
+        if ('' === $menu.html().trim()) {
+            $parent.hide();
+        }
+        new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                if (mutation.addedNodes.length) {
+                    $parent.show();
+                } else if (mutation.removedNodes.length) {
+                    if ('' === $menu.html().trim()) {
+                        $parent.hide();
+                    }
+                }
+            });
+        }).observe($menu.get(0), {
+            childList: true,
+        });
     }
 
     /**
@@ -836,7 +863,7 @@ $(() => {
                 mw.storage.set('mmCacheDate', newDate.setDate(newDate.getDate() + 1));
             }
 
-            hideNavLinks();
+            removeNavLinks();
             drawMenus();
             removeBlockLogLink();
 
