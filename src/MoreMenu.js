@@ -174,10 +174,9 @@ $(() => {
 
     /**
      * Get promises needed for initializing the script, such as user rights and block status.
-     * @param {Boolean} expired Whether the cache should be updated.
      * @returns {jQuery.Promise[]}
      */
-    function getPromises(expired = false) {
+    function getPromises() {
         const promises = new Array(4);
 
         if (config.targetUser.name) {
@@ -191,13 +190,13 @@ $(() => {
             });
         }
 
-        config.currentUser.rights = JSON.parse(mw.storage.get('mmUserRights'));
-        if (expired || !config.currentUser.rights) {
+        config.currentUser.rights = JSON.parse(mw.storage.session.getObject('mmUserRights'));
+        if (!config.currentUser.rights) {
             promises[1] = mw.user.getRights();
         }
 
-        config.currentUser.groupsData = JSON.parse(mw.storage.get('mmMetaUserGroups'));
-        if (expired || !config.currentUser.groupsData) {
+        config.currentUser.groupsData = JSON.parse(mw.storage.session.getObject('mmMetaUserGroups'));
+        if (!config.currentUser.groupsData) {
             promises[2] = api.get({
                 action: 'query',
                 meta: 'siteinfo',
@@ -756,7 +755,10 @@ $(() => {
     }
 
     /**
-     * Remove redundant links from the native menu.
+     * Remove redundant links from the native More menu.
+     * This uses mw.storage to keep track of whether the native menu usually gets items added to it
+     * after MoreMenu has loaded. If this is the case, it will not remove the menu at all. This is to avoid
+     * the irritating "jumping" effect you get due to race conditions.
      */
     function removeNavLinks() {
         $('#ca-protect,#ca-unprotect,#ca-delete,#ca-undelete').remove();
@@ -765,23 +767,35 @@ $(() => {
             $('#ca-move').remove();
         }
 
+        /** Check local storage to see if user continually has items added to the native menu. */
+        const reAddCount = parseInt(mw.storage.get('mmNativeMenuUsage'), 10) || 0;
+
+        /** Ignore for non-Vector/Timeless, if user explicitly disabled this feature, or if reAddCount is high. */
+        if (-1 === ['vector', 'timeless'].indexOf(config.currentUser.skin)
+            || !!window.moreMenuDisableAutoRemoval
+            || reAddCount >= 5
+        ) {
+            return;
+        }
+
+        const $menu = $('#p-cactions ul');
+        const $parent = $('#p-cactions');
+        const menuIsEmpty = () => '' === $menu.html().trim();
+        let itemsAdded = false;
+
         /**
          * Hide the native More menu if it's empty, and un-hide it if items get added by other scripts.
          */
-        if (-1 === ['vector', 'timeless'].indexOf(config.currentUser.skin)) {
-            return;
-        }
-        const $menu = $('#p-cactions ul');
-        const $parent = $('#p-cactions');
-        if ('' === $menu.html().trim()) {
+        if (menuIsEmpty()) {
             $parent.hide();
         }
         new MutationObserver(mutations => {
             mutations.forEach(mutation => {
                 if (mutation.addedNodes.length) {
+                    itemsAdded = true;
                     $parent.show();
                 } else if (mutation.removedNodes.length) {
-                    if ('' === $menu.html().trim()) {
+                    if (menuIsEmpty()) {
                         $parent.hide();
                     }
                 }
@@ -789,6 +803,13 @@ $(() => {
         }).observe($menu.get(0), {
             childList: true,
         });
+
+        /** Wait 5 seconds before checking the reAddCount, to give other scripts time to populate the menu */
+        setTimeout(() => {
+            if (itemsAdded) {
+                mw.storage.set('mmNativeMenuUsage', reAddCount + 1);
+            }
+        }, 5000);
     }
 
     /**
@@ -806,7 +827,7 @@ $(() => {
                 $('#mm-user-blocks-view-block-log').remove();
             }
 
-            // Remove the 'Blocks' submenu if it's empty.
+            /** Remove the 'Blocks' submenu if it's empty. */
             if (!$('#mm-user-blocks').find('.mm-item').length) {
                 $('#mm-user-blocks').remove();
             }
@@ -817,10 +838,7 @@ $(() => {
      * Script entry point. The 'moremenu.ready' event is fired after the menus are drawn and populated.
      */
     function init() {
-        const cacheDate = mw.storage.get('mmCacheDate') ? parseInt(mw.storage.get('mmCacheDate'), 10) : 0;
-        const expired = cacheDate < new Date();
-
-        $.when.apply(this, getPromises(expired)).done((targetUserData, userRightsData, metaData) => {
+        $.when.apply(this, getPromises()).done((targetUserData, userRightsData, metaData) => {
             /** Target user data. */
             if (targetUserData) {
                 Object.assign(config.targetUser, targetUserData[0].query.users[0]);
@@ -839,7 +857,7 @@ $(() => {
             /** Cache user rights of current user, if given. */
             if (userRightsData) {
                 log('caching user rights');
-                mw.storage.set('mmUserRights', JSON.stringify(userRightsData));
+                mw.storage.session.setObject('mmUserRights', JSON.stringify(userRightsData));
                 config.currentUser.rights = userRightsData.slice();
             }
 
@@ -853,14 +871,7 @@ $(() => {
                         canAddRemoveGroups: !!el.add || !!el.remove,
                     };
                 });
-                mw.storage.set('mmMetaUserGroups', JSON.stringify(config.currentUser.groupsData));
-            }
-
-            /** Set expiry for +24 hours if cache is expired. */
-            if (expired) {
-                log('setting cache expiry');
-                const newDate = new Date();
-                mw.storage.set('mmCacheDate', newDate.setDate(newDate.getDate() + 1));
+                mw.storage.session.setObject('mmMetaUserGroups', JSON.stringify(config.currentUser.groupsData));
             }
 
             removeNavLinks();

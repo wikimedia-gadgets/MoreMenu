@@ -75,14 +75,14 @@ window.MoreMenu.page = function (config) {
           insertAfter: false
         },
         'analysis-wikihistory': {
-          url: "https://tools.wmflabs.org/wikihistory/wh.php?page_title=".concat(config.page.escapedName, "&wiki=").concat(config.dbName),
+          url: "https://tools.wmflabs.org/wikihistory/wh.php?page_title=".concat(config.page.escapedName, "&wiki=").concat(config.project.dbName),
           databaseRestrict: ['enwiki', 'dewiki'],
           namespaceRestrict: [0],
           pageExists: true,
           insertAfter: 'analysis-xtools'
         },
         'analysis-sigma': {
-          url: "https://tools.wmflabs.org/sigma/articleinfo.py?page=".concat(config.page.encodedName, "&server=").concat(config.dbName),
+          url: "https://tools.wmflabs.org/sigma/articleinfo.py?page=".concat(config.page.encodedName, "&server=").concat(config.project.dbName),
           pageExists: true,
           insertAfter: 'analysis-xtools'
         },
@@ -105,7 +105,7 @@ window.MoreMenu.page = function (config) {
           pageExists: true
         },
         'transclusion-count': {
-          url: "https://tools.wmflabs.org/templatecount/index.php?lang=".concat(config.contentLanguage, "&name=").concat(encodeURIComponent(mw.config.get('wgTitle')), "&namespace=").concat(config.nsId),
+          url: "https://tools.wmflabs.org/templatecount/index.php?lang=".concat(config.project.contentLanguage, "&name=").concat(encodeURIComponent(mw.config.get('wgTitle')), "&namespace=").concat(config.page.nsId),
           namespaceRestrict: [2, 4, 5, 10, 11, 12, 13, 100, 101, 828],
           noticeProjectRestrict: ['wikipedia']
         },
@@ -123,11 +123,11 @@ window.MoreMenu.page = function (config) {
           pageExists: true
         },
         'search-by-contributor': {
-          url: "https://xtools.wmflabs.org/topedits/".concat(config.project.domain, "?namespace=").concat(config.nsId, "&page=").concat(encodeURIComponent(mw.config.get('wgTitle'))),
+          url: "https://xtools.wmflabs.org/topedits/".concat(config.project.domain, "?namespace=").concat(config.page.nsId, "&page=").concat(encodeURIComponent(mw.config.get('wgTitle'))),
           pageExists: true
         },
         'search-history-wikiblame': {
-          url: "https://wikipedia.ramselehof.de/wikiblame.php?lang=".concat(config.contentLanguage, "&project=").concat(config.noticeProject, "&article=").concat(config.page.encodedName),
+          url: "https://wikipedia.ramselehof.de/wikiblame.php?lang=".concat(config.project.contentLanguage, "&project=").concat(config.project.noticeProject, "&article=").concat(config.page.encodedName),
           pageExists: true
         },
         'search-history-xtools': {
@@ -150,23 +150,23 @@ window.MoreMenu.page = function (config) {
           pageExists: true
         },
         'check-redirects': {
-          url: "https://dispenser.info.tm/~dispenser/cgi-bin/rdcheck.py?page=".concat(config.page.encodedName, "&lang=").concat(config.contentLanguage),
+          url: "https://dispenser.info.tm/~dispenser/cgi-bin/rdcheck.py?page=".concat(config.page.encodedName, "&lang=").concat(config.project.contentLanguage),
           pageExists: true,
           noticeProjectRestrict: ['wikipedia']
         },
         'disambiguate-links': {
-          url: "https://dispenser.info.tm/~dispenser/cgi-bin/dablinks.py?page=".concat(config.page.encodedName, "&lang=").concat(config.contentLanguage),
+          url: "https://dispenser.info.tm/~dispenser/cgi-bin/dablinks.py?page=".concat(config.page.encodedName, "&lang=").concat(config.project.contentLanguage),
           pageExists: true,
           noticeProjectRestrict: ['wikipedia']
         },
         'expand-bare-references': {
-          url: "https://tools.wmflabs.org/refill/result.php?page=".concat(config.page.encodedName, "&defaults=y&wiki=").concat(config.contentLanguage),
+          url: "https://tools.wmflabs.org/refill/result.php?page=".concat(config.page.encodedName, "&defaults=y&wiki=").concat(config.project.contentLanguage),
           pageExists: true,
           namespaceRestrict: [0, 2, 118],
           noticeProjectRestrict: ['wikipedia', 'commons', 'meta']
         },
         'fix-dead-links': {
-          url: "https://tools.wmflabs.org/iabot/index.php?page=runbotsingle&pagesearch=".concat(config.page.encodedName, "&wiki=").concat(config.dbName),
+          url: "https://tools.wmflabs.org/iabot/index.php?page=runbotsingle&pagesearch=".concat(config.page.encodedName, "&wiki=").concat(config.project.dbName),
           pageExists: true,
           databaseRestrict: ['alswiki', 'barwiki', 'ckbwiki', 'dewiki', 'enwiki', 'eswiki', 'frwiki', 'huwiki', 'itwiki', 'jawiki', 'kowiki', 'lvwiki', 'nlwiki', 'nowiki', 'ptwiki', 'ruwiki', 'svwiki', 'zhwiki']
         }
@@ -211,7 +211,7 @@ window.MoreMenu.page = function (config) {
         pageExists: true,
         pageMovable: true
       }
-    }, _defineProperty(_page, config.pageProtected ? 'change-protection' : 'protect-page', {
+    }, _defineProperty(_page, config.page["protected"] ? 'change-protection' : 'protect-page', {
       url: mw.util.getUrl(config.page.name, {
         action: 'protect'
       }),
