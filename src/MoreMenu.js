@@ -785,6 +785,7 @@ $(() => {
 
         /**
          * Hide the native More menu if it's empty, and un-hide it if items get added by other scripts.
+         * MutationObserver implementation courtesy of LunarTwilight. See https://github.com/MusikAnimal/MoreMenu/pull/1
          */
         if (menuIsEmpty()) {
             $parent.hide();
