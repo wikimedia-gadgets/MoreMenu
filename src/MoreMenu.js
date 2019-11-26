@@ -468,7 +468,7 @@ $(() => {
                     text-decoration: underline !important;
                 }
                 .mm-submenu {
-                    left: 100%;
+                    ${leftKey}: 100%;
                     top: 0;
                 }
             `);
@@ -671,7 +671,7 @@ $(() => {
 
         /** Position the menu. */
         $menu.css({
-            left: isRtl ? $(window).width() - $tab.offset().left : $tab.position().left,
+            left: isRtl ? $tab.position().left - $menu.width() + $tab.width() + 7 : $tab.position().left,
             top: $tab.offset().top,
         });
 
@@ -701,7 +701,7 @@ $(() => {
 
         /** Position the menu. */
         $menu.css({
-            left: isRtl ? $(window).width() - $tab.offset().left : $tab.position().left,
+            left: isRtl ? $tab.position().left - $menu.width() + $tab.width() + 7 : $tab.position().left,
             top: $tab.offset().top + $tab.outerHeight(),
         });
 

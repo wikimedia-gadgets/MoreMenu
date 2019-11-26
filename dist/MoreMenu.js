@@ -391,7 +391,7 @@ $(function () {
         return mw.util.addCSS("\n                .mm-menu {\n                    background: #fff;\n                    border-bottom: 1px solid #aaa;\n                    margin: 0;\n                    position: absolute;\n                    z-index: 99;\n                }\n                .mm-menu ~ a {\n                    z-index: 99 !important;\n                }\n                .mm-submenu {\n                    background: #fff;\n                    border-bottom: 1px solid #aaa;\n                    border-top: 1px solid #aaa;\n                    font-size: inherit;\n                    margin: 0;\n                    top: -1px;\n                    z-index: 95;\n                }\n                .mm-item, .mm-submenu-wrapper {\n                    background: transparent !important;\n                    border-top: 0 !important;\n                    display: block !important;\n                    margin: 0 !important;\n                    padding: 0 !important;\n                }\n                .mm-item a, .mm-submenu-wrapper a {\n                    background: transparent !important;\n                    text-transform: none !important;\n                }\n                .mm-menu a:hover {\n                    text-decoration: underline !important;\n                }\n            ");
 
       case 'modern':
-        return mw.util.addCSS("\n                .mm-menu, .mm-submenu {\n                    background: #f0f0f0 !important;\n                    border: solid 1px #666;\n                }\n                .mm-menu {\n                    border-top: none;\n                    position: absolute;\n                    z-index: 99;\n                }\n                .mm-submenu-wrapper > a {\n                    cursor: default !important;\n                }\n                .mm-item, .mm-submenu-wrapper {\n                    display: block !important;\n                    float: none !important;\n                    height: inherit !important;\n                    margin: 0 !important;\n                    padding: 0 !important;\n                }\n                .mm-menu a {\n                    display: inline-block;\n                    padding: 3px 10px !important;\n                    text-transform: none !important;\n                    text-decoration: none !important;\n                    white-space: nowrap;\n                    width: 100%;\n                }\n                .mm-menu a:hover {\n                    text-decoration: underline !important;\n                }\n                .mm-submenu {\n                    left: 100%;\n                    top: 0;\n                }\n            ");
+        return mw.util.addCSS("\n                .mm-menu, .mm-submenu {\n                    background: #f0f0f0 !important;\n                    border: solid 1px #666;\n                }\n                .mm-menu {\n                    border-top: none;\n                    position: absolute;\n                    z-index: 99;\n                }\n                .mm-submenu-wrapper > a {\n                    cursor: default !important;\n                }\n                .mm-item, .mm-submenu-wrapper {\n                    display: block !important;\n                    float: none !important;\n                    height: inherit !important;\n                    margin: 0 !important;\n                    padding: 0 !important;\n                }\n                .mm-menu a {\n                    display: inline-block;\n                    padding: 3px 10px !important;\n                    text-transform: none !important;\n                    text-decoration: none !important;\n                    white-space: nowrap;\n                    width: 100%;\n                }\n                .mm-menu a:hover {\n                    text-decoration: underline !important;\n                }\n                .mm-submenu {\n                    ".concat(leftKey, ": 100%;\n                    top: 0;\n                }\n            "));
 
       default:
         return null;
@@ -586,7 +586,7 @@ $(function () {
     /** Position the menu. */
 
     $menu.css({
-      left: isRtl ? $(window).width() - $tab.offset().left : $tab.position().left,
+      left: isRtl ? $tab.position().left - $menu.width() + $tab.width() + 7 : $tab.position().left,
       top: $tab.offset().top
     });
     /** Add hover listeners. */
@@ -617,7 +617,7 @@ $(function () {
     /** Position the menu. */
 
     $menu.css({
-      left: isRtl ? $(window).width() - $tab.offset().left : $tab.position().left,
+      left: isRtl ? $tab.position().left - $menu.width() + $tab.width() + 7 : $tab.position().left,
       top: $tab.offset().top + $tab.outerHeight()
     });
     /** Add hover listeners. */
