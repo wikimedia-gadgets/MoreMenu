@@ -88,6 +88,7 @@ Object.assign(window.MoreMenu.messages, {
   "subpages": "Subpages",
   "sul": "SUL",
   "suppressed-contribs": "Suppressed contribs",
+  "suppression-log": "Suppression log",
   "thanks-log": "Thanks log",
   "tools": "Tools",
   "top-edited-pages": "Top edited pages",

@@ -120,6 +120,14 @@ window.MoreMenu.user = function (config) {
             type: 'spamblacklist'
           })
         },
+        'suppression-log': {
+          url: mw.util.getUrl('Special:Log', {
+            user: config.targetUser.name,
+            type: 'suppress'
+          }),
+          targetUserRights: ['suppressrevision'],
+          currentUserRights: ['suppressionlog']
+        },
         'thanks-log': {
           url: mw.util.getUrl('Special:Log', {
             user: config.targetUser.name,
@@ -207,7 +215,7 @@ window.MoreMenu.user = function (config) {
           url: "https://tools.wmflabs.org/guc/?user=".concat(config.targetUser.encodedName, "&blocks=true")
         },
         'global-contributions-xtools': {
-          url: "https://xtools.wmflabs.org/global-contribs/".concat(config.targetUser.encodedName)
+          url: "https://xtools.wmflabs.org/globalcontribs/".concat(config.targetUser.encodedName)
         },
         'non-automated-edits': {
           url: "https://xtools.wmflabs.org/autoedits/".concat(config.project.domain, "/").concat(config.targetUser.encodedName)

@@ -163,7 +163,7 @@ $(() => {
             return dfd.resolve();
         }
 
-        /** First check Metawiki. */
+        /** Check Metawiki. */
         mw.loader.getScript(
             'https://meta.wikimedia.org/w/index.php?action=raw&ctype=text/javascript'
                 + `&title=MediaWiki:Gadget-MoreMenu.messages.${lang}.js`

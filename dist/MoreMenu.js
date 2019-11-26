@@ -193,7 +193,7 @@ $(function () {
     if ('en' === lang) {
       return dfd.resolve();
     }
-    /** First check Metawiki. */
+    /** Check Metawiki. */
 
 
     mw.loader.getScript('https://meta.wikimedia.org/w/index.php?action=raw&ctype=text/javascript' + "&title=MediaWiki:Gadget-MoreMenu.messages.".concat(lang, ".js")).then(function () {
@@ -709,6 +709,7 @@ $(function () {
     var itemsAdded = false;
     /**
      * Hide the native More menu if it's empty, and un-hide it if items get added by other scripts.
+     * MutationObserver implementation courtesy of LunarTwilight. See https://github.com/MusikAnimal/MoreMenu/pull/1
      */
 
     if (menuIsEmpty()) {

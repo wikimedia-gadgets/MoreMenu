@@ -59,6 +59,11 @@ window.MoreMenu.user = config => ({
             'spam-blacklist-log': {
                 url: mw.util.getUrl('Special:Log', { user: config.targetUser.name, type: 'spamblacklist' }),
             },
+            'suppression-log': {
+                url: mw.util.getUrl('Special:Log', { user: config.targetUser.name, type: 'suppress' }),
+                targetUserRights: ['suppressrevision'],
+                currentUserRights: ['suppressionlog'],
+            },
             'thanks-log': {
                 url: mw.util.getUrl('Special:Log', { user: config.targetUser.name, type: 'thanks' }),
                 targetUserGroups: ['user'],
@@ -128,7 +133,7 @@ window.MoreMenu.user = config => ({
                 url: `https://tools.wmflabs.org/guc/?user=${config.targetUser.encodedName}&blocks=true`,
             },
             'global-contributions-xtools': {
-                url: `https://xtools.wmflabs.org/global-contribs/${config.targetUser.encodedName}`,
+                url: `https://xtools.wmflabs.org/globalcontribs/${config.targetUser.encodedName}`,
             },
             'non-automated-edits': {
                 url: `https://xtools.wmflabs.org/autoedits/${config.project.domain}/${config.targetUser.encodedName}`,
