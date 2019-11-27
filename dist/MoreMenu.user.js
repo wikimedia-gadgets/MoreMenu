@@ -198,7 +198,7 @@ window.MoreMenu.user = function (config) {
         }
       },
       'analysis': {
-        'analysis': {
+        'analysis-xtools': {
           url: "https://xtools.wmflabs.org/ec/".concat(config.project.domain, "/").concat(config.targetUser.encodedName)
         },
         'articles-created': {

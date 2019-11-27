@@ -116,7 +116,7 @@ window.MoreMenu.user = config => ({
             },
         },
         'analysis': {
-            'analysis': {
+            'analysis-xtools': {
                 url: `https://xtools.wmflabs.org/ec/${config.project.domain}/${config.targetUser.encodedName}`,
             },
             'articles-created': {
