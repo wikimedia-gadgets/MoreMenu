@@ -88,7 +88,8 @@ window.MoreMenu.page = function (config) {
         },
         'authorship': {
           url: "https://xtools.wmflabs.org/authorship/".concat(config.project.domain, "/").concat(config.page.escapedName),
-          pageExists: true
+          pageExists: true,
+          databaseRestrict: ['dewiki', 'enwiki', 'eswiki', 'euwiki', 'trwiki']
         },
         'basic-statistics': {
           url: mw.util.getUrl(config.page.name, {

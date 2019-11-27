@@ -47,6 +47,7 @@ window.MoreMenu.page = config => ({
             'authorship': {
                 url: `https://xtools.wmflabs.org/authorship/${config.project.domain}/${config.page.escapedName}`,
                 pageExists: true,
+                databaseRestrict: ['dewiki', 'enwiki', 'eswiki', 'euwiki', 'trwiki'],
             },
             'basic-statistics': {
                 url: mw.util.getUrl(config.page.name, { action: 'info' }),
