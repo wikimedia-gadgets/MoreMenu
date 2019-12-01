@@ -78,7 +78,7 @@ window.MoreMenu.user = config => ({
             },
             'user-rights-log': {
                 url: mw.util.getUrl('Special:Log', { user: config.targetUser.name, type: 'rights' }),
-                addRemoveGroups: true,
+                targetUserChangeGroups: true,
             },
         },
         'blocks': {

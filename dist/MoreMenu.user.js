@@ -155,7 +155,7 @@ window.MoreMenu.user = function (config) {
             user: config.targetUser.name,
             type: 'rights'
           }),
-          addRemoveGroups: true
+          targetUserChangeGroups: true
         }
       },
       'blocks': {

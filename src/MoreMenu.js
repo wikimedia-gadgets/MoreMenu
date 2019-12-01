@@ -61,8 +61,25 @@ $(() => {
          */
         this.targetUser = {
             name: mw.config.get('wgRelevantUserName') || '',
+            groups: [],
+            rights: [],
             blocked: false,
+            ipRange: false,
         };
+        if (!this.targetUser.name
+            && 'Contributions' === mw.config.get('wgCanonicalSpecialPageName')
+            && !$('.mw-userpage-userdoesnotexist')[0]
+        ) {
+            /**
+             * IP range at Special:Contribs, where wgRelevantUserName isn't set.
+             * @see https://phabricator.wikimedia.org/T206954
+             */
+            this.targetUser.name = mw.config.get('wgTitle').split('/').slice(1).join('/');
+            this.targetUser.ipRange = true;
+
+            /** Some things don't work for IPv4 ranges (block log API), but do for IPv6 ranges... */
+            this.targetUser.ipv4Range = mw.util.isIPv4Address(this.targetUser.name.split('/')[0]);
+        }
         Object.assign(this.targetUser, {
             escapedName: this.targetUser.name.replace(/[?!'"()*]/g, escape),
             encodedName: encodeURIComponent(this.targetUser.name),
@@ -179,7 +196,8 @@ $(() => {
     function getPromises() {
         const promises = new Array(4);
 
-        if (config.targetUser.name) {
+        /** Note that the blocks API doesn't work for IPv4 ranges. */
+        if (config.targetUser.name && !config.targetUser.ipv4Range) {
             promises[0] = api.get({
                 action: 'query',
                 list: 'users|blocks',
@@ -760,7 +778,7 @@ $(() => {
      * after MoreMenu has loaded. If this is the case, it will not remove the menu at all. This is to avoid
      * the irritating "jumping" effect you get due to race conditions.
      */
-    function removeNavLinks() {
+    function removeNativeLinks() {
         $('#ca-protect,#ca-unprotect,#ca-delete,#ca-undelete').remove();
         if ('commonswiki' !== config.project.dbName) {
             /** Do not do this for Commons, where the move file gadget has a listener on the native move link. */
@@ -836,6 +854,31 @@ $(() => {
     }
 
     /**
+     * Remove unneeded links and empty submenus.
+     */
+    function removeUnneededLinks() {
+        /** For now this logic only applies to the User menu. */
+        if (!config.targetUser.name) {
+            return;
+        }
+
+        removeBlockLogLink();
+
+        if (config.targetUser.ipRange) {
+            $('#mm-user-user-logs').remove();
+            $('#mm-user-deleted-contributions').remove();
+            $('#mm-user-suppressed-contributions').remove();
+
+            /**
+             * For now assuming no tools accept IP ranges.
+             * FIXME: We should hide all empty menus, and use MutationObserver to un-hide them
+             *   if a script adds something to them after MoreMenu has finished loading.
+             */
+            $('#mm-user-analysis').remove();
+        }
+    }
+
+    /**
      * Script entry point. The 'moremenu.ready' event is fired after the menus are drawn and populated.
      */
     function init() {
@@ -846,8 +889,6 @@ $(() => {
 
                 /** Logged out user. */
                 if ('' === config.targetUser.invalid) {
-                    config.targetUser.groups = [];
-                    config.targetUser.rights = [];
                     if (targetUserData[0].query.blocks.length) {
                         config.targetUser.blocked = true;
                         config.targetUser.blockid = targetUserData[0].query.blocks[0].id;
@@ -875,9 +916,9 @@ $(() => {
                 mw.storage.session.setObject('mmMetaUserGroups', JSON.stringify(config.currentUser.groupsData));
             }
 
-            removeNavLinks();
+            removeNativeLinks();
             drawMenus();
-            removeBlockLogLink();
+            removeUnneededLinks();
 
             mw.hook('moremenu.ready').fire(config);
         });
