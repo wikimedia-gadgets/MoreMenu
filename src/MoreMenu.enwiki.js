@@ -113,7 +113,7 @@ $(() => {
             'analysis',
             'AfD stats',
             `https://tools.wmflabs.org/afdstats/afdstats.py?name=${config.targetUser.encodedName}`,
-            'analysis'
+            'analysis-xtools'
         );
 
         /** Add link to Peer reviewer tool under 'Tools'. */
