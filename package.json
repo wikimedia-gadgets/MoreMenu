@@ -1,6 +1,6 @@
 {
   "name": "moremenu",
-  "version": "5.0.7",
+  "version": "5.0.8",
   "description": "Dropdown menus with links to common tasks, user and page analytic tools and logs.",
   "private": true,
   "scripts": {
