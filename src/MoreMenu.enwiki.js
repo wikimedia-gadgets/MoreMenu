@@ -92,29 +92,31 @@ $(() => {
     mw.hook('moremenu.ready').add(config => {
         const api = new mw.Api();
 
-        if (config.targetUser.name) {
+        if (config.targetUser.name && !config.targetUser.ipRange) {
             addRfXs(api, config);
         }
-        if (config.page.name) {
+        if (config.page.id > 0) {
             addXfD(api, config);
         }
 
         /** Add link to BLP edits in the 'Analysis' menu. */
-        MoreMenu.addSubmenuLink(
-            'user',
-            'analysis',
-            'BLP Edits',
-            `https://xtools.wmflabs.org/categoryedits/${config.project.serverName}/${config.targetUser.encodedName}/Living people`
-        );
+        if (!config.targetUser.ipRange) {
+            MoreMenu.addSubmenuLink(
+                'user',
+                'analysis',
+                'BLP Edits',
+                `https://xtools.wmflabs.org/categoryedits/${config.project.serverName}/${config.targetUser.encodedName}/Living people`
+            );
 
-        /** Add link to AfD stats. */
-        MoreMenu.addSubmenuLink(
-            'user',
-            'analysis',
-            'AfD stats',
-            `https://tools.wmflabs.org/afdstats/afdstats.py?name=${config.targetUser.encodedName}`,
-            'analysis-xtools'
-        );
+            /** Add link to AfD stats. */
+            MoreMenu.addSubmenuLink(
+                'user',
+                'analysis',
+                'AfD stats',
+                `https://tools.wmflabs.org/afdstats/afdstats.py?name=${config.targetUser.encodedName}`,
+                'analysis-xtools'
+            );
+        }
 
         /** Add link to Peer reviewer tool under 'Tools'. */
         MoreMenu.addSubmenuItem('page', 'tools', 'Peer reviewer', {

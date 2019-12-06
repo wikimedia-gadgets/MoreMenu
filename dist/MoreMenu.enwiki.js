@@ -109,21 +109,24 @@ $(function () {
   mw.hook('moremenu.ready').add(function (config) {
     var api = new mw.Api();
 
-    if (config.targetUser.name) {
+    if (config.targetUser.name && !config.targetUser.ipRange) {
       addRfXs(api, config);
     }
 
-    if (config.page.name) {
+    if (config.page.id > 0) {
       addXfD(api, config);
     }
     /** Add link to BLP edits in the 'Analysis' menu. */
 
 
-    MoreMenu.addSubmenuLink('user', 'analysis', 'BLP Edits', "https://xtools.wmflabs.org/categoryedits/".concat(config.project.serverName, "/").concat(config.targetUser.encodedName, "/Living people"));
-    /** Add link to AfD stats. */
+    if (!config.targetUser.ipRange) {
+      MoreMenu.addSubmenuLink('user', 'analysis', 'BLP Edits', "https://xtools.wmflabs.org/categoryedits/".concat(config.project.serverName, "/").concat(config.targetUser.encodedName, "/Living people"));
+      /** Add link to AfD stats. */
 
-    MoreMenu.addSubmenuLink('user', 'analysis', 'AfD stats', "https://tools.wmflabs.org/afdstats/afdstats.py?name=".concat(config.targetUser.encodedName), 'analysis-xtools');
+      MoreMenu.addSubmenuLink('user', 'analysis', 'AfD stats', "https://tools.wmflabs.org/afdstats/afdstats.py?name=".concat(config.targetUser.encodedName), 'analysis-xtools');
+    }
     /** Add link to Peer reviewer tool under 'Tools'. */
+
 
     MoreMenu.addSubmenuItem('page', 'tools', 'Peer reviewer', {
       url: "https://dispenser.info.tm/~dispenser/view/Peer_reviewer#page:".concat(config.page.encodedName),

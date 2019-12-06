@@ -367,7 +367,7 @@ $(() => {
             return mw.util.addCSS(`
                 .mm-submenu {
                     border-top-width: 1px !important;
-                    min-width: inherit !important;
+                    min-width: 120px !important;
                     top: -1px !important;
                 }
                 #p-views {
@@ -947,7 +947,7 @@ $(() => {
         const $menu = $(menuId);
 
         if (!$menu.length) {
-            log(`'${menu}${submenu ? ` ${submenu}` : ''}' menu with selector ${menuId} not found.`, 'error');
+            log(`'${menu}${submenu ? ` ${submenu}` : ''}' menu with selector ${menuId} not found.`, 'warn');
             return;
         }
 
