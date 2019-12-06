@@ -815,13 +815,10 @@ $(function () {
       /** Target user data. */
       if (targetUserData) {
         Object.assign(config.targetUser, targetUserData[0].query.users[0]);
-        /** Logged out user. */
 
-        if ('' === config.targetUser.invalid) {
-          if (targetUserData[0].query.blocks.length) {
-            config.targetUser.blocked = true;
-            config.targetUser.blockid = targetUserData[0].query.blocks[0].id;
-          }
+        if (targetUserData[0].query.blocks.length) {
+          config.targetUser.blocked = true;
+          config.targetUser.blockid = targetUserData[0].query.blocks[0].id;
         }
       }
       /** Cache user rights of current user, if given. */

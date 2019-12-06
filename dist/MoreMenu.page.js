@@ -64,6 +64,12 @@ window.MoreMenu.page = function (config) {
             page: config.page.name,
             type: 'protect'
           })
+        },
+        'spam-blacklist-log': {
+          url: mw.util.getUrl('Special:Log', {
+            page: config.page.name,
+            type: 'spamblacklist'
+          })
         }
       },
 

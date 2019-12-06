@@ -24,6 +24,9 @@ window.MoreMenu.page = config => ({
             'protection-log': {
                 url: mw.util.getUrl('Special:Log', { page: config.page.name, type: 'protect' }),
             },
+            'spam-blacklist-log': {
+                url: mw.util.getUrl('Special:Log', { page: config.page.name, type: 'spamblacklist' }),
+            },
         },
         /** Tools and links that provide meaningful statistics. */
         'analysis': {
