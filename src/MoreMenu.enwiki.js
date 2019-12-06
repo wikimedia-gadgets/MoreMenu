@@ -95,7 +95,7 @@ $(() => {
         if (config.targetUser.name && !config.targetUser.ipRange) {
             addRfXs(api, config);
         }
-        if (config.page.id > 0) {
+        if (config.page.name) {
             addXfD(api, config);
         }
 
