@@ -324,7 +324,9 @@ $(() => {
                 targetUserRights: hasConditional(itemData.targetUserRights, config.targetUser.rights),
                 targetUserBlocked: itemData.targetUserBlocked !== undefined ? config.targetUser.blocked === itemData.targetUserBlocked : true,
                 targetUserChangeGroups: itemData.targetUserChangeGroups ? canAddRemoveGroups(config.targetUser.groups, config.targetUser.rights) : true,
-                targetUserIp: itemData.targetUserIp ? mw.util.isIPAddress(config.targetUser.name) : true,
+                targetUserIp: itemData.targetUserIp
+                    ? mw.util.isIPAddress(config.targetUser.name) || (config.targetUser.ipRange && itemData.targetUserIpRange)
+                    : true,
             });
         }
 
@@ -365,6 +367,7 @@ $(() => {
             return mw.util.addCSS(`
                 .mm-submenu {
                     border-top-width: 1px !important;
+                    min-width: inherit !important;
                     top: -1px !important;
                 }
                 #p-views {

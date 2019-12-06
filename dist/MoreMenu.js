@@ -363,7 +363,7 @@ $(function () {
         targetUserRights: hasConditional(itemData.targetUserRights, config.targetUser.rights),
         targetUserBlocked: itemData.targetUserBlocked !== undefined ? config.targetUser.blocked === itemData.targetUserBlocked : true,
         targetUserChangeGroups: itemData.targetUserChangeGroups ? canAddRemoveGroups(config.targetUser.groups, config.targetUser.rights) : true,
-        targetUserIp: itemData.targetUserIp ? mw.util.isIPAddress(config.targetUser.name) : true
+        targetUserIp: itemData.targetUserIp ? mw.util.isIPAddress(config.targetUser.name) || config.targetUser.ipRange && itemData.targetUserIpRange : true
       });
     }
 
@@ -399,7 +399,7 @@ $(function () {
   function addCSS() {
     switch (config.currentUser.skin) {
       case 'vector':
-        return mw.util.addCSS("\n                .mm-submenu {\n                    border-top-width: 1px !important;\n                    top: -1px !important;\n                }\n                #p-views {\n                    padding-left: inherit !important;\n                    padding-right: inherit !important;\n                }\n                #p-views::after {\n                    display: none !important;\n                }\n            ");
+        return mw.util.addCSS("\n                .mm-submenu {\n                    border-top-width: 1px !important;\n                    min-width: inherit !important;\n                    top: -1px !important;\n                }\n                #p-views {\n                    padding-left: inherit !important;\n                    padding-right: inherit !important;\n                }\n                #p-views::after {\n                    display: none !important;\n                }\n            ");
 
       case 'timeless':
         return mw.util.addCSS("\n                .mm-submenu-wrapper {\n                    cursor: default;\n                }\n                .mm-submenu {\n                    background: #f8f9fa;\n                    border: 1px solid rgb(200, 204, 209);\n                    box-shadow: 0 2px 3px 1px rgba(0, 0, 0, 0.05);\n                    padding: 1.2em 1.5em !important;\n                    top: -1.2em;\n                    white-space: nowrap;\n                    z-index: 95;\n                }\n                .mm-submenu::after {\n                    border-bottom: 8px solid transparent;\n                    border-top: 8px solid transparent;\n                    border-".concat(leftKey, ": 8px solid rgb(200, 204, 209);\n                    content: '';\n                    height: 0;\n                    padding-").concat(rightKey, ": 4px;\n                    position: absolute;\n                    top: 20px;\n                    width: 0;\n                    ").concat(rightKey, ": -13px;\n                }\n                @media screen and (max-width: 1339px) and (min-width: 1100px) {\n                    .mm-submenu::after {\n                        border-").concat(leftKey, ": none;\n                        border-").concat(rightKey, ": 8px solid rgb(200, 204, 209);\n                        padding-").concat(leftKey, ": 4px;\n                        padding-").concat(rightKey, ": inherit;\n                        ").concat(rightKey, ": inherit;\n                        ").concat(leftKey, ": -35px;\n                    }\n                }\n                @media screen and (max-width: 850px) {\n                    .mm-submenu {\n                        top: -2.2em;\n                    }\n                }\n            "));

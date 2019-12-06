@@ -231,7 +231,8 @@ window.MoreMenu.user = function (config) {
       'ip-lookup': {
         'whois': {
           url: "https://tools.wmflabs.org/whois/gateway.py?lookup=true&ip=".concat(config.targetUser.escapedName),
-          targetUserIp: true
+          targetUserIp: true,
+          targetUserIpRange: true
         },
         'proxy-check': {
           url: "https://tools.wmflabs.org/ipcheck/?ip=".concat(config.targetUser.escapedName),
@@ -240,11 +241,13 @@ window.MoreMenu.user = function (config) {
         },
         'rdns': {
           url: "https://www.robtex.com/ip/".concat(config.targetUser.escapedName, ".html"),
-          targetUserIp: true
+          targetUserIp: true,
+          targetUserIpRange: true
         },
         'geolocate': {
           url: "https://whatismyipaddress.com/ip/".concat(config.targetUser.escapedName),
-          targetUserIp: true
+          targetUserIp: true,
+          targetUserIpRange: true
         }
       },
 

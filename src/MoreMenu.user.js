@@ -150,6 +150,7 @@ window.MoreMenu.user = config => ({
             'whois': {
                 url: `https://tools.wmflabs.org/whois/gateway.py?lookup=true&ip=${config.targetUser.escapedName}`,
                 targetUserIp: true,
+                targetUserIpRange: true,
             },
             'proxy-check': {
                 url: `https://tools.wmflabs.org/ipcheck/?ip=${config.targetUser.escapedName}`,
@@ -159,10 +160,12 @@ window.MoreMenu.user = config => ({
             'rdns': {
                 url: `https://www.robtex.com/ip/${config.targetUser.escapedName}.html`,
                 targetUserIp: true,
+                targetUserIpRange: true,
             },
             'geolocate': {
                 url: `https://whatismyipaddress.com/ip/${config.targetUser.escapedName}`,
                 targetUserIp: true,
+                targetUserIpRange: true,
             },
         },
         /** Actions the current user can take on the target user. */
