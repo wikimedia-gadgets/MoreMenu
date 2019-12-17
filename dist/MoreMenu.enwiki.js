@@ -38,7 +38,8 @@ $(function () {
       'Wikipedia:Requests for checkuser/Case': 'rfcuc',
       'Wikipedia:Requests for oversight': 'rfo',
       'Wikipedia:Contributor copyright investigations': 'cci',
-      'Wikipedia:Sockpuppet investigations': 'spi'
+      'Wikipedia:Sockpuppet investigations': 'spi',
+      'Wikipedia:Bots/Requests for approval': 'brfa'
     };
     Object.assign(MoreMenu.messages, {
       rfa: 'RfAs',
@@ -49,7 +50,8 @@ $(function () {
       rfcuc: 'RfCUCs',
       rfo: 'RfOs',
       cci: 'CCIs',
-      spi: 'SPIs'
+      spi: 'SPIs',
+      brfa: 'BRFAs'
     });
     var links = {};
     api.get({
@@ -113,7 +115,7 @@ $(function () {
       addRfXs(api, config);
     }
 
-    if (config.page.id > 0) {
+    if (config.page.name) {
       addXfD(api, config);
     }
     /** Add link to BLP edits in the 'Analysis' menu. */

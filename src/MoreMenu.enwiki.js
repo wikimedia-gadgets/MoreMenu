@@ -20,6 +20,7 @@ $(() => {
             'Wikipedia:Requests for oversight': 'rfo',
             'Wikipedia:Contributor copyright investigations': 'cci',
             'Wikipedia:Sockpuppet investigations': 'spi',
+            'Wikipedia:Bots/Requests for approval': 'brfa',
         };
         Object.assign(MoreMenu.messages, {
             rfa: 'RfAs',
@@ -31,6 +32,7 @@ $(() => {
             rfo: 'RfOs',
             cci: 'CCIs',
             spi: 'SPIs',
+            brfa: 'BRFAs',
         });
 
         const links = {};
