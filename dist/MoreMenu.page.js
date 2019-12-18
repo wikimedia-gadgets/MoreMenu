@@ -204,6 +204,12 @@ window.MoreMenu.page = function (config) {
         /** Don't show the 'Edit intro' link if the edittop gadget is enabled or there is only one section. */
         visible: '1' !== mw.user.options.get('gadget-edittop') && $('.mw-editsection').length
       },
+
+      /** Placeholder for history link in Monobook/Modern, will get replaced by native link */
+      'history': {
+        url: '#',
+        visible: -1 !== ['monobook', 'modern'].indexOf(config.currentUser.skin)
+      },
       'merge-page': {
         url: mw.util.getUrl('Special:MergeHistory', {
           target: config.page.name
@@ -235,6 +241,9 @@ window.MoreMenu.page = function (config) {
       url: mw.util.getUrl("Special:Undelete/".concat(config.page.name)),
       currentUserRights: ['undelete'],
       pageDeleted: true
+    }), _defineProperty(_page, 'watch', {
+      url: '#',
+      visible: -1 !== ['monobook', 'modern'].indexOf(config.currentUser.skin)
     }), _page)
   };
 };

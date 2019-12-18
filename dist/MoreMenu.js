@@ -571,7 +571,7 @@ $(function () {
 
   function drawMenuVector(parentKey, html) {
     html = "<div id=\"p-".concat(parentKey, "\" role=\"navigation\" class=\"vectorMenu mm-").concat(parentKey, " mm-tab\" ") + "aria-labelledby=\"p-".concat(parentKey, "-label\" style=\"z-index: 99\">") + "<input type=\"checkbox\" class=\"vectorMenuCheckbox\" aria-labelledby=\"p-".concat(parentKey, "-label\">") + "<h3 id=\"p-".concat(parentKey, "-label\"><span>").concat(msg(parentKey), "</span><a href=\"#\"></a></h3>") + "<ul class=\"menu mm-menu\">".concat(html, "</ul>") + '</div>';
-    $(html).insertAfter($('#p-views'));
+    $(html).insertAfter($('#p-views, .mm-page').last());
   }
   /**
    * Draw menu for the Timeless skin.
@@ -584,9 +584,9 @@ $(function () {
     html = "<div role=\"navigation\" class=\"mw-portlet mm-".concat(parentKey, " mm-tab\" id=\"p-").concat(parentKey, "\" aria-labelledby=\"p-").concat(parentKey, "-label\">") + "<h3 id=\"p-".concat(parentKey, "-label\">").concat(msg(parentKey), "</h3>") + "<div class=\"mw-portlet-body\"><ul class=\"mm-menu\">".concat(html, "</ul></div></div>");
 
     if ($('#p-cactions').length) {
-      $(html).insertAfter($('#p-cactions'));
+      $(html).insertBefore($('#p-cactions'));
     } else {
-      $('#page-tools .sidebar-inner').append(html);
+      $('#page-tools .sidebar-inner').prepend(html);
     }
   }
   /**
@@ -598,7 +598,7 @@ $(function () {
 
   function drawMenuMonobook(parentKey, html) {
     html = "<li id=\"ca-".concat(parentKey, "\" class=\"mm-").concat(parentKey, " mm-tab\">") + "<a href=\"javascript:void(0)\">".concat(msg(parentKey), "</a>") + "<ul class=\"mm-menu\" style=\"display:none\">".concat(html, "</ul>") + '</li>';
-    var $tab = $(html).appendTo('#p-cactions ul:first-child');
+    var $tab = $(html).insertAfter($('#ca-nstab-special, #ca-edit, #ca-ve-edit, #ca-page, #ca-viewsource').last());
     var $menu = $tab.find('.mm-menu');
     /** Position the menu. */
 
@@ -629,7 +629,7 @@ $(function () {
 
   function drawMenuModern(parentKey, html) {
     html = "<li id=\"ca-".concat(parentKey, "\" class=\"mm-").concat(parentKey, " mm-tab\">") + "<a href=\"javascript:void(0)\">".concat(msg(parentKey), "</a>") + "<ul class=\"mm-menu\" style=\"display:none\">".concat(html, "</ul>") + '</li>';
-    var $tab = $(html).appendTo('#p-cactions ul:first-child');
+    var $tab = $(html).insertAfter($('#ca-nstab-special, #ca-edit, #ca-ve-edit, #ca-page, #ca-viewsource').last());
     var $menu = $tab.find('.mm-menu');
     /** Position the menu. */
 
@@ -654,12 +654,12 @@ $(function () {
     var menus = {};
     /** Determine which menus to draw. */
 
-    if (config.targetUser.name) {
-      $.extend(menus, getModule('user')(config));
-    }
-
     if (config.page.nsId >= 0) {
       $.extend(menus, getModule('page')(config));
+    }
+
+    if (config.targetUser.name) {
+      $.extend(menus, getModule('user')(config));
     }
     /** Preemptively add the appropriate CSS. */
 
@@ -692,6 +692,36 @@ $(function () {
     addListeners();
   }
   /**
+   * Monobook and Modern have 'History' and 'Watch' links as tabs. To conserve space, they are added to the Page menu.
+   * This method is called before and after the menus are drawn, to ensure positioning is calculated correctly.
+   * @param {Boolean} [replace] True to replace the links in .mm-page with the native links, false just hides them.
+   */
+
+
+  function handleHistoryAndWatchLinks() {
+    var replace = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+    if (-1 === ['monobook', 'modern'].indexOf(config.currentUser.skin)) {
+      return;
+    }
+
+    var $histLink = $('#ca-history');
+    var $watchLink = $('.mw-watchlink');
+
+    if (replace) {
+      $('#mm-page-watch').replaceWith($watchLink.addClass('mm-item').show());
+      $('#mm-page-history').replaceWith($histLink.addClass('mm-item').show());
+    } else {
+      /** No need to ask for translations when these already live on the page. */
+      MoreMenu.messages.watch = $watchLink.text() || 'watch';
+      MoreMenu.messages.history = $histLink.text() || 'history';
+      /** Hide the links so that the positioning is calculated correctly in drawMenus() */
+
+      $watchLink.hide();
+      $histLink.hide();
+    }
+  }
+  /**
    * Remove redundant links from the native More menu.
    * This uses mw.storage to keep track of whether the native menu usually gets items added to it
    * after MoreMenu has loaded. If this is the case, it will not remove the menu at all. This is to avoid
@@ -706,8 +736,9 @@ $(function () {
       /** Do not do this for Commons, where the move file gadget has a listener on the native move link. */
       $('#ca-move').remove();
     }
-    /** Check local storage to see if user continually has items added to the native menu. */
 
+    handleHistoryAndWatchLinks();
+    /** Check local storage to see if user continually has items added to the native menu. */
 
     var reAddCount = parseInt(mw.storage.get('mmNativeMenuUsage'), 10) || 0;
     /** Ignore for non-Vector/Timeless, if user explicitly disabled this feature, or if reAddCount is high. */
@@ -804,6 +835,8 @@ $(function () {
 
       $('#mm-user-analysis').remove();
     }
+
+    handleHistoryAndWatchLinks(true);
   }
   /**
    * Script entry point. The 'moremenu.ready' event is fired after the menus are drawn and populated.

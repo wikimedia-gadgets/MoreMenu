@@ -656,7 +656,7 @@ $(() => {
             + `<ul class="menu mm-menu">${html}</ul>`
             + '</div>';
 
-        $(html).insertAfter($('#p-views'));
+        $(html).insertAfter($('#p-views, .mm-page').last());
     }
 
     /**
@@ -670,9 +670,9 @@ $(() => {
             + `<div class="mw-portlet-body"><ul class="mm-menu">${html}</ul></div></div>`;
 
         if ($('#p-cactions').length) {
-            $(html).insertAfter($('#p-cactions'));
+            $(html).insertBefore($('#p-cactions'));
         } else {
-            $('#page-tools .sidebar-inner').append(html);
+            $('#page-tools .sidebar-inner').prepend(html);
         }
     }
 
@@ -687,7 +687,9 @@ $(() => {
             + `<ul class="mm-menu" style="display:none">${html}</ul>`
             + '</li>';
 
-        const $tab = $(html).appendTo('#p-cactions ul:first-child');
+        const $tab = $(html).insertAfter(
+            $('#ca-nstab-special, #ca-edit, #ca-ve-edit, #ca-page, #ca-viewsource').last()
+        );
         const $menu = $tab.find('.mm-menu');
 
         /** Position the menu. */
@@ -717,7 +719,9 @@ $(() => {
             + `<ul class="mm-menu" style="display:none">${html}</ul>`
             + '</li>';
 
-        const $tab = $(html).appendTo('#p-cactions ul:first-child');
+        const $tab = $(html).insertAfter(
+            $('#ca-nstab-special, #ca-edit, #ca-ve-edit, #ca-page, #ca-viewsource').last()
+        );
         const $menu = $tab.find('.mm-menu');
 
         /** Position the menu. */
@@ -741,11 +745,11 @@ $(() => {
         const menus = {};
 
         /** Determine which menus to draw. */
-        if (config.targetUser.name) {
-            $.extend(menus, getModule('user')(config));
-        }
         if (config.page.nsId >= 0) {
             $.extend(menus, getModule('page')(config));
+        }
+        if (config.targetUser.name) {
+            $.extend(menus, getModule('user')(config));
         }
 
         /** Preemptively add the appropriate CSS. */
@@ -776,6 +780,37 @@ $(() => {
     }
 
     /**
+     * Monobook and Modern have 'History' and 'Watch' links as tabs. To conserve space, they are added to the Page menu.
+     * This method is called before and after the menus are drawn, to ensure positioning is calculated correctly.
+     * @param {Boolean} [replace] True to replace the links in .mm-page with the native links, false just hides them.
+     */
+    function handleHistoryAndWatchLinks(replace = false) {
+        if (-1 === ['monobook', 'modern'].indexOf(config.currentUser.skin)) {
+            return;
+        }
+
+        const $histLink = $('#ca-history');
+        const $watchLink = $('.mw-watchlink');
+
+        if (replace) {
+            $('#mm-page-watch').replaceWith(
+                $watchLink.addClass('mm-item').show()
+            );
+            $('#mm-page-history').replaceWith(
+                $histLink.addClass('mm-item').show()
+            );
+        } else {
+            /** No need to ask for translations when these already live on the page. */
+            MoreMenu.messages.watch = $watchLink.text() || 'watch';
+            MoreMenu.messages.history = $histLink.text() || 'history';
+
+            /** Hide the links so that the positioning is calculated correctly in drawMenus() */
+            $watchLink.hide();
+            $histLink.hide();
+        }
+    }
+
+    /**
      * Remove redundant links from the native More menu.
      * This uses mw.storage to keep track of whether the native menu usually gets items added to it
      * after MoreMenu has loaded. If this is the case, it will not remove the menu at all. This is to avoid
@@ -787,6 +822,8 @@ $(() => {
             /** Do not do this for Commons, where the move file gadget has a listener on the native move link. */
             $('#ca-move').remove();
         }
+
+        handleHistoryAndWatchLinks();
 
         /** Check local storage to see if user continually has items added to the native menu. */
         const reAddCount = parseInt(mw.storage.get('mmNativeMenuUsage'), 10) || 0;
@@ -879,6 +916,8 @@ $(() => {
              */
             $('#mm-user-analysis').remove();
         }
+
+        handleHistoryAndWatchLinks(true);
     }
 
     /**
