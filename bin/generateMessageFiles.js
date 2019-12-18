@@ -29,7 +29,7 @@ fs.readdir('./i18n/', (err, files) => {
  */
 window.MoreMenu = window.MoreMenu || {};
 window.MoreMenu.messages = window.MoreMenu.messages || {};
-Object.assign(window.MoreMenu.messages, {
+$.extend(window.MoreMenu.messages, {
 ${rows}}, window.MoreMenu.messages);
 `;
         fs.writeFileSync(
