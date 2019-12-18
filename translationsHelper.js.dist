@@ -1,0 +1,141 @@
+/**
+ * Script to sync translations, find missing messages, etc.
+ * Copy this to translationsHelper.js, adjust to run the methods you want,
+ * then run `node translationsHelper.js`.
+ */
+
+const request = require('request');
+
+function reportMissingMessages(lang) {
+    getContent('MediaWiki:Gadget-MoreMenu.messages.en.js', messages => {
+        const keys = Object.keys(messages);
+
+        getLangs(pages => {
+            if (lang) {
+                pages = [`MediaWiki:Gadget-MoreMenu.messages.${lang}.js`];
+            }
+            pages.forEach(page => {
+                if ('MediaWiki:Gadget-MoreMenu.messages.en.js' === page) {
+                    return;
+                }
+
+                getContent(page, localMessages => {
+                    const localKeys = Object.keys(localMessages);
+
+                    const missing = keys.filter(key => !localKeys.includes(key));
+                    const extra = localKeys.filter(localKey => !keys.includes(localKey));
+
+                    if (missing.length + extra.length) {
+                        console.log(page);
+                        console.log('MISSING: ');
+                        missing.forEach(msg => {
+                            console.log(`#* ${messages[msg]}`);
+                        });
+                        console.log('EXTRA: ');
+                        extra.forEach(msg => {
+                            console.log(`#* ${messages[msg]}`);
+                        });
+                        console.log('----------------------------');
+                    }
+                });
+            });
+        });
+    });
+}
+
+function getLangs(cb = () => {}) {
+    request.get('https://meta.wikimedia.org/w/api.php', {
+        qs: {
+            action: 'query',
+            list: 'prefixsearch',
+            pssearch: 'MediaWiki:Gadget-MoreMenu.messages',
+            pslimit: 500,
+            format: 'json',
+        },
+    }, (err, res, body) => {
+        if (!err && res.statusCode === 200) {
+            cb(JSON.parse(body).query.prefixsearch.map(page => {
+                return page.title;
+            }));
+        }
+    });
+}
+
+function getContent(page, cb = () => {}) {
+    request.get('https://meta.wikimedia.org/w/index.php', {
+        qs: {
+            action: 'raw',
+            ctype: 'text/javascript',
+            title: page,
+        },
+    }, (err, res, body) => {
+        if (!err && res.statusCode === 200) {
+            const window = {};
+            eval(body); // We know what we're doing.
+            cb(window.MoreMenu.messages);
+        }
+    });
+}
+
+function importTranslations(lang) {
+    const keyMap = {
+        'abuselog': 'abusefilter-log',
+        'all-logs-page': 'all-logs',
+        'pageinfo-toolboxlink': 'basic-statistics',
+        'block': 'block-user',
+        'change-blocklink': 'change-block',
+        'unprotect': 'change-protection',
+        'tool-link-userrights': 'change-rights',
+        'checkuser': 'checkuser',
+        'checkuserlog': 'checkuser-log',
+        'contributions': 'contributions',
+        'deletepage': 'delete-page',
+        'deletedcontributions-title': 'deleted-contributions',
+        'deletionlog': 'deletion-log',
+        'tool-link-emailuser': 'email-user',
+        'centralauth-log-name': 'global-account-log',
+        'globalblocking-logpage': 'global-block-log',
+        'log-name-massmessage': 'mass-message-log',
+        'mergehistory': 'merge-page',
+        'movelogpage': 'move-log',
+        'movepagebtn': 'move-page',
+        'pagelang-name': 'page',
+        'stable-logpage': 'pending-changes-log',
+        'protectlogpage': 'protection-log',
+        'protect': 'protect-page',
+        'log-name-renameuser': 'rename-log',
+        'review-logpage': 'review-log',
+        'search': 'search',
+        'log-name-spamblacklist': 'spam-blacklist-log',
+        'centralauth-ro': 'sul',
+        'sp-contributions-suppresslog': 'suppressed-contribs',
+        'suppressionlog': 'suppression-log',
+        'log-name-thanks': 'thanks-log',
+        'toolbox': 'tools',
+        'unblock': 'unblock-user',
+        'uploadlogpage': 'upload-log',
+        'uploadslink-portlet-label': 'uploads',
+        'listfiles_user': 'user',
+        'newuserlogpage': 'user-creation-log',
+        'rightslog': 'user-rights-log',
+    };
+
+    request.get('https://meta.wikimedia.org/w/api.php', {
+        qs: {
+            action: 'query',
+            format: 'json',
+            formatversion: 2,
+            meta: 'allmessages',
+            ammessages: Object.keys(keyMap).join('|'),
+            amlang: lang,
+        },
+    }, (err, res, body) => {
+        if (!err && res.statusCode === 200) {
+            JSON.parse(body).query.allmessages.forEach(msg => {
+                if (!msg.content.includes('{{GENDER') && !msg.content.includes('$1')) {
+                    console.log(`  "${keyMap[msg.name]}": "${msg.content}",`);
+                }
+            });
+        }
+    });
+}
