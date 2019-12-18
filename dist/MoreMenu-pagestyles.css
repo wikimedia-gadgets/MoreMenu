@@ -2,14 +2,15 @@
 
 /* User menu */
 .client-js .skin-vector.ns-2 #p-views,
-.client-js .skin-vector.ns-3 #p-views {
+.client-js .skin-vector.ns-3 #p-views,
+.client-js > .skin-vector.mw-special-Contributions #p-views,
+.client-js > .skin-vector.mw-special-DeletedContributions #p-views,
+.client-js > .skin-vector.mw-special-Block #p-views {
     padding-right: 3.68em;
 }
 
 /* Page menu */
-.client-js .skin-vector:not(.ns-special) #p-views::after,
-.client-js > .skin-vector.mw-special-Contributions #p-views::after,
-.client-js > .skin-vector.mw-special-DeletedContributions #p-views::after {
+.client-js .skin-vector:not(.ns-special) #p-views::after {
     content: '';
     display: inline-block;
     width: 3.85em;
