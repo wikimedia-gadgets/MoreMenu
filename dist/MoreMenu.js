@@ -274,7 +274,7 @@ $(function () {
 
 
     var valid = groups.some(function (group) {
-      return config.currentUser.groupsData[group] && config.currentUser.groupsData[group].addRemoveGroups;
+      return config.currentUser.groupsData[group] && config.currentUser.groupsData[group].canAddRemoveGroups;
     });
 
     if (!valid) {
