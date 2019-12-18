@@ -1,24 +1,9 @@
 /**
-* WARNING: GLOBAL GADGET FILE
-* Compiled from source at https://github.com/MusikAnimal/MoreMenu
-* Please submit code changes as a pull request to the source repository at https://github.com/MusikAnimal/MoreMenu
-* Are there missing translations? See [[meta:MoreMenu#Localization]].
-* Want to add custom links? See [[meta:MoreMenu#Customization]].
-* 
-* Script:         MoreMenu.js
-* Version:        5.1.1
-* Author:         MusikAnimal
-* License:        MIT
-* Documentation:  [[meta:MoreMenu]]
-* GitHub:         https://github.com/MusikAnimal/MoreMenu
-* Skins:          Vector, Timeless, Monobook, Modern
-* Browsers:       See [[mw:Compatibility#Browsers]]
-**/
-"use strict";
-
-/* eslint quotes: ["error", "double"] */
-
-/* eslint quote-props: ["error", "always"] */
+ * WARNING: GLOBAL GADGET FILE
+ * Please submit translations on translatewiki.net:
+ * https://translatewiki.net/w/i.php?title=Special:Translate&group=moremenu&action=translate
+ * Changes made to this page directly may be overridden.
+ */
 window.MoreMenu = window.MoreMenu || {};
 window.MoreMenu.messages = window.MoreMenu.messages || {};
 $.extend(window.MoreMenu.messages, {
@@ -108,5 +93,5 @@ $.extend(window.MoreMenu.messages, {
   "user-thanks-received": "User thanks received",
   "view-block": "View block",
   "view-block-log": "View block log",
-  "whois": "WHOIS"
+  "whois": "WHOIS",
 }, window.MoreMenu.messages);

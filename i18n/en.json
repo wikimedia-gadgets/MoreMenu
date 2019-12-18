@@ -1,8 +1,9 @@
-/* eslint quotes: ["error", "double"] */
-/* eslint quote-props: ["error", "always"] */
-window.MoreMenu = window.MoreMenu || {};
-window.MoreMenu.messages = window.MoreMenu.messages || {};
-$.extend(window.MoreMenu.messages, {
+{
+    "@metadata": {
+        "authors": [
+            "MusikAnimal"
+        ]
+    },
     "abusefilter-log": "AbuseFilter log",
     "all-logs": "All logs",
     "analysis": "Analysis",
@@ -67,7 +68,7 @@ $.extend(window.MoreMenu.messages, {
     "search-subpages": "Search subpages",
     "spam-blacklist-log": "Spam blacklist log",
     "subpages": "Subpages",
-    "sul": "SUL",
+    "sul": "Global account",
     "suppressed-contribs": "Suppressed contribs",
     "suppression-log": "Suppression log",
     "thanks-log": "Thanks log",
@@ -89,5 +90,5 @@ $.extend(window.MoreMenu.messages, {
     "user-thanks-received": "User thanks received",
     "view-block": "View block",
     "view-block-log": "View block log",
-    "whois": "WHOIS",
-}, window.MoreMenu.messages);
+    "whois": "WHOIS"
+}
