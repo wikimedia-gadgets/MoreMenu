@@ -41,7 +41,7 @@ $(function () {
   var rightKey = isRtl ? 'left' : 'right';
   /** Configuration to be passed to MoreMenu.user.js, MoreMenu.page.js, and handlers of the 'moremenu.ready' hook. */
 
-  var config = new function config() {
+  var config = new function () {
     /** Project-level */
     this.project = {
       domain: mw.config.get('wgServerName'),
@@ -59,7 +59,7 @@ $(function () {
       id: mw.config.get('wgArticleId'),
       movable: !mw.config.get('wgIsMainPage') && !!$('#ca-move').length
     };
-    Object.assign(this.page, {
+    $.extend(this.page, {
       escapedName: this.page.name.replace(/[?!'"()*]/g, escape),
       encodedName: encodeURIComponent(this.page.name)
     });
@@ -97,7 +97,7 @@ $(function () {
       this.targetUser.ipv4Range = mw.util.isIPv4Address(this.targetUser.name.split('/')[0]);
     }
 
-    Object.assign(this.targetUser, {
+    $.extend(this.targetUser, {
       escapedName: this.targetUser.name.replace(/[?!'"()*]/g, escape),
       encodedName: encodeURIComponent(this.targetUser.name)
     });
@@ -358,7 +358,7 @@ $(function () {
 
     if (config.targetUser.name) {
       /** Target user */
-      Object.assign(conditions, {
+      $.extend(conditions, {
         targetUserGroups: hasConditional(itemData.targetUserGroups, config.targetUser.groups),
         targetUserRights: hasConditional(itemData.targetUserRights, config.targetUser.rights),
         targetUserBlocked: itemData.targetUserBlocked !== undefined ? config.targetUser.blocked === itemData.targetUserBlocked : true,
@@ -655,11 +655,11 @@ $(function () {
     /** Determine which menus to draw. */
 
     if (config.targetUser.name) {
-      Object.assign(menus, getModule('user')(config));
+      $.extend(menus, getModule('user')(config));
     }
 
     if (config.page.nsId >= 0) {
-      Object.assign(menus, getModule('page')(config));
+      $.extend(menus, getModule('page')(config));
     }
     /** Preemptively add the appropriate CSS. */
 
@@ -814,7 +814,7 @@ $(function () {
     $.when.apply(this, getPromises()).done(function (targetUserData, userRightsData, metaData) {
       /** Target user data. */
       if (targetUserData) {
-        Object.assign(config.targetUser, targetUserData[0].query.users[0]);
+        $.extend(config.targetUser, targetUserData[0].query.users[0]);
 
         if (targetUserData[0].query.blocks.length) {
           config.targetUser.blocked = true;
