@@ -28,8 +28,7 @@ fs.readdir(dir, (err, files) => {
         password
     }).then(() => {
         files.forEach(file => {
-            // These get synced manually.
-            if (['MoreMenu.enwiki.js', 'MoreMenu.import.js', 'MoreMenu-pagestyles.css'].includes(file)) {
+            if ('unversioned' === file) {
                 return;
             }
 
