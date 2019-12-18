@@ -1,7 +1,7 @@
 /**
  * Script to sync translations, find missing messages, etc.
  * Copy this to translationsHelper.js, adjust to run the methods you want,
- * then run `node translationsHelper.js`.
+ * then run `node bin/translationsHelper.js`.
  */
 
 const request = require('request');

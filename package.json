@@ -29,6 +29,7 @@
     "eslint-plugin-import": "^2.18.2"
   },
   "dependencies": {
-    "mwbot": "^1.0.10"
+    "mwbot": "^1.0.10",
+    "request": "latest"
   }
 }

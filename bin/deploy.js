@@ -4,7 +4,7 @@
  * Use [[Special:BotPasswords]] to get credentials.
  *
  * To use, run:
- *     node deploy.js [username] [password] "[edit summary]"
+ *     node bin/deploy.js [username] [password] "[edit summary]"
  *
  * The edit summary is transformed to "v5.5.5 at abcd1234: [edit summary]"
  */
@@ -19,7 +19,7 @@ const [username, password, summary] = process.argv.slice(2);
 // Version info for edit summary.
 const sha = execSync('git rev-parse --short HEAD').toString('utf-8');
 const message = summary || execSync('git log -2 --pretty=%B').toString('utf-8').split('\n')[2];
-const version = require('./package.json').version;
+const version = require('../package.json').version;
 
 fs.readdir(dir, (err, files) => {
     client.loginGetEditToken({
