@@ -782,32 +782,42 @@ $(() => {
     /**
      * Monobook and Modern have 'History' and 'Watch' links as tabs. To conserve space, they are added to the Page menu.
      * This method is called before and after the menus are drawn, to ensure positioning is calculated correctly.
+     * Additionally, we move the native Move link instead of producing it ourselves, to preserve listeners added by
+     * other gadgets and scripts.
      * @param {Boolean} [replace] True to replace the links in .mm-page with the native links, false just hides them.
      */
     function handleHistoryAndWatchLinks(replace = false) {
-        if (-1 === ['monobook', 'modern'].indexOf(config.currentUser.skin)) {
-            return;
-        }
+        const monobookModern = -1 !== ['monobook', 'modern'].indexOf(config.currentUser.skin);
 
         const $histLink = $('#ca-history');
         const $watchLink = $('.mw-watchlink');
+        const $moveLink = $('#ca-move');
 
         if (replace) {
-            $('#mm-page-watch').replaceWith(
-                $watchLink.addClass('mm-item').show()
+            if (monobookModern) {
+                $('#mm-page-watch').replaceWith(
+                    $watchLink.addClass('mm-item').show()
+                );
+                $('#mm-page-history').replaceWith(
+                    $histLink.addClass('mm-item').show()
+                );
+            }
+            $('#mm-page-move-page').replaceWith(
+                $moveLink.addClass('mm-item').show()
             );
-            $('#mm-page-history').replaceWith(
-                $histLink.addClass('mm-item').show()
-            );
-        } else {
-            /** No need to ask for translations when these already live on the page. */
-            MoreMenu.messages.watch = $watchLink.text() || 'watch';
-            MoreMenu.messages.history = $histLink.text() || 'history';
+            return;
+        }
 
-            /** Hide the links so that the positioning is calculated correctly in drawMenus() */
+        /** No need to ask for translations when these already live on the page. */
+        MoreMenu.messages.watch = $watchLink.text() || 'watch';
+        MoreMenu.messages.history = $histLink.text() || 'history';
+
+        /** Hide the links so that the positioning is calculated correctly in drawMenus() */
+        if (monobookModern) {
             $watchLink.hide();
             $histLink.hide();
         }
+        $moveLink.hide();
     }
 
     /**
@@ -831,11 +841,6 @@ $(() => {
             '#t-pagelog',
         ];
         $(linksToRemove.join(',')).remove();
-
-        if ('commonswiki' !== config.project.dbName) {
-            /** Do not do this for Commons, where the move file gadget has a listener on the native move link. */
-            $('#ca-move').remove();
-        }
 
         handleHistoryAndWatchLinks();
 
@@ -911,7 +916,9 @@ $(() => {
      * Remove unneeded links and empty submenus.
      */
     function removeUnneededLinks() {
-        /** For now this logic only applies to the User menu. */
+        handleHistoryAndWatchLinks(true);
+
+        /** Following logic only applies to the User menu. */
         if (!config.targetUser.name) {
             return;
         }
@@ -930,8 +937,6 @@ $(() => {
              */
             $('#mm-user-analysis').remove();
         }
-
-        handleHistoryAndWatchLinks(true);
     }
 
     /**
