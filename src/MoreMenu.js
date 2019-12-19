@@ -832,13 +832,6 @@ $(() => {
             '#ca-unprotect',
             '#ca-delete',
             '#ca-undelete',
-            '#t-contributions',
-            '#t-log',
-            '#t-blockip',
-            '#t-emailuser',
-            '#t-userrights',
-            '#t-info',
-            '#t-pagelog',
         ];
         $(linksToRemove.join(',')).remove();
 

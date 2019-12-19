@@ -739,7 +739,7 @@ $(function () {
 
 
   function removeNativeLinks() {
-    var linksToRemove = ['#ca-protect', '#ca-unprotect', '#ca-delete', '#ca-undelete', '#t-contributions', '#t-log', '#t-blockip', '#t-emailuser', '#t-userrights', '#t-info', '#t-pagelog'];
+    var linksToRemove = ['#ca-protect', '#ca-unprotect', '#ca-delete', '#ca-undelete'];
     $(linksToRemove.join(',')).remove();
     handleHistoryAndWatchLinks();
     /** Check local storage to see if user continually has items added to the native menu. */
