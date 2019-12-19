@@ -730,7 +730,8 @@ $(function () {
 
 
   function removeNativeLinks() {
-    $('#ca-protect,#ca-unprotect,#ca-delete,#ca-undelete').remove();
+    var linksToRemove = ['#ca-protect', '#ca-unprotect', '#ca-delete', '#ca-undelete', '#t-contributions', '#t-log', '#t-blockip', '#t-emailuser', '#t-userrights', '#t-info', '#t-pagelog'];
+    $(linksToRemove.join(',')).remove();
 
     if ('commonswiki' !== config.project.dbName) {
       /** Do not do this for Commons, where the move file gadget has a listener on the native move link. */
