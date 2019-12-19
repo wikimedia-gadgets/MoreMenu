@@ -731,7 +731,76 @@ $(function () {
     $moveLink.hide();
   }
   /**
-   * Remove redundant links from the native More menu.
+   * Add a MutationObserver to look for items added/removed from the given menus.
+   * If they are empty, the container is hidden, otherwise it's unhidden.
+   * MutationObserver implementation courtesy of LunarTwilight. See https://github.com/MusikAnimal/MoreMenu/pull/1
+   * @param {String|Array} ids Selector for the menu to observe (a parent of the <ul> element).
+   */
+
+
+  function addMutationObserver(ids) {
+    if ('string' === typeof ids) {
+      ids = [ids];
+    }
+
+    ids.forEach(function (id) {
+      var $parent = $(id);
+
+      if (!$parent.length) {
+        return;
+      }
+
+      var $menu = $parent.find('ul');
+
+      var menuIsEmpty = function menuIsEmpty() {
+        return '' === $menu.html().trim();
+      };
+
+      if (menuIsEmpty()) {
+        $parent.hide();
+      }
+
+      new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+          if (mutation.addedNodes.length) {
+            $parent.show();
+          } else if (mutation.removedNodes.length) {
+            if (menuIsEmpty()) {
+              $parent.hide();
+            }
+          }
+        });
+      }).observe($menu.get(0), {
+        childList: true
+      });
+    });
+  }
+  /**
+   * For Vector/Timeless's native More menu, we keep track of how many times it gets populated over time,
+   * to intelligently determine whether we should leave it upfront to make the script feel more responsive.
+   */
+
+
+  function observeCactionsMenu() {
+    /** Check local storage to see if user continually has items added to the native menu. */
+    var reAddCount = parseInt(mw.storage.get('mmNativeMenuUsage'), 10) || 0;
+    /** Ignore for non-Vector/Timeless, if user disabled this feature, or if reAddCount is high. */
+
+    if (-1 === ['vector', 'timeless'].indexOf(config.currentUser.skin) || !!window.moreMenuDisableAutoRemoval || reAddCount >= 5) {
+      return;
+    }
+
+    addMutationObserver('#p-cactions');
+    /** Wait 5 seconds before checking the reAddCount, to give other scripts time to populate the menu */
+
+    setTimeout(function () {
+      if ($('#p-cactions').find('li').length) {
+        mw.storage.set('mmNativeMenuUsage', reAddCount + 1);
+      }
+    }, 5000);
+  }
+  /**
+   * Remove redundant links from the native More menu, and from the "Page tools" and "Userpage tools" in Timeless.
    * This uses mw.storage to keep track of whether the native menu usually gets items added to it
    * after MoreMenu has loaded. If this is the case, it will not remove the menu at all. This is to avoid
    * the irritating "jumping" effect you get due to race conditions.
@@ -740,55 +809,19 @@ $(function () {
 
   function removeNativeLinks() {
     var linksToRemove = ['#ca-protect', '#ca-unprotect', '#ca-delete', '#ca-undelete'];
+
+    if ('timeless' === config.currentUser.skin) {
+      linksToRemove.push.apply(linksToRemove, ['#t-contributions', '#t-log', '#t-blockip', '#t-emailuser', '#t-userrights', '#t-info', '#t-pagelog']);
+    }
+
     $(linksToRemove.join(',')).remove();
     handleHistoryAndWatchLinks();
-    /** Check local storage to see if user continually has items added to the native menu. */
+    observeCactionsMenu();
+    /** Remove empty userpage tools menu in Timeless */
 
-    var reAddCount = parseInt(mw.storage.get('mmNativeMenuUsage'), 10) || 0;
-    /** Ignore for non-Vector/Timeless, if user explicitly disabled this feature, or if reAddCount is high. */
-
-    if (-1 === ['vector', 'timeless'].indexOf(config.currentUser.skin) || !!window.moreMenuDisableAutoRemoval || reAddCount >= 5) {
-      return;
+    if ('timeless' === config.currentUser.skin) {
+      addMutationObserver('#p-userpagetools');
     }
-
-    var $menu = $('#p-cactions ul');
-    var $parent = $('#p-cactions');
-
-    var menuIsEmpty = function menuIsEmpty() {
-      return '' === $menu.html().trim();
-    };
-
-    var itemsAdded = false;
-    /**
-     * Hide the native More menu if it's empty, and un-hide it if items get added by other scripts.
-     * MutationObserver implementation courtesy of LunarTwilight. See https://github.com/MusikAnimal/MoreMenu/pull/1
-     */
-
-    if (menuIsEmpty()) {
-      $parent.hide();
-    }
-
-    new MutationObserver(function (mutations) {
-      mutations.forEach(function (mutation) {
-        if (mutation.addedNodes.length) {
-          itemsAdded = true;
-          $parent.show();
-        } else if (mutation.removedNodes.length) {
-          if (menuIsEmpty()) {
-            $parent.hide();
-          }
-        }
-      });
-    }).observe($menu.get(0), {
-      childList: true
-    });
-    /** Wait 5 seconds before checking the reAddCount, to give other scripts time to populate the menu */
-
-    setTimeout(function () {
-      if (itemsAdded) {
-        mw.storage.set('mmNativeMenuUsage', reAddCount + 1);
-      }
-    }, 5000);
   }
   /**
    * Removes the link to the block log if the user has never been blocked.
@@ -806,12 +839,6 @@ $(function () {
       if (!data.query.logevents.length) {
         $('#mm-user-blocks-view-block-log').remove();
       }
-      /** Remove the 'Blocks' submenu if it's empty. */
-
-
-      if (!$('#mm-user-blocks').find('.mm-item').length) {
-        $('#mm-user-blocks').remove();
-      }
     });
   }
   /**
@@ -828,6 +855,9 @@ $(function () {
     }
 
     removeBlockLogLink();
+    /** Observe all submenus, removing them if they're empty. */
+
+    addMutationObserver(['#mm-page-analysis', '#mm-page-search', '#mm-page-tools', '#mm-user-blocks', '#mm-user-analysis']);
 
     if (config.targetUser.ipRange) {
       $('#mm-user-user-logs').remove();
