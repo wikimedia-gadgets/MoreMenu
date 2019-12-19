@@ -801,16 +801,16 @@ $(() => {
                 $('#mm-page-history').replaceWith(
                     $histLink.addClass('mm-item').show()
                 );
+
+                /** No need to ask for translations when these already live on the page. */
+                MoreMenu.messages.watch = $watchLink.text() || 'watch';
+                MoreMenu.messages.history = $histLink.text() || 'history';
             }
             $('#mm-page-move-page').replaceWith(
                 $moveLink.addClass('mm-item').show()
             );
             return;
         }
-
-        /** No need to ask for translations when these already live on the page. */
-        MoreMenu.messages.watch = $watchLink.text() || 'watch';
-        MoreMenu.messages.history = $histLink.text() || 'history';
 
         /** Hide the links so that the positioning is calculated correctly in drawMenus() */
         if (monobookModern) {
@@ -945,11 +945,6 @@ $(() => {
      */
     function removeUnneededLinks() {
         handleHistoryAndWatchLinks(true);
-
-        /** Following logic only applies to the User menu. */
-        if (!config.targetUser.name) {
-            return;
-        }
 
         removeBlockLogLink();
 

@@ -71,7 +71,7 @@ $.extend(window.MoreMenu.messages, {
   "search-subpages": "Search subpages",
   "spam-blacklist-log": "Spam blacklist log",
   "subpages": "Subpages",
-  "sul": "SUL",
+  "sul": "Global account",
   "suppressed-contribs": "Suppressed contribs",
   "suppression-log": "Suppression log",
   "thanks-log": "Thanks log",
