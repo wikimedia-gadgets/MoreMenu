@@ -134,7 +134,7 @@ window.MoreMenu.page = function (config) {
           pageExists: true
         },
         'search-history-wikiblame': {
-          url: "https://wikipedia.ramselehof.de/wikiblame.php?lang=".concat(config.project.contentLanguage, "&project=").concat(config.project.noticeProject, "&article=").concat(config.page.encodedName),
+          url: "http://wikipedia.ramselehof.de/wikiblame.php?lang=".concat(config.project.contentLanguage, "&project=").concat(config.project.noticeProject, "&article=").concat(config.page.encodedName),
           pageExists: true
         },
         'search-history-xtools': {

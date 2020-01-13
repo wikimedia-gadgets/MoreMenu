@@ -84,7 +84,7 @@ window.MoreMenu.page = config => ({
                 pageExists: true,
             },
             'search-history-wikiblame': {
-                url: `https://wikipedia.ramselehof.de/wikiblame.php?lang=${config.project.contentLanguage}&project=${config.project.noticeProject}&article=${config.page.encodedName}`,
+                url: `http://wikipedia.ramselehof.de/wikiblame.php?lang=${config.project.contentLanguage}&project=${config.project.noticeProject}&article=${config.page.encodedName}`,
                 pageExists: true,
             },
             'search-history-xtools': {
