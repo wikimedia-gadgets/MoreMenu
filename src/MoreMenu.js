@@ -422,9 +422,13 @@ $(() => {
             `);
         case 'monobook':
             return mw.util.addCSS(`
+                .mm-tab {
+                    position: relative;
+                }
                 .mm-menu {
                     background: #fff;
                     border-bottom: 1px solid #aaa;
+                    ${leftKey}: -1px;
                     margin: 0;
                     position: absolute;
                     z-index: 99;
@@ -438,15 +442,17 @@ $(() => {
                     border-top: 1px solid #aaa;
                     font-size: inherit;
                     margin: 0;
+                    min-width: 75px;
                     top: -1px;
                     z-index: 95;
                 }
                 .mm-item, .mm-submenu-wrapper {
-                    background: transparent !important;
+                    background: #fff !important;
                     border-top: 0 !important;
                     display: block !important;
                     margin: 0 !important;
                     padding: 0 !important;
+                    width: 100%;
                 }
                 .mm-item a, .mm-submenu-wrapper a {
                     background: transparent !important;
@@ -490,6 +496,7 @@ $(() => {
                 }
                 .mm-submenu {
                     ${leftKey}: 100%;
+                    min-width: 120px !important;
                     top: 0;
                 }
             `);
@@ -691,12 +698,6 @@ $(() => {
             $('#ca-nstab-special, #ca-edit, #ca-ve-edit, #ca-page, #ca-viewsource').last()
         );
         const $menu = $tab.find('.mm-menu');
-
-        /** Position the menu. */
-        $menu.css({
-            left: isRtl ? $tab.position().left - $menu.width() + $tab.width() + 7 : $tab.position().left,
-            top: $tab.offset().top,
-        });
 
         /** Add hover listeners. */
         $tab.on('mouseenter', () => {
