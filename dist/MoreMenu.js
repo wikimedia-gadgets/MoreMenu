@@ -598,7 +598,7 @@ $(function () {
 
   function drawMenuMonobook(parentKey, html) {
     html = "<li id=\"ca-".concat(parentKey, "\" class=\"mm-").concat(parentKey, " mm-tab\">") + "<a href=\"javascript:void(0)\">".concat(msg(parentKey), "</a>") + "<ul class=\"mm-menu\" style=\"display:none\">".concat(html, "</ul>") + '</li>';
-    var $tab = $(html).insertAfter($('#ca-nstab-special, #ca-edit, #ca-ve-edit, #ca-page, #ca-viewsource').last());
+    var $tab = $(html).insertAfter($('#ca-nstab-special, #ca-edit, #ca-ve-edit, #ca-page, #ca-viewsource, #ca-talk').last());
     var $menu = $tab.find('.mm-menu');
     /** Add hover listeners. */
 
@@ -623,7 +623,7 @@ $(function () {
 
   function drawMenuModern(parentKey, html) {
     html = "<li id=\"ca-".concat(parentKey, "\" class=\"mm-").concat(parentKey, " mm-tab\">") + "<a href=\"javascript:void(0)\">".concat(msg(parentKey), "</a>") + "<ul class=\"mm-menu\" style=\"display:none\">".concat(html, "</ul>") + '</li>';
-    var $tab = $(html).insertAfter($('#ca-nstab-special, #ca-edit, #ca-ve-edit, #ca-page, #ca-viewsource').last());
+    var $tab = $(html).insertAfter($('#ca-nstab-special, #ca-edit, #ca-ve-edit, #ca-page, #ca-viewsource, #ca-talk').last());
     var $menu = $tab.find('.mm-menu');
     /** Position the menu. */
 

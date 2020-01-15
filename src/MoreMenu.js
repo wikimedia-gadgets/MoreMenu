@@ -695,7 +695,7 @@ $(() => {
             + '</li>';
 
         const $tab = $(html).insertAfter(
-            $('#ca-nstab-special, #ca-edit, #ca-ve-edit, #ca-page, #ca-viewsource').last()
+            $('#ca-nstab-special, #ca-edit, #ca-ve-edit, #ca-page, #ca-viewsource, #ca-talk').last()
         );
         const $menu = $tab.find('.mm-menu');
 
@@ -721,7 +721,7 @@ $(() => {
             + '</li>';
 
         const $tab = $(html).insertAfter(
-            $('#ca-nstab-special, #ca-edit, #ca-ve-edit, #ca-page, #ca-viewsource').last()
+            $('#ca-nstab-special, #ca-edit, #ca-ve-edit, #ca-page, #ca-viewsource, #ca-talk').last()
         );
         const $menu = $tab.find('.mm-menu');
 
