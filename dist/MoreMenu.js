@@ -6,7 +6,7 @@
 * Want to add custom links? See [[meta:MoreMenu#Customization]].
 * 
 * Script:         MoreMenu.js
-* Version:        5.1.3
+* Version:        5.1.4
 * Author:         MusikAnimal
 * License:        MIT
 * Documentation:  [[meta:MoreMenu]]
@@ -687,10 +687,9 @@ $(function () {
     addListeners();
   }
   /**
-   * Monobook and Modern have 'History' and 'Watch' links as tabs. To conserve space, they are added to the Page menu.
+   * Monobook and Modern have 'History' and 'Watch' links as tabs. To conserve space, they are moved to the Page menu.
    * This method is called before and after the menus are drawn, to ensure positioning is calculated correctly.
-   * Additionally, we move the native Move link instead of producing it ourselves, to preserve listeners added by
-   * other gadgets and scripts.
+   * Listeners on these links are preserved, but we do change the element IDs to our pattern (e.g. `mm-page-history`).
    * @param {Boolean} [replace] True to replace the links in .mm-page with the native links, false just hides them.
    */
 
@@ -704,11 +703,11 @@ $(function () {
 
     if (replace) {
       if (monobookModern) {
-        $('#mm-page-watch').replaceWith($watchLink.addClass('mm-item').show());
-        $('#mm-page-history').replaceWith($histLink.addClass('mm-item').show());
+        $('#mm-page-watch').replaceWith($watchLink.addClass('mm-item').prop('id', 'mm-page-watch').show());
+        $('#mm-page-history').replaceWith($histLink.addClass('mm-item').prop('id', 'mm-page-history').show());
       }
 
-      $('#mm-page-move-page').replaceWith($moveLink.addClass('mm-item').show());
+      $('#mm-page-move-page').replaceWith($moveLink.addClass('mm-item').prop('id', 'mm-page-move-page').show());
       return;
     }
     /** No need to ask for translations when these already live on the page. */
@@ -913,6 +912,24 @@ $(function () {
     });
   }
   /**
+   * Get the ID of the menu item preceding the given item.
+   * @param {String} menu The parent menu the item lives (or will live) under.
+   * @param {String} [submenu] The given item lives (or will live) under this submenu.
+   * @param {Boolean|String} [insertAfter] The preceding item should be this one.
+   * @returns {jQuery}
+   */
+
+
+  function getBeforeItem(menu, submenu, insertAfter) {
+    /** Normalize to native IDs if necessary */
+    if (-1 !== ['history', 'move', 'watch'].indexOf(insertAfter)) {
+      return $("#ca-".concat(insertAfter));
+    }
+
+    var beforeItemKey = getItemId(menu, insertAfter || '', submenu);
+    return $("#".concat(beforeItemKey));
+  }
+  /**
    * PUBLIC METHODS
    */
 
@@ -958,8 +975,7 @@ $(function () {
     var $html = $(getMenuHtml(menu, items, submenu));
     /** Check if insertAfter ID is valid. */
 
-    var beforeItemKey = getItemId(menu, insertAfter || '', submenu);
-    var $beforeItem = $("#".concat(beforeItemKey));
+    var $beforeItem = getBeforeItem(menu, submenu, insertAfter);
     var isSubmenuItem = $beforeItem.parents('.mm-submenu').length;
 
     if ($beforeItem.length && (!submenu || submenu && isSubmenuItem)) {
