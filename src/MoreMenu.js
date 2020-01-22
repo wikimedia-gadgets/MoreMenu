@@ -782,10 +782,9 @@ $(() => {
     }
 
     /**
-     * Monobook and Modern have 'History' and 'Watch' links as tabs. To conserve space, they are added to the Page menu.
+     * Monobook and Modern have 'History' and 'Watch' links as tabs. To conserve space, they are moved to the Page menu.
      * This method is called before and after the menus are drawn, to ensure positioning is calculated correctly.
-     * Additionally, we move the native Move link instead of producing it ourselves, to preserve listeners added by
-     * other gadgets and scripts.
+     * Listeners on these links are preserved, but we do change the element IDs to our pattern (e.g. `mm-page-history`).
      * @param {Boolean} [replace] True to replace the links in .mm-page with the native links, false just hides them.
      */
     function handleHistoryAndWatchLinks(replace = false) {
@@ -798,14 +797,20 @@ $(() => {
         if (replace) {
             if (monobookModern) {
                 $('#mm-page-watch').replaceWith(
-                    $watchLink.addClass('mm-item').show()
+                    $watchLink.addClass('mm-item')
+                        .prop('id', 'mm-page-watch')
+                        .show()
                 );
                 $('#mm-page-history').replaceWith(
-                    $histLink.addClass('mm-item').show()
+                    $histLink.addClass('mm-item')
+                        .prop('id', 'mm-page-history')
+                        .show()
                 );
             }
             $('#mm-page-move-page').replaceWith(
-                $moveLink.addClass('mm-item').show()
+                $moveLink.addClass('mm-item')
+                    .prop('id', 'mm-page-move-page')
+                    .show()
             );
             return;
         }
@@ -1029,7 +1034,8 @@ $(() => {
      * @returns {jQuery}
      */
     function getBeforeItem(menu, submenu, insertAfter) {
-        if (-1 !== ['history', 'watch', 'unwatch'].indexOf(insertAfter)) {
+        /** Normalize to native IDs if necessary */
+        if (-1 !== ['history', 'move', 'watch'].indexOf(insertAfter)) {
             return $(`#ca-${insertAfter}`);
         }
         const beforeItemKey = getItemId(menu, insertAfter || '', submenu);
