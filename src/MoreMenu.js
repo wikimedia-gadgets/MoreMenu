@@ -162,7 +162,7 @@ $(() => {
         /* eslint-disable prefer-template */
         return `mm-${normalizeId(parentKey)}`
             + (submenuKey ? `-${normalizeId(submenuKey)}` : '')
-            + (itemKey ? `-${normalizeId(itemKey)}` : '');
+            + ('string' === typeof itemKey ? `-${normalizeId(itemKey)}` : '');
     }
 
     /**
@@ -614,9 +614,10 @@ $(() => {
      * Get the markup for the menu based on the given data.
      * @param {String} parentKey Message key for the parent menu ('user' or 'page').
      * @param {Object} items Menu items, as provided by MoreMenu.user.js and MoreMenu.page.js
+     * @param {String} [submenuKey] Used to ensure the generated IDs include the submenu name.
      * @return {String} Raw HTML.
      */
-    function getMenuHtml(parentKey, items) {
+    function getMenuHtml(parentKey, items, submenuKey) {
         let html = '';
 
         sortItems(items).forEach(itemKey => {
@@ -641,7 +642,7 @@ $(() => {
                     itemHtml = '';
                 }
             } else {
-                itemHtml += getItemHtml(parentKey, itemKey, item);
+                itemHtml += getItemHtml(parentKey, itemKey, item, submenuKey);
             }
 
             html += itemHtml;
@@ -1028,7 +1029,7 @@ $(() => {
      * Add an item (or submenu + its items) to a menu, given the full config hash for the item.
      * @param {String} menu The parent menu to append to, either 'user' or 'page'.
      * @param {Object} items A single item/submenu with structure matching config at MoreMenu.user or MoreMenu.page.
-     * @param {String} [insertAfter] Insert the item/submenu after the item with this ID.
+     * @param {Boolean|String} [insertAfter] Insert the item/submenu after the item with this ID.
      * @param {String} [submenu] Insert into this submenu.
      */
     MoreMenu.addItemCore = (menu, items, insertAfter, submenu) => {
@@ -1055,12 +1056,12 @@ $(() => {
 
         /** Ensure only one item (top-level menu item or submenu + items) is given. */
         if (Object.keys(items).length !== 1) {
-            log('MoreMenu.addItem() was given multiple items. Ignoring all but the first.', 'warn');
+            log('MoreMenu.addItemCore() was given multiple items. Ignoring all but the first.', 'warn');
             items = items[Object.keys(items)[0]];
         }
 
         /** `items` could be a submenu. getMenuHtml() will work on single items, or a submenu and its items. */
-        const $html = $(getMenuHtml(menu, items));
+        const $html = $(getMenuHtml(menu, items, submenu));
 
         /** Check if insertAfter ID is valid. */
         const beforeItemKey = getItemId(menu, insertAfter || '', submenu);
@@ -1092,7 +1093,7 @@ $(() => {
             /** Get the index of the preceding item. */
             const beforeItemIndex = i18nKeys.indexOf(newI18nKey) - 1;
 
-            if (beforeItemIndex < 0) {
+            if (beforeItemIndex < 0 || false === insertAfter) {
                 /** Alphabetically the new item goes first, so insert it before the existing first item. */
                 $(`#${ids[0]}`).before($html);
             } else {
@@ -1113,7 +1114,7 @@ $(() => {
      * @param {String} menu Either 'page' or 'user'.
      * @param {String} name Title for the link. Can either be a normal string or an i18n key.
      * @param {Object} data Item data.
-     * @param {String} [insertAfter] Insert the link after the link with this ID.
+     * @param {Boolean|String} [insertAfter] Insert the link after the link with this ID.
      */
     MoreMenu.addItem = (menu, name, data, insertAfter) => {
         MoreMenu.addItemCore(menu, {
@@ -1127,7 +1128,7 @@ $(() => {
      * @param {String} submenu ID for the submenu (such as 'user-logs' or 'analysis').
      * @param {String} name Title for the link. Can either be a normal string or an i18n key.
      * @param {Object} data Item data.
-     * @param {String} [insertAfter] Insert the link after the link with this ID.
+     * @param {Boolean|String} [insertAfter] Insert the link after the link with this ID.
      */
     MoreMenu.addSubmenuItem = (menu, submenu, name, data, insertAfter) => {
         MoreMenu.addItemCore(menu, {
@@ -1140,7 +1141,7 @@ $(() => {
      * @param {String} menu Either 'page' or 'user'.
      * @param {String} name Name for the submenu. Can either be a normal string or an i18n key.
      * @param {Object} items Keys are the names for each link, and values are the item data.
-     * @param {String} [insertAfter] Insert the submenu after the link with this ID.
+     * @param {Boolean|String} [insertAfter] Insert the submenu after the link with this ID.
      */
     MoreMenu.addSubmenu = (menu, name, items, insertAfter) => {
         MoreMenu.addItemCore(menu, {
@@ -1153,7 +1154,7 @@ $(() => {
      * @param {String} menu Either 'page' or 'user'.
      * @param {String} name Title for the link. Can either be a normal string or an i18n key.
      * @param {String} url URL to point to.
-     * @param {String} [insertAfter] Insert the link after the link with this ID.
+     * @param {Boolean|String} [insertAfter] Insert the link after the link with this ID.
      */
     MoreMenu.addLink = (menu, name, url, insertAfter) => {
         MoreMenu.addItemCore(menu, {
@@ -1167,7 +1168,7 @@ $(() => {
      * @param {String} submenu ID for the submenu (such as 'user-logs' or 'analysis').
      * @param {String} name Title for the link. Can either be a normal string or an i18n key.
      * @param {String} url URL to point to.
-     * @param {String} [insertAfter] Insert the link after the link with this ID.
+     * @param {Boolean|String} [insertAfter] Insert the link after the link with this ID.
      */
     MoreMenu.addSubmenuLink = (menu, submenu, name, url, insertAfter) => {
         MoreMenu.addItemCore(menu, {

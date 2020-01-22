@@ -191,7 +191,7 @@ $(function () {
     var submenuKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
     /* eslint-disable prefer-template */
-    return "mm-".concat(normalizeId(parentKey)) + (submenuKey ? "-".concat(normalizeId(submenuKey)) : '') + (itemKey ? "-".concat(normalizeId(itemKey)) : '');
+    return "mm-".concat(normalizeId(parentKey)) + (submenuKey ? "-".concat(normalizeId(submenuKey)) : '') + ('string' === typeof itemKey ? "-".concat(normalizeId(itemKey)) : '');
   }
   /**
    * Load translations if viewing in non-English. MoreMenu first looks for translations on Meta,
@@ -532,11 +532,12 @@ $(function () {
    * Get the markup for the menu based on the given data.
    * @param {String} parentKey Message key for the parent menu ('user' or 'page').
    * @param {Object} items Menu items, as provided by MoreMenu.user.js and MoreMenu.page.js
+   * @param {String} [submenuKey] Used to ensure the generated IDs include the submenu name.
    * @return {String} Raw HTML.
    */
 
 
-  function getMenuHtml(parentKey, items) {
+  function getMenuHtml(parentKey, items, submenuKey) {
     var html = '';
     sortItems(items).forEach(function (itemKey) {
       var item = items[itemKey];
@@ -555,7 +556,7 @@ $(function () {
           itemHtml = '';
         }
       } else {
-        itemHtml += getItemHtml(parentKey, itemKey, item);
+        itemHtml += getItemHtml(parentKey, itemKey, item, submenuKey);
       }
 
       html += itemHtml;
@@ -919,7 +920,7 @@ $(function () {
    * Add an item (or submenu + its items) to a menu, given the full config hash for the item.
    * @param {String} menu The parent menu to append to, either 'user' or 'page'.
    * @param {Object} items A single item/submenu with structure matching config at MoreMenu.user or MoreMenu.page.
-   * @param {String} [insertAfter] Insert the item/submenu after the item with this ID.
+   * @param {Boolean|String} [insertAfter] Insert the item/submenu after the item with this ID.
    * @param {String} [submenu] Insert into this submenu.
    */
 
@@ -948,13 +949,13 @@ $(function () {
     /** Ensure only one item (top-level menu item or submenu + items) is given. */
 
     if (Object.keys(items).length !== 1) {
-      log('MoreMenu.addItem() was given multiple items. Ignoring all but the first.', 'warn');
+      log('MoreMenu.addItemCore() was given multiple items. Ignoring all but the first.', 'warn');
       items = items[Object.keys(items)[0]];
     }
     /** `items` could be a submenu. getMenuHtml() will work on single items, or a submenu and its items. */
 
 
-    var $html = $(getMenuHtml(menu, items));
+    var $html = $(getMenuHtml(menu, items, submenu));
     /** Check if insertAfter ID is valid. */
 
     var beforeItemKey = getItemId(menu, insertAfter || '', submenu);
@@ -988,7 +989,7 @@ $(function () {
 
       var beforeItemIndex = i18nKeys.indexOf(newI18nKey) - 1;
 
-      if (beforeItemIndex < 0) {
+      if (beforeItemIndex < 0 || false === insertAfter) {
         /** Alphabetically the new item goes first, so insert it before the existing first item. */
         $("#".concat(ids[0])).before($html);
       } else {
@@ -1007,7 +1008,7 @@ $(function () {
    * @param {String} menu Either 'page' or 'user'.
    * @param {String} name Title for the link. Can either be a normal string or an i18n key.
    * @param {Object} data Item data.
-   * @param {String} [insertAfter] Insert the link after the link with this ID.
+   * @param {Boolean|String} [insertAfter] Insert the link after the link with this ID.
    */
 
 
@@ -1020,7 +1021,7 @@ $(function () {
    * @param {String} submenu ID for the submenu (such as 'user-logs' or 'analysis').
    * @param {String} name Title for the link. Can either be a normal string or an i18n key.
    * @param {Object} data Item data.
-   * @param {String} [insertAfter] Insert the link after the link with this ID.
+   * @param {Boolean|String} [insertAfter] Insert the link after the link with this ID.
    */
 
 
@@ -1032,7 +1033,7 @@ $(function () {
    * @param {String} menu Either 'page' or 'user'.
    * @param {String} name Name for the submenu. Can either be a normal string or an i18n key.
    * @param {Object} items Keys are the names for each link, and values are the item data.
-   * @param {String} [insertAfter] Insert the submenu after the link with this ID.
+   * @param {Boolean|String} [insertAfter] Insert the submenu after the link with this ID.
    */
 
 
@@ -1044,7 +1045,7 @@ $(function () {
    * @param {String} menu Either 'page' or 'user'.
    * @param {String} name Title for the link. Can either be a normal string or an i18n key.
    * @param {String} url URL to point to.
-   * @param {String} [insertAfter] Insert the link after the link with this ID.
+   * @param {Boolean|String} [insertAfter] Insert the link after the link with this ID.
    */
 
 
@@ -1059,7 +1060,7 @@ $(function () {
    * @param {String} submenu ID for the submenu (such as 'user-logs' or 'analysis').
    * @param {String} name Title for the link. Can either be a normal string or an i18n key.
    * @param {String} url URL to point to.
-   * @param {String} [insertAfter] Insert the link after the link with this ID.
+   * @param {Boolean|String} [insertAfter] Insert the link after the link with this ID.
    */
 
 
