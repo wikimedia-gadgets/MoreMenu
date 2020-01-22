@@ -1022,6 +1022,21 @@ $(() => {
     }
 
     /**
+     * Get the ID of the menu item preceding the given item.
+     * @param {String} menu The parent menu the item lives (or will live) under.
+     * @param {String} [submenu] The given item lives (or will live) under this submenu.
+     * @param {Boolean|String} [insertAfter] The preceding item should be this one.
+     * @returns {jQuery}
+     */
+    function getBeforeItem(menu, submenu, insertAfter) {
+        if (-1 !== ['history', 'watch', 'unwatch'].indexOf(insertAfter)) {
+            return $(`#ca-${insertAfter}`);
+        }
+        const beforeItemKey = getItemId(menu, insertAfter || '', submenu);
+        return $(`#${beforeItemKey}`);
+    }
+
+    /**
      * PUBLIC METHODS
      */
 
@@ -1064,8 +1079,7 @@ $(() => {
         const $html = $(getMenuHtml(menu, items, submenu));
 
         /** Check if insertAfter ID is valid. */
-        const beforeItemKey = getItemId(menu, insertAfter || '', submenu);
-        const $beforeItem = $(`#${beforeItemKey}`);
+        const $beforeItem = getBeforeItem(menu, submenu, insertAfter);
         const isSubmenuItem = $beforeItem.parents('.mm-submenu').length;
         if ($beforeItem.length && (!submenu || (submenu && isSubmenuItem))) {
             /** insertAfter ID is valid. */
