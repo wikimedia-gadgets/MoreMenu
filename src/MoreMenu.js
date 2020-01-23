@@ -1094,17 +1094,28 @@ $(() => {
             const newI18nKey = normalizeId(Object.keys(items)[0]);
             const newId = getItemId(menu, newI18nKey, submenu);
 
-            /** insertAfter ID was either invalid or not found. */
-            if (!$beforeItem.length && insertAfter) {
-                log('getMenuHtml() was given an invalid `insertAfter`.', 'warn');
-            }
-
-            /** Grab IDs of the visible top-level items (excluding submenus) and append the new item ID. */
+            /** Grab the visible top-level items (excluding submenus). */
             const $topItems = submenu
                 ? $(menuId).find('.mm-submenu > .mm-item')
                 : $(menuId).find('.mm-menu > .mm-item');
+
+            if (true === insertAfter) {
+                $topItems.last().after($html);
+                return;
+            }
+            if (false === insertAfter) {
+                $topItems.first().before($html);
+                return;
+            }
+            if (!$beforeItem.length && insertAfter) {
+                /** insertAfter ID was either invalid or not found. */
+                log('getMenuHtml() was given an invalid `insertAfter`.', 'warn');
+            }
+
+            /** Create a list of the IDs and append the new ID. */
             const ids = $.map($topItems, el => el.id)
                 .concat([newId]);
+
             /** Extract the i18n keys and sort alphabetically by translation. */
             const i18nKeys = sortByTranslation(
                 ids.map(id => id.replace(new RegExp(`^mm-${menu}-${submenu ? `${submenu}-` : ''}`), ''))
@@ -1113,7 +1124,7 @@ $(() => {
             /** Get the index of the preceding item. */
             const beforeItemIndex = i18nKeys.indexOf(newI18nKey) - 1;
 
-            if (beforeItemIndex < 0 || false === insertAfter) {
+            if (beforeItemIndex < 0) {
                 /** Alphabetically the new item goes first, so insert it before the existing first item. */
                 $(`#${ids[0]}`).before($html);
             } else {
