@@ -921,11 +921,6 @@ $(function () {
 
 
   function getBeforeItem(menu, submenu, insertAfter) {
-    /** Normalize to native IDs if necessary */
-    if (-1 !== ['history', 'move', 'watch'].indexOf(insertAfter)) {
-      return $("#ca-".concat(insertAfter));
-    }
-
     var beforeItemKey = getItemId(menu, insertAfter || '', submenu);
     return $("#".concat(beforeItemKey));
   }

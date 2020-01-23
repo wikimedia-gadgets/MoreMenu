@@ -1034,10 +1034,6 @@ $(() => {
      * @returns {jQuery}
      */
     function getBeforeItem(menu, submenu, insertAfter) {
-        /** Normalize to native IDs if necessary */
-        if (-1 !== ['history', 'move', 'watch'].indexOf(insertAfter)) {
-            return $(`#ca-${insertAfter}`);
-        }
         const beforeItemKey = getItemId(menu, insertAfter || '', submenu);
         return $(`#${beforeItemKey}`);
     }
