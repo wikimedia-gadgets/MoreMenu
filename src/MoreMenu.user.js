@@ -127,7 +127,7 @@ window.MoreMenu.user = config => ({
                 url: `https://xtools.wmflabs.org/editsummary/${config.project.domain}/${config.targetUser.encodedName}`,
             },
             'edit-summary-search': {
-                url: `https://tools.wmflabs.org/sigma/summary.py?server=${config.dbName}&name=${config.targetUser.encodedName}`,
+                url: `https://tools.wmflabs.org/sigma/summary.py?server=${config.project.dbName}&name=${config.targetUser.encodedName}`,
             },
             'global-contributions-guc': {
                 url: `https://tools.wmflabs.org/guc/?user=${config.targetUser.encodedName}&blocks=true`,
