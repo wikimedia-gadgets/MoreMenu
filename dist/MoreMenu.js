@@ -343,7 +343,7 @@ $(function () {
       /** Page */
       namespaceRestrict: hasConditional(itemData.namespaceRestrict, config.page.nsId) && namespaceExclusion,
       pageExists: itemData.pageExists && config.page.id > 0 || !itemData.pageExists,
-      pageDeleted: itemData.pageDeleted ? 0 === config.pageId && false === mw.config.get('wgIsArticle') : true,
+      pageDeleted: itemData.pageDeleted ? !config.pageId && false === mw.config.get('wgIsArticle') : true,
       pageProtected: itemData.pageProtected ? config.page["protected"] : true,
       pageMovable: itemData.pageMovable ? config.page.movable : true,
 
