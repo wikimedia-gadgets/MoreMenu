@@ -6,7 +6,7 @@
 * Want to add custom links? See [[meta:MoreMenu#Customization]].
 * 
 * Script:         MoreMenu.js
-* Version:        5.1.5
+* Version:        5.1.6
 * Author:         MusikAnimal
 * License:        MIT
 * Documentation:  [[meta:MoreMenu]]
@@ -209,7 +209,7 @@ window.MoreMenu.user = function (config) {
           url: "https://xtools.wmflabs.org/editsummary/".concat(config.project.domain, "/").concat(config.targetUser.encodedName)
         },
         'edit-summary-search': {
-          url: "https://tools.wmflabs.org/sigma/summary.py?server=".concat(config.dbName, "&name=").concat(config.targetUser.encodedName)
+          url: "https://tools.wmflabs.org/sigma/summary.py?server=".concat(config.project.dbName, "&name=").concat(config.targetUser.encodedName)
         },
         'global-contributions-guc': {
           url: "https://tools.wmflabs.org/guc/?user=".concat(config.targetUser.encodedName, "&blocks=true")
