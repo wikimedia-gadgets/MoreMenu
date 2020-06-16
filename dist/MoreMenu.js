@@ -539,13 +539,14 @@ $(function () {
 
   function getMenuHtml(parentKey, items, submenuKey) {
     var html = '';
+    var submenuClasses = 'vector' === config.currentUser.skin ? 'vector-menu-content-list' : '';
     sortItems(items).forEach(function (itemKey) {
       var item = items[itemKey];
       var itemHtml = '';
 
       if (!item.url) {
         /** This is a submenu. */
-        itemHtml += "\n                    <li style=\"position:relative;\" id=\"".concat(getItemId(parentKey, itemKey), "\" class=\"mm-submenu-wrapper\">\n                    <a style=\"font-weight: bold\">").concat(msg(itemKey), "&hellip;</a>\n                    <ul class=\"menu mm-submenu\" style=\"display: none; position: absolute;\">");
+        itemHtml += "\n                    <li style=\"position:relative;\" id=\"".concat(getItemId(parentKey, itemKey), "\" class=\"mm-submenu-wrapper\">\n                    <a style=\"font-weight: bold\">").concat(msg(itemKey), "&hellip;</a>\n                    <ul class=\"menu mm-submenu ").concat(submenuClasses, "\" style=\"display: none; position: absolute;\">");
         sortItems(item).forEach(function (submenuItemKey) {
           itemHtml += getItemHtml(parentKey, submenuItemKey, item[submenuItemKey], itemKey);
         });
@@ -571,7 +572,7 @@ $(function () {
 
 
   function drawMenuVector(parentKey, html) {
-    html = "<div id=\"p-".concat(parentKey, "\" role=\"navigation\" class=\"vectorMenu mm-").concat(parentKey, " mm-tab\" ") + "aria-labelledby=\"p-".concat(parentKey, "-label\" style=\"z-index: 99\">") + "<input type=\"checkbox\" class=\"vectorMenuCheckbox\" aria-labelledby=\"p-".concat(parentKey, "-label\">") + "<h3 id=\"p-".concat(parentKey, "-label\"><span>").concat(msg(parentKey), "</span><a href=\"#\"></a></h3>") + "<ul class=\"menu mm-menu\">".concat(html, "</ul>") + '</div>';
+    html = "<div id=\"p-".concat(parentKey, "\" role=\"navigation\" class=\"vector-menu vector-menu-dropdown mm-").concat(parentKey, " mm-tab\" ") + "aria-labelledby=\"p-".concat(parentKey, "-label\" style=\"z-index: 99\">") + "<input type=\"checkbox\" class=\"vectorMenuCheckbox vector-menu-checkbox\" aria-labelledby=\"p-".concat(parentKey, "-label\">") + "<h3 id=\"p-".concat(parentKey, "-label\"><span>").concat(msg(parentKey), "</span><a href=\"#\"></a></h3>") + '<div class="vector-menu-content">' + "<ul class=\"menu vector-menu-content-list mm-menu\">".concat(html, "</ul>") + '</div></div>';
     $(html).insertAfter($('#p-views, .mm-page').last());
   }
   /**
