@@ -10,7 +10,7 @@
 }
 
 /* Page menu */
-.client-js .skin-vector:not(.ns-special) #p-views::after {
+.client-js .skin-vector:not(.ns-special) #p-views .vector-menu-content::after {
     content: '';
     display: inline-block;
     width: 3.85em;
