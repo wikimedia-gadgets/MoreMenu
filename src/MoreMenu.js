@@ -377,6 +377,9 @@ $(() => {
                 #p-views .vector-menu-content::after {
                     display: none !important;
                 }
+                .rtl #p-views .vector-menu-content::before {
+                    display: none !important;
+                }
             `);
         case 'timeless':
             return mw.util.addCSS(`
