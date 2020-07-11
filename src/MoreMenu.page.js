@@ -116,7 +116,7 @@ window.MoreMenu.page = config => ({
                 noticeProjectRestrict: ['wikipedia'],
             },
             'expand-bare-references': {
-                url: `https://tools.wmflabs.org/refill/result.php?page=${config.page.encodedName}&defaults=y&wiki=${config.project.contentLanguage}`,
+                url: `https://refill.toolforge.org/ng/result.php?page=${config.page.encodedName}&defaults=y&wiki=${config.project.contentLanguage}`,
                 pageExists: true,
                 namespaceRestrict: [0, 2, 118],
                 noticeProjectRestrict: ['wikipedia', 'commons', 'meta'],
