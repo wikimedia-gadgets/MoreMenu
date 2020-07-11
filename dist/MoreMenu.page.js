@@ -81,14 +81,14 @@ window.MoreMenu.page = function (config) {
           insertAfter: false
         },
         'analysis-wikihistory': {
-          url: "https://tools.wmflabs.org/wikihistory/wh.php?page_title=".concat(config.page.escapedName, "&wiki=").concat(config.project.dbName),
+          url: "https://wikihistory.toolforge.org/wh.php?page_title=".concat(config.page.escapedName, "&wiki=").concat(config.project.dbName),
           databaseRestrict: ['enwiki', 'dewiki'],
           namespaceRestrict: [0],
           pageExists: true,
           insertAfter: 'analysis-xtools'
         },
         'analysis-sigma': {
-          url: "https://tools.wmflabs.org/sigma/articleinfo.py?page=".concat(config.page.encodedName, "&server=").concat(config.project.dbName),
+          url: "https://sigma.toolforge.org/articleinfo.py?page=".concat(config.page.encodedName, "&server=").concat(config.project.dbName),
           pageExists: true,
           insertAfter: 'analysis-xtools'
         },
@@ -104,15 +104,15 @@ window.MoreMenu.page = function (config) {
           pageExists: true
         },
         'copyvio-detector': {
-          url: "https://tools.wmflabs.org/copyvios?lang=".concat(config.project.domain.split('.')[0], "&project=").concat(config.project.domain.split('.')[1], "&title=").concat(config.page.encodedName, "&oldid=&action=search&use_engine=1&use_links=1"),
+          url: "https://copyvios.toolforge.org?lang=".concat(config.project.domain.split('.')[0], "&project=").concat(config.project.domain.split('.')[1], "&title=").concat(config.page.encodedName, "&oldid=&action=search&use_engine=1&use_links=1"),
           pageExists: true
         },
         'traffic-report': {
-          url: "https://tools.wmflabs.org/pageviews?project=".concat(config.project.domain, "&pages=").concat(config.page.encodedName),
+          url: "https://pageviews.toolforge.org?project=".concat(config.project.domain, "&pages=").concat(config.page.encodedName),
           pageExists: true
         },
         'transclusion-count': {
-          url: "https://tools.wmflabs.org/templatecount/index.php?lang=".concat(config.project.contentLanguage, "&name=").concat(encodeURIComponent(mw.config.get('wgTitle')), "&namespace=").concat(config.page.nsId),
+          url: "https://templatecount.toolforge.org/index.php?lang=".concat(config.project.contentLanguage, "&name=").concat(encodeURIComponent(mw.config.get('wgTitle')), "&namespace=").concat(config.page.nsId),
           namespaceRestrict: [2, 4, 5, 10, 11, 12, 13, 100, 101, 828],
           noticeProjectRestrict: ['wikipedia']
         },
@@ -167,13 +167,13 @@ window.MoreMenu.page = function (config) {
           noticeProjectRestrict: ['wikipedia']
         },
         'expand-bare-references': {
-          url: "https://tools.wmflabs.org/refill/result.php?page=".concat(config.page.encodedName, "&defaults=y&wiki=").concat(config.project.contentLanguage),
+          url: "https://refill.toolforge.org/ng/result.php?page=".concat(config.page.encodedName, "&defaults=y&wiki=").concat(config.project.contentLanguage),
           pageExists: true,
           namespaceRestrict: [0, 2, 118],
           noticeProjectRestrict: ['wikipedia', 'commons', 'meta']
         },
         'fix-dead-links': {
-          url: "https://tools.wmflabs.org/iabot/index.php?page=runbotsingle&pagesearch=".concat(config.page.encodedName, "&wiki=").concat(config.project.dbName),
+          url: "https://iabot.toolforge.org/index.php?page=runbotsingle&pagesearch=".concat(config.page.encodedName, "&wiki=").concat(config.project.dbName),
           pageExists: true,
           databaseRestrict: ['alswiki', 'barwiki', 'ckbwiki', 'dewiki', 'enwiki', 'eswiki', 'frwiki', 'huwiki', 'itwiki', 'jawiki', 'kowiki', 'lvwiki', 'nlwiki', 'nowiki', 'ptwiki', 'ruwiki', 'svwiki', 'zhwiki']
         }

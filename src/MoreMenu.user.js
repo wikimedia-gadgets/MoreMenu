@@ -127,10 +127,10 @@ window.MoreMenu.user = config => ({
                 url: `https://xtools.wmflabs.org/editsummary/${config.project.domain}/${config.targetUser.encodedName}`,
             },
             'edit-summary-search': {
-                url: `https://tools.wmflabs.org/sigma/summary.py?server=${config.project.dbName}&name=${config.targetUser.encodedName}`,
+                url: `https://sigma.toolforge.org/summary.py?server=${config.project.dbName}&name=${config.targetUser.encodedName}`,
             },
             'global-contributions-guc': {
-                url: `https://tools.wmflabs.org/guc/?user=${config.targetUser.encodedName}&blocks=true`,
+                url: `https://guc.toolforge.org/?user=${config.targetUser.encodedName}&blocks=true`,
             },
             'global-contributions-xtools': {
                 url: `https://xtools.wmflabs.org/globalcontribs/${config.targetUser.encodedName}`,
@@ -148,12 +148,12 @@ window.MoreMenu.user = config => ({
         },
         'ip-lookup': {
             'whois': {
-                url: `https://tools.wmflabs.org/whois/gateway.py?lookup=true&ip=${config.targetUser.escapedName}`,
+                url: `https://whois.toolforge.org/gateway.py?lookup=true&ip=${config.targetUser.escapedName}`,
                 targetUserIp: true,
                 targetUserIpRange: true,
             },
             'proxy-check': {
-                url: `https://tools.wmflabs.org/ipcheck/?ip=${config.targetUser.escapedName}`,
+                url: `https://ipcheck.toolforge.org/?ip=${config.targetUser.escapedName}`,
                 targetUserIp: true,
                 currentUserRights: 'block',
             },

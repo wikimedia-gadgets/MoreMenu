@@ -209,10 +209,10 @@ window.MoreMenu.user = function (config) {
           url: "https://xtools.wmflabs.org/editsummary/".concat(config.project.domain, "/").concat(config.targetUser.encodedName)
         },
         'edit-summary-search': {
-          url: "https://tools.wmflabs.org/sigma/summary.py?server=".concat(config.project.dbName, "&name=").concat(config.targetUser.encodedName)
+          url: "https://sigma.toolforge.org/summary.py?server=".concat(config.project.dbName, "&name=").concat(config.targetUser.encodedName)
         },
         'global-contributions-guc': {
-          url: "https://tools.wmflabs.org/guc/?user=".concat(config.targetUser.encodedName, "&blocks=true")
+          url: "https://guc.toolforge.org/?user=".concat(config.targetUser.encodedName, "&blocks=true")
         },
         'global-contributions-xtools': {
           url: "https://xtools.wmflabs.org/globalcontribs/".concat(config.targetUser.encodedName)
@@ -230,12 +230,12 @@ window.MoreMenu.user = function (config) {
       },
       'ip-lookup': {
         'whois': {
-          url: "https://tools.wmflabs.org/whois/gateway.py?lookup=true&ip=".concat(config.targetUser.escapedName),
+          url: "https://whois.toolforge.org/gateway.py?lookup=true&ip=".concat(config.targetUser.escapedName),
           targetUserIp: true,
           targetUserIpRange: true
         },
         'proxy-check': {
-          url: "https://tools.wmflabs.org/ipcheck/?ip=".concat(config.targetUser.escapedName),
+          url: "https://ipcheck.toolforge.org/?ip=".concat(config.targetUser.escapedName),
           targetUserIp: true,
           currentUserRights: 'block'
         },
