@@ -1,7 +1,7 @@
 /**
  * WARNING: GLOBAL GADGET FILE
- * Compiled from source at https://github.com/MusikAnimal/MoreMenu
- * Please submit code changes as a pull request to the source repository at https://github.com/MusikAnimal/MoreMenu
+ * Compiled from source at https://github.com/wikimedia-gadgets/MoreMenu
+ * Please submit code changes as a pull request to the source repository at https://github.com/wikimedia-gadgets/MoreMenu
  *
  * Enwiki extension to MoreMenu.
  * This adds a menu item with RfAs/RfBs and an item for XfD where applicable.

@@ -1,16 +1,16 @@
 /**
 * WARNING: GLOBAL GADGET FILE
-* Compiled from source at https://github.com/MusikAnimal/MoreMenu
-* Please submit code changes as a pull request to the source repository at https://github.com/MusikAnimal/MoreMenu
+* Compiled from source at https://github.com/wikimedia-gadgets/MoreMenu
+* Please submit code changes as a pull request to the source repository at https://github.com/wikimedia-gadgets/MoreMenu
 * Are there missing translations? See [[meta:MoreMenu#Localization]].
 * Want to add custom links? See [[meta:MoreMenu#Customization]].
-* 
+*
 * Script:         MoreMenu.js
 * Version:        5.1.7
 * Author:         MusikAnimal
 * License:        MIT
 * Documentation:  [[meta:MoreMenu]]
-* GitHub:         https://github.com/MusikAnimal/MoreMenu
+* GitHub:         https://github.com/wikimedia-gadgets/MoreMenu
 * Skins:          Vector, Timeless, Monobook, Modern
 * Browsers:       See [[mw:Compatibility#Browsers]]
 **/
@@ -728,7 +728,7 @@ $(function () {
   /**
    * Add a MutationObserver to look for items added/removed from the given menus.
    * If they are empty, the container is hidden, otherwise it's unhidden.
-   * MutationObserver implementation courtesy of LunarTwilight. See https://github.com/MusikAnimal/MoreMenu/pull/1
+   * MutationObserver implementation courtesy of LunarTwilight. See https://github.com/wikimedia-gadgets/MoreMenu/pull/1
    * @param {String|Array} ids Selector for the menu to observe (a parent of the <ul> element).
    */
 

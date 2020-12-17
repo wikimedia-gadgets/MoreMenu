@@ -837,7 +837,7 @@ $(() => {
     /**
      * Add a MutationObserver to look for items added/removed from the given menus.
      * If they are empty, the container is hidden, otherwise it's unhidden.
-     * MutationObserver implementation courtesy of LunarTwilight. See https://github.com/MusikAnimal/MoreMenu/pull/1
+     * MutationObserver implementation courtesy of LunarTwilight. See https://github.com/wikimedia-gadgets/MoreMenu/pull/1
      * @param {String|Array} ids Selector for the menu to observe (a parent of the <ul> element).
      */
     function addMutationObserver(ids) {
