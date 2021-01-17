@@ -4,7 +4,7 @@
 * Please submit code changes as a pull request to the source repository at https://github.com/wikimedia-gadgets/MoreMenu
 * Are there missing translations? See [[meta:MoreMenu#Localization]].
 * Want to add custom links? See [[meta:MoreMenu#Customization]].
-*
+* 
 * Script:         MoreMenu.js
 * Version:        5.1.7
 * Author:         MusikAnimal
@@ -21,7 +21,7 @@
 /* eslint quote-props: ["error", "always"] */
 window.MoreMenu = window.MoreMenu || {};
 window.MoreMenu.messages = window.MoreMenu.messages || {};
-$.extend(window.MoreMenu.messages, {
+Object.assign(window.MoreMenu.messages, {
   "abusefilter-log": "AbuseFilter log",
   "all-logs": "All logs",
   "analysis": "Analysis",

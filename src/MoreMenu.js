@@ -42,7 +42,7 @@ $(() => {
             id: mw.config.get('wgArticleId'),
             movable: !mw.config.get('wgIsMainPage') && !!$('#ca-move').length,
         };
-        $.extend(this.page, {
+        Object.assign(this.page, {
             escapedName: this.page.name.replace(/[?!'"()*]/g, escape),
             encodedName: encodeURIComponent(this.page.name),
         });
@@ -80,7 +80,7 @@ $(() => {
             /** Some things don't work for IPv4 ranges (block log API), but do for IPv6 ranges... */
             this.targetUser.ipv4Range = mw.util.isIPv4Address(this.targetUser.name.split('/')[0]);
         }
-        $.extend(this.targetUser, {
+        Object.assign(this.targetUser, {
             escapedName: this.targetUser.name.replace(/[?!'"()*]/g, escape),
             encodedName: encodeURIComponent(this.targetUser.name),
         });
@@ -319,7 +319,7 @@ $(() => {
 
         if (config.targetUser.name) {
             /** Target user */
-            $.extend(conditions, {
+            Object.assign(conditions, {
                 targetUserGroups: hasConditional(itemData.targetUserGroups, config.targetUser.groups),
                 targetUserRights: hasConditional(itemData.targetUserRights, config.targetUser.rights),
                 targetUserBlocked: itemData.targetUserBlocked !== undefined ? config.targetUser.blocked === itemData.targetUserBlocked : true,
@@ -755,10 +755,10 @@ $(() => {
 
         /** Determine which menus to draw. */
         if (config.page.nsId >= 0) {
-            $.extend(menus, getModule('page')(config));
+            Object.assign(menus, getModule('page')(config));
         }
         if (config.targetUser.name) {
-            $.extend(menus, getModule('user')(config));
+            Object.assign(menus, getModule('user')(config));
         }
 
         /** Preemptively add the appropriate CSS. */
@@ -997,7 +997,7 @@ $(() => {
         $.when.apply(this, getPromises()).done((targetUserData, userRightsData, metaData) => {
             /** Target user data. */
             if (targetUserData) {
-                $.extend(config.targetUser, targetUserData[0].query.users[0]);
+                Object.assign(config.targetUser, targetUserData[0].query.users[0]);
 
                 if (targetUserData[0].query.blocks.length) {
                     config.targetUser.blocked = true;

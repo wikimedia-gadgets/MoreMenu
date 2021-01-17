@@ -25,7 +25,7 @@ $(function () {
       'Wikipedia:Sockpuppet investigations': 'spi',
       'Wikipedia:Bots/Requests for approval': 'brfa'
     };
-    $.extend(MoreMenu.messages, {
+    Object.assign(MoreMenu.messages, {
       rfa: 'RfAs',
       rfb: 'RfBs',
       rfarb: 'RfArbs',

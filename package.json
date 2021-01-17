@@ -1,10 +1,11 @@
 {
   "name": "moremenu",
-  "version": "5.1.7",
+  "version": "5.1.8",
   "description": "Dropdown menus with links to common tasks, user and page analytic tools and logs.",
   "private": true,
   "scripts": {
     "build": "babel src/*.js --out-dir dist/",
+    "server": "node bin/server.js",
     "test": "eslint src/"
   },
   "repository": "git+https://github.com/wikimedia-gadgets/MoreMenu.git",
@@ -20,7 +21,7 @@
   "homepage": "https://meta.wikimedia.org/wiki/MoreMenu",
   "main": "MoreMenu.js",
   "devDependencies": {
-    "@babel/cli": "^7.5.5",
+    "@babel/cli": "^7.12.10",
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "babel-plugin-add-header-comment": "^1.0.3",
