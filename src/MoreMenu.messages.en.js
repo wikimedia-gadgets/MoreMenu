@@ -2,7 +2,7 @@
 /* eslint quote-props: ["error", "always"] */
 window.MoreMenu = window.MoreMenu || {};
 window.MoreMenu.messages = window.MoreMenu.messages || {};
-Object.assign(window.MoreMenu.messages, {
+$.extend(window.MoreMenu.messages, {
     "abusefilter-log": "AbuseFilter log",
     "all-logs": "All logs",
     "analysis": "Analysis",

@@ -59,7 +59,7 @@ $(function () {
       id: mw.config.get('wgArticleId'),
       movable: !mw.config.get('wgIsMainPage') && !!$('#ca-move').length
     };
-    Object.assign(this.page, {
+    $.extend(this.page, {
       escapedName: this.page.name.replace(/[?!'"()*]/g, escape),
       encodedName: encodeURIComponent(this.page.name)
     });
@@ -97,7 +97,7 @@ $(function () {
       this.targetUser.ipv4Range = mw.util.isIPv4Address(this.targetUser.name.split('/')[0]);
     }
 
-    Object.assign(this.targetUser, {
+    $.extend(this.targetUser, {
       escapedName: this.targetUser.name.replace(/[?!'"()*]/g, escape),
       encodedName: encodeURIComponent(this.targetUser.name)
     });
@@ -358,7 +358,7 @@ $(function () {
 
     if (config.targetUser.name) {
       /** Target user */
-      Object.assign(conditions, {
+      $.extend(conditions, {
         targetUserGroups: hasConditional(itemData.targetUserGroups, config.targetUser.groups),
         targetUserRights: hasConditional(itemData.targetUserRights, config.targetUser.rights),
         targetUserBlocked: itemData.targetUserBlocked !== undefined ? config.targetUser.blocked === itemData.targetUserBlocked : true,
@@ -651,11 +651,11 @@ $(function () {
     /** Determine which menus to draw. */
 
     if (config.page.nsId >= 0) {
-      Object.assign(menus, getModule('page')(config));
+      $.extend(menus, getModule('page')(config));
     }
 
     if (config.targetUser.name) {
-      Object.assign(menus, getModule('user')(config));
+      $.extend(menus, getModule('user')(config));
     }
     /** Preemptively add the appropriate CSS. */
 
@@ -876,7 +876,7 @@ $(function () {
     $.when.apply(this, getPromises()).done(function (targetUserData, userRightsData, metaData) {
       /** Target user data. */
       if (targetUserData) {
-        Object.assign(config.targetUser, targetUserData[0].query.users[0]);
+        $.extend(config.targetUser, targetUserData[0].query.users[0]);
 
         if (targetUserData[0].query.blocks.length) {
           config.targetUser.blocked = true;
