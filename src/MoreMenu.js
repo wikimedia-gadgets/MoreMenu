@@ -368,6 +368,7 @@ $(() => {
                 .mm-submenu {
                     border-top-width: 1px !important;
                     min-width: 120px !important;
+                    ${rightKey}: inherit !important;
                     top: -1px !important;
                 }
                 #p-views {
