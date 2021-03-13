@@ -960,6 +960,11 @@ $(() => {
      */
     function removeUnneededLinks() {
         handleHistoryAndWatchLinks(true);
+        
+        /* Hides core More menu if it is empty */
+        if( $('#p-cactions ul li').length === 0 ) {
+            $('#p-cactions').hide();
+        }
 
         /** Following logic only applies to the User menu. */
         if (!config.targetUser.name) {
