@@ -875,6 +875,27 @@ $(() => {
         });
     }
 
+    function setStorageWithExpiry(key, value, liveTime) {
+        return mw.storage.setObject(
+            key,
+            {
+                value: value,
+                expiryDate: (new Date()).getTime() + liveTime,
+            }
+        )
+    }
+
+    function getStorageWithExpiry(key) {
+        const obj = mw.storage.getObject(key)
+
+        if ((new Date()).getTime() > obj.expiryDate) {
+            mw.storage.remove(key)
+            return null
+        }
+
+        return obj.value
+    }
+
     /**
      * For Vector/Timeless's native More menu, we keep track of how many times it gets populated over time,
      * to intelligently determine whether we should leave it upfront to make the script feel more responsive.
