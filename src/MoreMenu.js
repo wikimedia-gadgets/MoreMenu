@@ -875,6 +875,14 @@ $(() => {
         });
     }
 
+    /**
+     * Stores in LocalStorage with an expiry date (now + liveTime, in ms).
+     *
+     * @param {string} key Key name to store under
+     * @param {Object} value Object value to be stored
+     * @param {int} liveTime Delay in ms before to consider the value as outdated
+     * @return {boolean} The value was set
+     */
     function setStorageWithExpiry(key, value, liveTime) {
         return mw.storage.setObject(
             key,
@@ -884,16 +892,32 @@ $(() => {
             }
         )
     }
+    
+    /**
+     * Retrieve mmNativeMenuUsage from LocalStorage and decrements it if
+     * its expiry date has been passed.
+     *
+     * @return {int|null|boolean} mmNativeMenuUsage, null if no value exists,
+     *  or false if storage is not available.
+     */
+    function getMmNativeMenuUsage() {
+        const obj = mw.storage.getObject('mmNativeMenuUsage');
 
-    function getStorageWithExpiry(key) {
-        const obj = mw.storage.getObject(key)
-
-        if ((new Date()).getTime() > obj.expiryDate) {
-            mw.storage.remove(key)
-            return null
+        if (!obj) { //mmNativeMenuUsage nonexistent, or LocalStorage not available
+            return obj;
         }
 
-        return obj.value
+        //Let’s decrement value older than 24h
+        if ((new Date()).getTime() > obj.expiryDate) {
+            obj.value--;
+            setStorageWithExpiry('mmNativeMenuUsage', obj.value, 86400000);
+        }
+        if (0 == obj.value) {
+            mw.storage.remove('mmNativeMenuUsage');
+            return null;
+        }
+
+        return obj.value;
     }
 
     /**
@@ -902,7 +926,7 @@ $(() => {
      */
     function observeCactionsMenu() {
         /** Check local storage to see if user continually has items added to the native menu. */
-        const reAddCount = parseInt(mw.storage.get('mmNativeMenuUsage'), 10) || 0;
+        const reAddCount = parseInt(getMmNativeMenuUsage(), 10) || 0;
 
         /** Ignore for non-Vector/Timeless, if user disabled this feature, or if reAddCount is high. */
         if (-1 === ['vector', 'timeless'].indexOf(config.currentUser.skin)
@@ -917,7 +941,7 @@ $(() => {
         /** Wait 5 seconds before checking the reAddCount, to give other scripts time to populate the menu */
         setTimeout(() => {
             if ($('#p-cactions').find('li').length) {
-                mw.storage.set('mmNativeMenuUsage', reAddCount + 1);
+                setStorageWithExpiry('mmNativeMenuUsage', reAddCount + 1, 86400000); //24h liveTime
             }
         }, 5000);
     }
