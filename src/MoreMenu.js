@@ -382,6 +382,9 @@ $(() => {
                 .rtl #p-views .vector-menu-content::before {
                     display: none !important;
                 }
+                .mm-submenu .mm-item {
+                    font-size: inherit;
+                }
             `);
         case 'timeless':
             return mw.util.addCSS(`

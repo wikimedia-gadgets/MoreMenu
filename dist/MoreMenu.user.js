@@ -4,9 +4,9 @@
 * Please submit code changes as a pull request to the source repository at https://github.com/wikimedia-gadgets/MoreMenu
 * Are there missing translations? See [[meta:MoreMenu#Localization]].
 * Want to add custom links? See [[meta:MoreMenu#Customization]].
-*
+* 
 * Script:         MoreMenu.js
-* Version:        5.1.11
+* Version:        5.1.12
 * Author:         MusikAnimal
 * License:        MIT
 * Documentation:  [[meta:MoreMenu]]
