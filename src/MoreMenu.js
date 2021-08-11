@@ -383,7 +383,7 @@ $(() => {
                     display: none !important;
                 }
                 .mm-submenu .mm-item {
-                    font-size: inherit;
+                    font-size: inherit !important;
                 }
             `);
         case 'timeless':
