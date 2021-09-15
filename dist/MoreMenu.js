@@ -6,7 +6,7 @@
 * Want to add custom links? See [[meta:MoreMenu#Customization]].
 * 
 * Script:         MoreMenu.js
-* Version:        5.1.13
+* Version:        5.1.14
 * Author:         MusikAnimal
 * License:        MIT
 * Documentation:  [[meta:MoreMenu]]
@@ -572,7 +572,7 @@ $(function () {
 
 
   function drawMenuVector(parentKey, html) {
-    html = "<div id=\"p-".concat(parentKey, "\" role=\"navigation\" class=\"mw-portlet vector-menu vector-menu-dropdown mm-").concat(parentKey, " mm-tab\" ") + "aria-labelledby=\"p-".concat(parentKey, "-label\" style=\"z-index: 99\">") + "<input type=\"checkbox\" class=\"vector-menu-checkbox\" aria-labelledby=\"p-".concat(parentKey, "-label\">") + "<h3 id=\"p-".concat(parentKey, "-label\"><span>").concat(msg(parentKey), "</span><a href=\"#\"></a></h3>") + '<div class="vector-menu-content">' + "<ul class=\"menu vector-menu-content-list mm-menu\">".concat(html, "</ul>") + '</div></div>';
+    html = "<div id=\"p-".concat(parentKey, "\" role=\"navigation\" class=\"mw-portlet mw-portlet-cactions vector-menu vector-menu-dropdown mm-").concat(parentKey, " mm-tab\" ") + "aria-labelledby=\"p-".concat(parentKey, "-label\" style=\"z-index: 99\">") + "<input type=\"checkbox\" class=\"vector-menu-checkbox\" aria-labelledby=\"p-".concat(parentKey, "-label\">") + "<h3 id=\"p-".concat(parentKey, "-label\"><span>").concat(msg(parentKey), "</span><a href=\"#\"></a></h3>") + '<div class="vector-menu-content">' + "<ul class=\"menu vector-menu-content-list mm-menu\">".concat(html, "</ul>") + '</div></div>';
     $(html).insertAfter($('#p-views, .mm-page').last());
   }
   /**
