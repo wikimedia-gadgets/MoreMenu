@@ -34,7 +34,7 @@ fs.readdir(dir, (err, files) => {
 
             fs.readFile(`${dir}${file}`, 'utf-8', (err, content) => {
                 const title = `MediaWiki:Gadget-${file}`;
-                client.edit(title, content, `v${version} at ${sha}: ${message}`);
+                client.edit(title, content, `v${version} at ${sha.trim()}: ${message}`);
             });
         });
     });
