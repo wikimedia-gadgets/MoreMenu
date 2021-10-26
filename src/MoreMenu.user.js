@@ -117,38 +117,46 @@ window.MoreMenu.user = config => ({
         },
         'analysis': {
             'analysis-xtools': {
-                url: `https://xtools.wmflabs.org/ec/${config.project.domain}/${config.targetUser.encodedName}`,
+                url: `https://xtools.wmflabs.org/ec/${config.project.domain}/${config.targetUser.ipRange ? `ipr-${config.targetUser.name}` : config.targetUser.encodedName}`,
             },
             'articles-created': {
                 url: `https://xtools.wmflabs.org/pages/${config.project.domain}/${config.targetUser.encodedName}/0`,
                 targetUserGroups: ['user'],
             },
             'edit-summary-usage': {
-                url: `https://xtools.wmflabs.org/editsummary/${config.project.domain}/${config.targetUser.encodedName}`,
+                url: `https://xtools.wmflabs.org/editsummary/${config.project.domain}/${config.targetUser.ipRange ? `ipr-${config.targetUser.name}` : config.targetUser.encodedName}`,
             },
             'edit-summary-search': {
                 url: `https://sigma.toolforge.org/summary.py?server=${config.project.dbName}&name=${config.targetUser.encodedName}`,
+                targetUserIpRange: false,
             },
             'global-contributions-guc': {
                 url: `https://guc.toolforge.org/?user=${config.targetUser.encodedName}&blocks=true`,
+                targetUserIpRange: false,
             },
             'global-contributions-xtools': {
-                url: `https://xtools.wmflabs.org/globalcontribs/${config.targetUser.encodedName}`,
+                url: `https://xtools.wmflabs.org/globalcontribs/${config.targetUser.ipRange ? `ipr-${config.targetUser.name}` : config.targetUser.encodedName}`,
             },
             'non-automated-edits': {
-                url: `https://xtools.wmflabs.org/autoedits/${config.project.domain}/${config.targetUser.encodedName}`,
+                url: `https://xtools.wmflabs.org/autoedits/${config.project.domain}/${config.targetUser.ipRange ? `ipr-${config.targetUser.name}` : config.targetUser.encodedName}`,
             },
             'sul': {
                 url: mw.util.getUrl(`Special:CentralAuth/${config.targetUser.name}`),
                 targetUserGroups: ['user'],
             },
             'top-edited-pages': {
-                url: `https://xtools.wmflabs.org/topedits/${config.project.domain}/${config.targetUser.encodedName}`,
+                url: `https://xtools.wmflabs.org/topedits/${config.project.domain}/${config.targetUser.ipRange ? `ipr-${config.targetUser.name}` : config.targetUser.encodedName}`,
             },
         },
         'ip-lookup': {
+            'spur': {
+                url: `https://spur.us/app/context?q=${config.targetUser.name}`,
+                targetUserIp: true,
+                targetUserIpRange: false,
+                currentUserGroups: ['user'],
+            },
             'whois': {
-                url: `https://whois.toolforge.org/gateway.py?lookup=true&ip=${config.targetUser.escapedName}`,
+                url: `https://whois-referral.toolforge.org/gateway.py?lookup=true&ip=${config.targetUser.escapedName}`,
                 targetUserIp: true,
                 targetUserIpRange: true,
             },

@@ -102,16 +102,16 @@ window.MoreMenu.page = config => ({
         /** Tools used to semi-automate editing. */
         'tools': {
             'check-external-links': {
-                url: `https://dispenser.info.tm/~dispenser/cgi-bin/webchecklinks.py?page=${config.page.encodedName}&hostname=${config.project.domain}`,
+                url: `http://69.142.160.183/~dispenser/cgi-bin/webchecklinks.py?page=${config.page.encodedName}&hostname=${config.project.domain}`,
                 pageExists: true,
             },
             'check-redirects': {
-                url: `https://dispenser.info.tm/~dispenser/cgi-bin/rdcheck.py?page=${config.page.encodedName}&lang=${config.project.contentLanguage}`,
+                url: `http://69.142.160.183/~dispenser/cgi-bin/rdcheck.py?page=${config.page.encodedName}&lang=${config.project.contentLanguage}`,
                 pageExists: true,
                 noticeProjectRestrict: ['wikipedia'],
             },
             'disambiguate-links': {
-                url: `https://dispenser.info.tm/~dispenser/cgi-bin/dablinks.py?page=${config.page.encodedName}&lang=${config.project.contentLanguage}`,
+                url: `http://69.142.160.183/~dispenser/cgi-bin/dablinks.py?page=${config.page.encodedName}&lang=${config.project.contentLanguage}`,
                 pageExists: true,
                 noticeProjectRestrict: ['wikipedia'],
             },

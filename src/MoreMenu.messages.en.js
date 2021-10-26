@@ -89,5 +89,8 @@ $.extend(window.MoreMenu.messages, {
     "user-thanks-received": "User thanks received",
     "view-block": "View block",
     "view-block-log": "View block log",
+
+    // Optional
+    "spur": "Spur",
     "whois": "WHOIS",
 }, window.MoreMenu.messages);

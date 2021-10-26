@@ -153,16 +153,16 @@ window.MoreMenu.page = function (config) {
       /** Tools used to semi-automate editing. */
       'tools': {
         'check-external-links': {
-          url: "https://dispenser.info.tm/~dispenser/cgi-bin/webchecklinks.py?page=".concat(config.page.encodedName, "&hostname=").concat(config.project.domain),
+          url: "http://69.142.160.183/~dispenser/cgi-bin/webchecklinks.py?page=".concat(config.page.encodedName, "&hostname=").concat(config.project.domain),
           pageExists: true
         },
         'check-redirects': {
-          url: "https://dispenser.info.tm/~dispenser/cgi-bin/rdcheck.py?page=".concat(config.page.encodedName, "&lang=").concat(config.project.contentLanguage),
+          url: "http://69.142.160.183/~dispenser/cgi-bin/rdcheck.py?page=".concat(config.page.encodedName, "&lang=").concat(config.project.contentLanguage),
           pageExists: true,
           noticeProjectRestrict: ['wikipedia']
         },
         'disambiguate-links': {
-          url: "https://dispenser.info.tm/~dispenser/cgi-bin/dablinks.py?page=".concat(config.page.encodedName, "&lang=").concat(config.project.contentLanguage),
+          url: "http://69.142.160.183/~dispenser/cgi-bin/dablinks.py?page=".concat(config.page.encodedName, "&lang=").concat(config.project.contentLanguage),
           pageExists: true,
           noticeProjectRestrict: ['wikipedia']
         },

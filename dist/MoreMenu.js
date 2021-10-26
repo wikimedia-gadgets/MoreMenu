@@ -363,7 +363,8 @@ $(function () {
         targetUserRights: hasConditional(itemData.targetUserRights, config.targetUser.rights),
         targetUserBlocked: itemData.targetUserBlocked !== undefined ? config.targetUser.blocked === itemData.targetUserBlocked : true,
         targetUserChangeGroups: itemData.targetUserChangeGroups ? canAddRemoveGroups(config.targetUser.groups, config.targetUser.rights) : true,
-        targetUserIp: itemData.targetUserIp ? mw.util.isIPAddress(config.targetUser.name) || config.targetUser.ipRange && itemData.targetUserIpRange : true
+        targetUserIp: itemData.targetUserIp ? mw.util.isIPAddress(config.targetUser.name) || config.targetUser.ipRange && itemData.targetUserIpRange : true,
+        targetUserIpRange: config.targetUser.ipRange ? itemData.targetUserIpRange : true
       });
     }
 
@@ -858,13 +859,6 @@ $(function () {
       $('#mm-user-user-logs').remove();
       $('#mm-user-deleted-contributions').remove();
       $('#mm-user-suppressed-contributions').remove();
-      /**
-       * For now assuming no tools accept IP ranges.
-       * FIXME: We should hide all empty menus, and use MutationObserver to un-hide them
-       *   if a script adds something to them after MoreMenu has finished loading.
-       */
-
-      $('#mm-user-analysis').remove();
     }
   }
   /**
