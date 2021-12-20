@@ -42,6 +42,16 @@ $(() => {
             id: mw.config.get('wgArticleId'),
             movable: !mw.config.get('wgIsMainPage') && !!$('#ca-move').length,
         };
+        if (-1 === this.page.nsId
+            && !!mw.config.get('wgRelevantPageName') && mw.config.get('wgRelevantPageName').length
+            && this.page.name !== mw.config.get('wgRelevantPageName')
+        ) {
+            $.extend(this.page, {
+                name: mw.config.get('wgRelevantPageName'),
+                id: mw.config.get('wgRelevantArticleId')
+            });
+            this.page.nsId = mw.Title.newFromText(this.page.name).namespace;
+        }
         $.extend(this.page, {
             escapedName: this.page.name.replace(/[?!'"()*]/g, escape),
             encodedName: encodeURIComponent(this.page.name),
