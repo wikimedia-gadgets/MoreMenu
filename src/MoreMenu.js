@@ -1041,7 +1041,7 @@ $(() => {
      */
     function getBeforeItem(menu, submenu, insertAfter) {
         const beforeItemKey = getItemId(menu, insertAfter || '', submenu);
-        return $(`#${beforeItemKey}`);
+        return $(`#${$.escapeSelector(beforeItemKey)}`);
     }
 
     /**
@@ -1128,10 +1128,10 @@ $(() => {
 
             if (beforeItemIndex < 0) {
                 /** Alphabetically the new item goes first, so insert it before the existing first item. */
-                $(`#${ids[0]}`).before($html);
+                $(`#${$.escapeSelector(ids[0])}`).before($html);
             } else {
                 /** Insert HTML after the would-be previous item in the menu. */
-                $(`#${getItemId(menu, i18nKeys[Math.max(0, i18nKeys.indexOf(newI18nKey) - 1)], submenu)}`)
+                $(`#${$.escapeSelector(getItemId(menu, i18nKeys[Math.max(0, i18nKeys.indexOf(newI18nKey) - 1)], submenu))}`)
                     .after($html);
             }
         }
