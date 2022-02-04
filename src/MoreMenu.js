@@ -784,6 +784,7 @@ $(() => {
             const html = getMenuHtml(key, menus[key]);
 
             switch (config.currentUser.skin) {
+            case 'vector-2022':
             case 'vector':
                 drawMenuVector(key, html);
                 break;
