@@ -375,6 +375,7 @@ $(() => {
     function addCSS() {
         switch (config.currentUser.skin) {
         case 'vector':
+        case 'vector-2022':
             return mw.util.addCSS(`
                 .mm-submenu {
                     background: #ffffff;
@@ -532,6 +533,7 @@ $(() => {
     function getSubmenuCss($element) {
         switch (config.currentUser.skin) {
         case 'vector':
+        case 'vector-2022':
             return { [leftKey]: $element.outerWidth() };
         case 'timeless':
             return {
@@ -638,7 +640,7 @@ $(() => {
      */
     function getMenuHtml(parentKey, items, submenuKey) {
         let html = '';
-        const submenuClasses = 'vector' === config.currentUser.skin
+        const submenuClasses = 'vector' === config.currentUser.skin || 'vector-2022' === config.currentUser.skin
             ? 'vector-menu-content-list'
             : '';
 
@@ -900,7 +902,7 @@ $(() => {
         const reAddCount = parseInt(mw.storage.get('mmNativeMenuUsage'), 10) || 0;
 
         /** Ignore for non-Vector/Timeless, if user disabled this feature, or if reAddCount is high. */
-        if (-1 === ['vector', 'timeless'].indexOf(config.currentUser.skin)
+        if (-1 === ['vector', 'vector-2022', 'timeless'].indexOf(config.currentUser.skin)
             || !!window.moreMenuDisableAutoRemoval
             || reAddCount >= 5
         ) {

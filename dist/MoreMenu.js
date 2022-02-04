@@ -6,7 +6,7 @@
 * Want to add custom links? See [[meta:MoreMenu#Customization]].
 * 
 * Script:         MoreMenu.js
-* Version:        5.1.17
+* Version:        5.1.18
 * Author:         MusikAnimal
 * License:        MIT
 * Documentation:  [[meta:MoreMenu]]
@@ -59,6 +59,15 @@ $(function () {
       id: mw.config.get('wgArticleId'),
       movable: !mw.config.get('wgIsMainPage') && !!$('#ca-move').length
     };
+
+    if (-1 === this.page.nsId && !!mw.config.get('wgRelevantPageName') && mw.config.get('wgRelevantPageName').length && this.page.name !== mw.config.get('wgRelevantPageName')) {
+      $.extend(this.page, {
+        name: mw.config.get('wgRelevantPageName'),
+        id: mw.config.get('wgRelevantArticleId')
+      });
+      this.page.nsId = mw.Title.newFromText(this.page.name).namespace;
+    }
+
     $.extend(this.page, {
       escapedName: this.page.name.replace(/[?!'"()*]/g, escape),
       encodedName: encodeURIComponent(this.page.name)
@@ -400,6 +409,7 @@ $(function () {
   function addCSS() {
     switch (config.currentUser.skin) {
       case 'vector':
+      case 'vector-2022':
         return mw.util.addCSS("\n                .mm-submenu {\n                    background: #ffffff;\n                    border: 1px solid #a2a9b1;\n                    min-width: 120px !important;\n                    ".concat(rightKey, ": inherit !important;\n                    top: -1px !important;\n                }\n                #p-views {\n                    padding-left: inherit !important;\n                    padding-right: inherit !important;\n                }\n                #p-views .vector-menu-content::after {\n                    display: none !important;\n                }\n                .rtl #p-views .vector-menu-content::before {\n                    display: none !important;\n                }\n                .mm-submenu .mm-item {\n                    font-size: inherit !important;\n                }\n            "));
 
       case 'timeless':
@@ -425,6 +435,7 @@ $(function () {
   function getSubmenuCss($element) {
     switch (config.currentUser.skin) {
       case 'vector':
+      case 'vector-2022':
         return _defineProperty({}, leftKey, $element.outerWidth());
 
       case 'timeless':
@@ -540,7 +551,7 @@ $(function () {
 
   function getMenuHtml(parentKey, items, submenuKey) {
     var html = '';
-    var submenuClasses = 'vector' === config.currentUser.skin ? 'vector-menu-content-list' : '';
+    var submenuClasses = 'vector' === config.currentUser.skin || 'vector-2022' === config.currentUser.skin ? 'vector-menu-content-list' : '';
     sortItems(items).forEach(function (itemKey) {
       var item = items[itemKey];
       var itemHtml = '';
@@ -666,6 +677,7 @@ $(function () {
       var html = getMenuHtml(key, menus[key]);
 
       switch (config.currentUser.skin) {
+        case 'vector-2022':
         case 'vector':
           drawMenuVector(key, html);
           break;
@@ -782,7 +794,7 @@ $(function () {
     var reAddCount = parseInt(mw.storage.get('mmNativeMenuUsage'), 10) || 0;
     /** Ignore for non-Vector/Timeless, if user disabled this feature, or if reAddCount is high. */
 
-    if (-1 === ['vector', 'timeless'].indexOf(config.currentUser.skin) || !!window.moreMenuDisableAutoRemoval || reAddCount >= 5) {
+    if (-1 === ['vector', 'vector-2022', 'timeless'].indexOf(config.currentUser.skin) || !!window.moreMenuDisableAutoRemoval || reAddCount >= 5) {
       return;
     }
 
@@ -917,7 +929,7 @@ $(function () {
 
   function getBeforeItem(menu, submenu, insertAfter) {
     var beforeItemKey = getItemId(menu, insertAfter || '', submenu);
-    return $("#".concat(beforeItemKey));
+    return $("#".concat($.escapeSelector(beforeItemKey)));
   }
   /**
    * PUBLIC METHODS
@@ -1009,10 +1021,10 @@ $(function () {
 
       if (beforeItemIndex < 0) {
         /** Alphabetically the new item goes first, so insert it before the existing first item. */
-        $("#".concat(ids[0])).before($html);
+        $("#".concat($.escapeSelector(ids[0]))).before($html);
       } else {
         /** Insert HTML after the would-be previous item in the menu. */
-        $("#".concat(getItemId(menu, i18nKeys[Math.max(0, i18nKeys.indexOf(newI18nKey) - 1)], submenu))).after($html);
+        $("#".concat($.escapeSelector(getItemId(menu, i18nKeys[Math.max(0, i18nKeys.indexOf(newI18nKey) - 1)], submenu)))).after($html);
       }
     }
 
