@@ -4,7 +4,7 @@
  * Starts a local server so you can test your code by importing the src/ directory from your local.
  * To use, run "node bin/server.js", then in your https://meta.wikimedia.org/wiki/Special:MyPage/global.js,
  * add the following:
- *   mw.loader.using(['mediawiki.user', 'mediawiki.util', 'mediawiki.api'], function () {
+ *   mw.loader.using(['mediawiki.user', 'mediawiki.util', 'mediawiki.api', 'mediawiki.Title'], function () {
  *     mw.loader.load('http://localhost:5501/dist/MoreMenu.messages.en.js');
  *     mw.loader.load('http://localhost:5501/src/MoreMenu.user.js');
  *     mw.loader.load('http://localhost:5501/src/MoreMenu.page.js');

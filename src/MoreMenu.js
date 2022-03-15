@@ -5,7 +5,7 @@ $(() => {
     if (window.moreMenuDebug) {
         /* eslint-disable no-console */
         console.info(
-            '[MoreMenu] Debugging enabled. To disable, check your personal JS and remove `MoreMenu.debug = true;`.'
+            '[MoreMenu] Debugging enabled. To disable, check your personal JS and remove `MoreMenu.debug = true;`.',
         );
     }
 
@@ -48,7 +48,7 @@ $(() => {
         ) {
             $.extend(this.page, {
                 name: mw.config.get('wgRelevantPageName'),
-                id: mw.config.get('wgRelevantArticleId')
+                id: mw.config.get('wgRelevantArticleId'),
             });
             this.page.nsId = mw.Title.newFromText(this.page.name).namespace;
         }
@@ -193,7 +193,7 @@ $(() => {
         /** Check Metawiki. */
         mw.loader.getScript(
             'https://meta.wikimedia.org/w/index.php?action=raw&ctype=text/javascript'
-                + `&title=MediaWiki:Gadget-MoreMenu.messages.${lang}.js`
+                + `&title=MediaWiki:Gadget-MoreMenu.messages.${lang}.js`,
         ).then(() => dfd.resolve());
 
         return dfd;
@@ -721,7 +721,7 @@ $(() => {
             + '</li>';
 
         const $tab = $(html).insertAfter(
-            $('#ca-nstab-special, #ca-edit, #ca-ve-edit, #ca-page, #ca-viewsource, #ca-talk').last()
+            $('#ca-nstab-special, #ca-edit, #ca-ve-edit, #ca-page, #ca-viewsource, #ca-talk').last(),
         );
         const $menu = $tab.find('.mm-menu');
 
@@ -747,7 +747,7 @@ $(() => {
             + '</li>';
 
         const $tab = $(html).insertAfter(
-            $('#ca-nstab-special, #ca-edit, #ca-ve-edit, #ca-page, #ca-viewsource, #ca-talk').last()
+            $('#ca-nstab-special, #ca-edit, #ca-ve-edit, #ca-page, #ca-viewsource, #ca-talk').last(),
         );
         const $menu = $tab.find('.mm-menu');
 
@@ -825,18 +825,18 @@ $(() => {
                 $('#mm-page-watch').replaceWith(
                     $watchLink.addClass('mm-item')
                         .prop('id', 'mm-page-watch')
-                        .show()
+                        .show(),
                 );
                 $('#mm-page-history').replaceWith(
                     $histLink.addClass('mm-item')
                         .prop('id', 'mm-page-history')
-                        .show()
+                        .show(),
                 );
             }
             $('#mm-page-move-page').replaceWith(
                 $moveLink.addClass('mm-item')
                     .prop('id', 'mm-page-move-page')
-                    .show()
+                    .show(),
             );
             return;
         }
@@ -1133,7 +1133,7 @@ $(() => {
 
             /** Extract the i18n keys and sort alphabetically by translation. */
             const i18nKeys = sortByTranslation(
-                ids.map(id => id.replace(new RegExp(`^mm-${menu}-${submenu ? `${submenu}-` : ''}`), ''))
+                ids.map(id => id.replace(new RegExp(`^mm-${menu}-${submenu ? `${submenu}-` : ''}`), '')),
             );
 
             /** Get the index of the preceding item. */
