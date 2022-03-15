@@ -1,6 +1,8 @@
 MoreMenu
 ========
 
+[![Node.js CI](https://github.com/wikimedia-gadgets/MoreMenu/actions/workflows/node.js.yml/badge.svg)](https://github.com/wikimedia-gadgets/MoreMenu/actions/workflows/node.js.yml)
+
 A MediaWiki gadget to add dropdown menus with links to common tasks,
 user and page analytic tools and logs.
 
