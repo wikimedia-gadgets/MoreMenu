@@ -33,6 +33,15 @@ mw.loader.using(['mediawiki.user', 'mediawiki.util', 'mediawiki.api', 'mediawiki
 `moreMenuDebug = true;` is not necessary but provides useful output,
 particularly when debugging why certain links aren't showing up.
 
+Then start your server with:
+```
+node bin/server.js
+```
+
+Browsing the wiki, you should have a MoreMenu served from your local uncompiled code.
+Develop and test features as needed.
+You only need to run `npm run build` when you're ready to commit changes.
+
 ## Deployment
 
 NOTE: You must have interface-admin rights to use the deploy script.
