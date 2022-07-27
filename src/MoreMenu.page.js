@@ -65,9 +65,8 @@ window.MoreMenu.page = config => ({
                 pageExists: true,
             },
             'transclusion-count': {
-                url: `https://templatecount.toolforge.org/index.php?lang=${config.project.contentLanguage}&name=${encodeURIComponent(mw.config.get('wgTitle'))}&namespace=${config.page.nsId}`,
+                url: `https://linkcount.toolforge.org/?project=${config.project.domain}&page=${config.page.encodedName}`,
                 namespaceRestrict: [2, 4, 5, 10, 11, 12, 13, 100, 101, 828],
-                noticeProjectRestrict: ['wikipedia'],
             },
             'transclusions': {
                 url: `https://${config.project.domain}/w/index.php?title=Special:WhatLinksHere/${config.page.encodedName}&hidelinks=1&hideredirs=1`,

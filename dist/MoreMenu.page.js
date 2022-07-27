@@ -112,9 +112,8 @@ window.MoreMenu.page = function (config) {
           pageExists: true
         },
         'transclusion-count': {
-          url: "https://templatecount.toolforge.org/index.php?lang=".concat(config.project.contentLanguage, "&name=").concat(encodeURIComponent(mw.config.get('wgTitle')), "&namespace=").concat(config.page.nsId),
-          namespaceRestrict: [2, 4, 5, 10, 11, 12, 13, 100, 101, 828],
-          noticeProjectRestrict: ['wikipedia']
+          url: "https://linkcount.toolforge.org/?project=".concat(config.project.domain, "&page=").concat(config.page.encodedName),
+          namespaceRestrict: [2, 4, 5, 10, 11, 12, 13, 100, 101, 828]
         },
         'transclusions': {
           url: "https://".concat(config.project.domain, "/w/index.php?title=Special:WhatLinksHere/").concat(config.page.encodedName, "&hidelinks=1&hideredirs=1"),
