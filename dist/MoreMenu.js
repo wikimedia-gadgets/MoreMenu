@@ -397,7 +397,7 @@ $(function () {
 
     var titleAttr = msgExists("".concat(itemKey, "-desc")) || itemData.description ? " title=\"".concat(itemData.description ? itemData.description : msg("".concat(itemKey, "-desc")), "\"") : '';
     var styleAttr = itemData.style ? " style=\"".concat(itemData.style, "\"") : '';
-    return "\n            <li id=\"".concat(getItemId(parentKey, itemKey, submenuKey), "\" class=\"mm-item\">\n                <a href=\"").concat(itemData.url, "\"").concat(titleAttr).concat(styleAttr, ">\n                    <span>").concat(msg(itemData.title || itemKey), "</span>\n                </a>\n            </li>");
+    return "\n            <li id=\"".concat(getItemId(parentKey, itemKey, submenuKey), "\" class=\"mm-item mw-list-item\">\n                <a href=\"").concat(itemData.url, "\"").concat(titleAttr).concat(styleAttr, ">\n                    <span>").concat(msg(itemData.title || itemKey), "</span>\n                </a>\n            </li>");
   }
   /**
    * Apply CSS based on the skin. This is done here because it is fast enough,
@@ -558,7 +558,7 @@ $(function () {
 
       if (!item.url) {
         /** This is a submenu. */
-        itemHtml += "\n                    <li style=\"position:relative;\" id=\"".concat(getItemId(parentKey, itemKey), "\" class=\"mm-submenu-wrapper\">\n                    <a style=\"font-weight: bold\"><span>").concat(msg(itemKey), "&hellip;</span></a>\n                    <ul class=\"menu mm-submenu ").concat(submenuClasses, "\" style=\"display: none; position: absolute;\">");
+        itemHtml += "\n                    <li style=\"position:relative;\" id=\"".concat(getItemId(parentKey, itemKey), "\" class=\"mm-submenu-wrapper mw-list-item\">\n                    <a style=\"font-weight: bold\"><span>").concat(msg(itemKey), "&hellip;</span></a>\n                    <ul class=\"menu mm-submenu ").concat(submenuClasses, "\" style=\"display: none; position: absolute;\">");
         sortItems(item).forEach(function (submenuItemKey) {
           itemHtml += getItemHtml(parentKey, submenuItemKey, item[submenuItemKey], itemKey);
         });

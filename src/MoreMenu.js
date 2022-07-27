@@ -360,7 +360,7 @@ $(() => {
             : '';
         const styleAttr = itemData.style ? ` style="${itemData.style}"` : '';
         return `
-            <li id="${getItemId(parentKey, itemKey, submenuKey)}" class="mm-item">
+            <li id="${getItemId(parentKey, itemKey, submenuKey)}" class="mm-item mw-list-item">
                 <a href="${itemData.url}"${titleAttr}${styleAttr}>
                     <span>${msg(itemData.title || itemKey)}</span>
                 </a>
@@ -651,7 +651,7 @@ $(() => {
             if (!item.url) {
                 /** This is a submenu. */
                 itemHtml += `
-                    <li style="position:relative;" id="${getItemId(parentKey, itemKey)}" class="mm-submenu-wrapper">
+                    <li style="position:relative;" id="${getItemId(parentKey, itemKey)}" class="mm-submenu-wrapper mw-list-item">
                     <a style="font-weight: bold"><span>${msg(itemKey)}&hellip;</span></a>
                     <ul class="menu mm-submenu ${submenuClasses}" style="display: none; position: absolute;">`;
 
