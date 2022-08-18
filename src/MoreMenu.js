@@ -376,7 +376,12 @@ $(() => {
         switch (config.currentUser.skin) {
         case 'vector':
         case 'vector-2022':
+            // FIXME: first ruleset is a hotfix for T315418
             return mw.util.addCSS(`
+                .mm-tab .vector-menu-content {
+                    height: initial;
+                    overflow: initial;
+                }
                 .mm-submenu {
                     background: #ffffff;
                     border: 1px solid #a2a9b1;
