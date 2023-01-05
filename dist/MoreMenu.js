@@ -585,7 +585,7 @@ $(function () {
 
 
   function drawMenuVector(parentKey, html) {
-    html = "<nav id=\"p-".concat(parentKey, "\" role=\"navigation\" class=\"mw-portlet mw-portlet-").concat(parentKey, " vector-menu-dropdown-noicon vector-menu vector-menu-dropdown mm-").concat(parentKey, " mm-tab\" ") + "aria-labelledby=\"p-".concat(parentKey, "-label\">") + "<input id=\"p-".concat(parentKey, "-checkbox\" class=\"vector-menu-checkbox\" type=\"checkbox\" role=\"button\" aria-haspopup=\"true\" aria-labelledby=\"p-").concat(parentKey, "-label\">") + "<label id=\"p-".concat(parentKey, "-label\" class=\"vector-menu-heading\"><span class=\"vector-menu-heading-label\">").concat(msg(parentKey), "</span><a href=\"#\"></a></label>") + '<div class="vector-menu-content">' + "<ul class=\"menu vector-menu-content-list mm-menu\">".concat(html, "</ul>") + '</div></nav>';
+    html = "<nav id=\"p-".concat(parentKey, "\" role=\"navigation\" class=\"mw-portlet mw-portlet-").concat(parentKey, " vector-menu vector-dropdown vector-menu-dropdown vector-has-collapsible-items mm-").concat(parentKey, " mm-tab\" ") + "aria-labelledby=\"p-".concat(parentKey, "-label\">") + "<input id=\"p-".concat(parentKey, "-checkbox\" class=\"vector-menu-checkbox\" type=\"checkbox\" role=\"button\" aria-haspopup=\"true\" aria-labelledby=\"p-").concat(parentKey, "-label\">") + "<label id=\"p-".concat(parentKey, "-label\" class=\"vector-menu-heading\" for=\"p-").concat(parentKey, "-checkbox\"><span class=\"vector-menu-heading-label\">").concat(msg(parentKey), "</span></label>") + '<div class="vector-menu-content">' + "<ul class=\"menu vector-menu-content-list mm-menu\">".concat(html, "</ul>") + '</div></nav>';
     $(html).insertAfter($('#p-views, .mm-page').last());
   }
   /**
