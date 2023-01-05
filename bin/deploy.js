@@ -14,18 +14,19 @@ const fs = require('fs');
 const { execSync } = require('child_process');
 const MWBot = require('mwbot');
 const client = new MWBot();
-const [username, password, summary] = process.argv.slice(2);
+const [summary] = process.argv.slice(2);
 
 // Version info for edit summary.
 const sha = execSync('git rev-parse --short HEAD').toString('utf-8');
 const message = summary || execSync('git log -2 --pretty=%B').toString('utf-8').split('\n')[2];
 const version = require('../package.json').version;
+const credentials = require('../credentials.json');
 
 fs.readdir(dir, (err, files) => {
     client.loginGetEditToken({
         apiUrl: 'https://meta.wikimedia.org/w/api.php',
-        username,
-        password
+        username: credentials.username,
+        password: credentials.password
     }).then(() => {
         files.forEach(file => {
             if ('unversioned' === file) {
