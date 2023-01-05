@@ -44,10 +44,18 @@ You only need to run `npm run build` when you're ready to commit changes.
 
 ## Deployment
 
-NOTE: You must have interface-admin rights to use the deploy script.
-Visit https://meta.wikimedia.org/wiki/Special:BotPasswords to obtain credentials.
+You must have `interface-admin` rights to use the deploy script.
+Visit https://meta.wikimedia.org/wiki/Special:BotPasswords to obtain credentials,
+then `cp credentials.json.dist credentials.json` and change the details accordingly:
 
-To deploy the files in the dist/ directory, run `node bin/deploy.js [username] [password] "[edit summary]"`.
-The edit summary is transformed to include the version number and git SHA, e.g. "_v5.5.5 at abcd1234: [edit summary]_".
+```
+{
+   "username": "Exampleuser@somedescription",
+   "password": "mybotpassword1234567890123456789"
+}
+```
+
+To deploy, run `node bin/deploy.js "[edit summary]"`.
+The edit summary is transformed to include the version number and git SHA, e.g. "v5.5.5 at abcd1234: [edit summary]".
 
 Files in the dist/unversioned/ directory must be synced manually.
