@@ -108,7 +108,7 @@ window.MoreMenu.page = function (config) {
           pageExists: true
         },
         'traffic-report': {
-          url: "https://pageviews.toolforge.org?project=".concat(config.project.domain, "&pages=").concat(config.page.encodedName),
+          url: "https://pageviews.wmcloud.org?project=".concat(config.project.domain, "&pages=").concat(config.page.encodedName),
           pageExists: true
         },
         'transclusion-count': {

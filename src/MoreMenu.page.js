@@ -61,7 +61,7 @@ window.MoreMenu.page = config => ({
                 pageExists: true,
             },
             'traffic-report': {
-                url: `https://pageviews.toolforge.org?project=${config.project.domain}&pages=${config.page.encodedName}`,
+                url: `https://pageviews.wmcloud.org?project=${config.project.domain}&pages=${config.page.encodedName}`,
                 pageExists: true,
             },
             'transclusion-count': {
