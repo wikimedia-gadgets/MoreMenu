@@ -79,7 +79,7 @@ window.MoreMenu.page = config => ({
                 pageExists: true,
             },
             'search-by-contributor': {
-                url: `https://xtools.wmflabs.org/topedits/${config.project.domain}?namespace=${config.page.nsId}&page=${encodeURIComponent(mw.config.get('wgTitle'))}`,
+                url: `https://xtools.wmflabs.org/topedits/${config.project.domain}?namespace=${config.page.nsId}&page=${encodeURIComponent(mw.Title.newFromText(config.page.name).getMainText())}`,
                 pageExists: true,
             },
             'search-history-wikiblame': {
