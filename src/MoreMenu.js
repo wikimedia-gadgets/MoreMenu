@@ -375,8 +375,9 @@ $(() => {
     function addCSS() {
         switch (config.currentUser.skin) {
         case 'vector':
-        case 'vector-2022':
-            // NOTE: first ruleset is a hotfix for T315418
+            case 'vector-2022':
+            // FIXME: first ruleset is a hotfix for T315418
+            // FIXME: last two rulesets are for T337893
             return mw.util.addCSS(`
                 .mm-tab .vector-menu-content {
                     height: initial;
@@ -404,6 +405,13 @@ $(() => {
                 }
                 .mm-submenu .mm-item {
                     font-size: inherit !important;
+                }
+                .vector-feature-zebra-design-enabled .mm-menu {
+                    background: white;
+                    border: 1px solid #a2a9b1;
+                }
+                .vector-feature-zebra-design-enabled .mw-list-item {
+                    padding: 8px;
                 }
             `);
         case 'timeless':
