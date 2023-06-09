@@ -375,7 +375,7 @@ $(() => {
     function addCSS() {
         switch (config.currentUser.skin) {
         case 'vector':
-            case 'vector-2022':
+        case 'vector-2022':
             // FIXME: first ruleset is a hotfix for T315418
             // FIXME: last two rulesets are for T337893
             return mw.util.addCSS(`
