@@ -410,7 +410,7 @@ $(() => {
                     background: white;
                     border: 1px solid #a2a9b1;
                 }
-                .vector-feature-zebra-design-enabled .mw-list-item {
+                .vector-feature-zebra-design-enabled .mm-menu .mw-list-item {
                     padding: 8px;
                 }
             `);
