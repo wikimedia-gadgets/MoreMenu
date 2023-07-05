@@ -376,12 +376,12 @@ $(() => {
         switch (config.currentUser.skin) {
         case 'vector':
         case 'vector-2022':
-            // FIXME: first ruleset is a hotfix for T315418
+            // FIXME: first ruleset is a hotfix for T315418 / T319358
             // FIXME: last two rulesets are for T337893
             return mw.util.addCSS(`
                 .mm-tab .vector-menu-content {
                     height: initial;
-                    overflow: initial;
+                    overflow: initial !important;
                 }
                 .mm-menu .mw-list-item {
                     white-space: nowrap;
@@ -699,9 +699,9 @@ $(() => {
     function drawMenuVector(parentKey, html) {
         html = `<div id="p-${parentKey}" class="mw-portlet mw-portlet-${parentKey} vector-menu vector-dropdown vector-menu-dropdown vector-has-collapsible-items mm-${parentKey} mm-tab" `
             + `aria-labelledby="p-${parentKey}-label">`
-            + `<input id="p-${parentKey}-checkbox" class="vector-menu-checkbox" type="checkbox" role="button" aria-haspopup="true" aria-labelledby="p-${parentKey}-label">`
-            + `<label id="p-${parentKey}-label" class="vector-menu-heading" for="p-${parentKey}-checkbox"><span class="vector-menu-heading-label">${msg(parentKey)}</span></label>`
-            + '<div class="vector-menu-content">'
+            + `<input id="p-${parentKey}-dropdown-checkbox" class="vector-menu-checkbox vector-dropdown-checkbox" type="checkbox" role="button" aria-haspopup="true" aria-labelledby="p-${parentKey}-label">`
+            + `<label id="p-${parentKey}-label" class="vector-menu-heading vector-dropdown-label" for="p-${parentKey}-dropdown-checkbox"><span class="vector-menu-heading-label">${msg(parentKey)}</span></label>`
+            + '<div class="vector-menu-content vector-dropdown-content">'
             + `<ul class="menu vector-menu-content-list mm-menu">${html}</ul>`
             + '</div></div>';
 
