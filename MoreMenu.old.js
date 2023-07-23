@@ -197,22 +197,22 @@
 			},
 			'Analysis' : {
 				'Analysis – XTools' : {
-					url : '//xtools.wmflabs.org/ec/' + serverName + '/' + encodedUserName
+					url : 'https://xtools.wmcloud.org/ec/' + serverName + '/' + encodedUserName
 				},
 				'AfD stats' : {
 					url : '//tools.wmflabs.org/afdstats/afdstats.py?name=' + encodedUserName,
 					databaseRestrict : [ 'enwiki' ]
 				},
 				'Articles created' : {
-					url : '//xtools.wmflabs.org/pages/' + serverName + '/' + encodedUserName + '/0',
+					url : 'https://xtools.wmcloud.org/pages/' + serverName + '/' + encodedUserName + '/0',
 					groups : ['user']
 				},
 				'BLP edits' : {
-					url : '//xtools.wmflabs.org/categoryedits/' + serverName + '/' + encodedUserName + '/Living people',
+					url : 'https://xtools.wmcloud.org/categoryedits/' + serverName + '/' + encodedUserName + '/Living people',
 					databaseRestrict : [ 'enwiki' ]
 				},
 				'Edit summary usage' : {
-					url : '//xtools.wmflabs.org/editsummary/' + serverName + '/' + encodedUserName
+					url : 'https://xtools.wmcloud.org/editsummary/' + serverName + '/' + encodedUserName
 				},
 				'Edit summary search' : {
 					url : '//tools.wmflabs.org/sigma/summary.py?name=' + encodedUserName
@@ -221,14 +221,14 @@
 					url : '//tools.wmflabs.org/guc/?user=' + encodedUserName + '&blocks=true'
 				},
 				'Non-automated edits' : {
-					url : '//xtools.wmflabs.org/autoedits/' + serverName + '/' + encodedUserName
+					url : 'https://xtools.wmcloud.org/autoedits/' + serverName + '/' + encodedUserName
 				},
 				'SUL' : {
 					url : mw.util.getUrl( 'Special:CentralAuth/' + userName ),
 					groups : [ 'user' ]
 				},
 				'Top edits' : {
-					url : '//xtools.wmflabs.org/topedits/' + serverName + '/' + encodedUserName + '/0'
+					url : 'https://xtools.wmcloud.org/topedits/' + serverName + '/' + encodedUserName + '/0'
 				}
 			},
 			'IP lookup' : {
@@ -283,7 +283,7 @@
 				groups : [ 'user' ]
 			},
 			'User rights changes' : {
-				url : '//xtools.wmflabs.org/ec-rightschanges/' + serverName + '/' + encodedUserName,
+				url : 'https://xtools.wmcloud.org/ec-rightschanges/' + serverName + '/' + encodedUserName,
 				groups : [ 'user' ]
 			},
 			'User thanks received' : {
@@ -314,7 +314,7 @@
 			},
 			'Analysis' : {
 				'Analysis – XTools' : {
-					url : '//xtools.wmflabs.org/articleinfo/' + serverName + '/' + escapedPageName,
+					url : 'https://xtools.wmcloud.org/articleinfo/' + serverName + '/' + escapedPageName,
 					pageExists : true
 				},
 				'Analysis – WikiHistory' : {

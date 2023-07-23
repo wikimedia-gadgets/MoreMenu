@@ -105,7 +105,7 @@ $(function () {
 
     // Add link to BLP edits in the 'Analysis' menu.
     if (!config.targetUser.ipRange) {
-      MoreMenu.addSubmenuLink('user', 'analysis', 'BLP Edits', 'https://xtools.wmflabs.org/categoryedits/' + config.project.domain + '/' + config.targetUser.encodedName + '/Living people');
+      MoreMenu.addSubmenuLink('user', 'analysis', 'BLP Edits', 'https://xtools.wmcloud.org/categoryedits/' + config.project.domain + '/' + config.targetUser.encodedName + '/Living people');
 
       // Add link to AfD stats.
       MoreMenu.addSubmenuLink('user', 'analysis', 'AfD stats', 'https://tools.wmflabs.org/afdstats/afdstats.py?name=' + config.targetUser.encodedName, 'analysis-xtools');
