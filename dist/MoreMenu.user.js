@@ -199,14 +199,14 @@ window.MoreMenu.user = function (config) {
       },
       'analysis': {
         'analysis-xtools': {
-          url: "https://xtools.wmflabs.org/ec/".concat(config.project.domain, "/").concat(config.targetUser.ipRange ? "ipr-".concat(config.targetUser.name) : config.targetUser.encodedName)
+          url: "https://xtools.wmcloud.org/ec/".concat(config.project.domain, "/").concat(config.targetUser.ipRange ? "ipr-".concat(config.targetUser.name) : config.targetUser.encodedName)
         },
         'articles-created': {
-          url: "https://xtools.wmflabs.org/pages/".concat(config.project.domain, "/").concat(config.targetUser.encodedName, "/0"),
+          url: "https://xtools.wmcloud.org/pages/".concat(config.project.domain, "/").concat(config.targetUser.encodedName, "/0"),
           targetUserGroups: ['user']
         },
         'edit-summary-usage': {
-          url: "https://xtools.wmflabs.org/editsummary/".concat(config.project.domain, "/").concat(config.targetUser.ipRange ? "ipr-".concat(config.targetUser.name) : config.targetUser.encodedName)
+          url: "https://xtools.wmcloud.org/editsummary/".concat(config.project.domain, "/").concat(config.targetUser.ipRange ? "ipr-".concat(config.targetUser.name) : config.targetUser.encodedName)
         },
         'edit-summary-search': {
           url: "https://sigma.toolforge.org/summary.py?server=".concat(config.project.dbName, "&name=").concat(config.targetUser.encodedName),
@@ -217,17 +217,17 @@ window.MoreMenu.user = function (config) {
           targetUserIpRange: false
         },
         'global-contributions-xtools': {
-          url: "https://xtools.wmflabs.org/globalcontribs/".concat(config.targetUser.ipRange ? "ipr-".concat(config.targetUser.name) : config.targetUser.encodedName)
+          url: "https://xtools.wmcloud.org/globalcontribs/".concat(config.targetUser.ipRange ? "ipr-".concat(config.targetUser.name) : config.targetUser.encodedName)
         },
         'non-automated-edits': {
-          url: "https://xtools.wmflabs.org/autoedits/".concat(config.project.domain, "/").concat(config.targetUser.ipRange ? "ipr-".concat(config.targetUser.name) : config.targetUser.encodedName)
+          url: "https://xtools.wmcloud.org/autoedits/".concat(config.project.domain, "/").concat(config.targetUser.ipRange ? "ipr-".concat(config.targetUser.name) : config.targetUser.encodedName)
         },
         'sul': {
           url: mw.util.getUrl("Special:CentralAuth/".concat(config.targetUser.name)),
           targetUserGroups: ['user']
         },
         'top-edited-pages': {
-          url: "https://xtools.wmflabs.org/topedits/".concat(config.project.domain, "/").concat(config.targetUser.ipRange ? "ipr-".concat(config.targetUser.name) : config.targetUser.encodedName)
+          url: "https://xtools.wmcloud.org/topedits/".concat(config.project.domain, "/").concat(config.targetUser.ipRange ? "ipr-".concat(config.targetUser.name) : config.targetUser.encodedName)
         }
       },
       'ip-lookup': {
@@ -306,7 +306,7 @@ window.MoreMenu.user = function (config) {
         targetUserGroups: ['user']
       },
       'user-rights-changes': {
-        url: "https://xtools.wmflabs.org/ec-rightschanges/".concat(config.project.domain, "/").concat(config.targetUser.encodedName),
+        url: "https://xtools.wmcloud.org/ec-rightschanges/".concat(config.project.domain, "/").concat(config.targetUser.encodedName),
         targetUserGroups: ['user']
       },
       'user-thanks-received': {

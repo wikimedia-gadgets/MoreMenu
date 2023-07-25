@@ -31,7 +31,7 @@ window.MoreMenu.page = config => ({
         /** Tools and links that provide meaningful statistics. */
         'analysis': {
             'analysis-xtools': {
-                url: `https://xtools.wmflabs.org/articleinfo/${config.project.domain}/${config.page.escapedName}`,
+                url: `https://xtools.wmcloud.org/articleinfo/${config.project.domain}/${config.page.escapedName}`,
                 pageExists: true,
                 insertAfter: false,
             },
@@ -48,7 +48,7 @@ window.MoreMenu.page = config => ({
                 insertAfter: 'analysis-xtools',
             },
             'authorship': {
-                url: `https://xtools.wmflabs.org/authorship/${config.project.domain}/${config.page.escapedName}`,
+                url: `https://xtools.wmcloud.org/authorship/${config.project.domain}/${config.page.escapedName}`,
                 pageExists: true,
                 databaseRestrict: ['dewiki', 'enwiki', 'eswiki', 'euwiki', 'trwiki'],
             },
@@ -79,7 +79,7 @@ window.MoreMenu.page = config => ({
                 pageExists: true,
             },
             'search-by-contributor': {
-                url: `https://xtools.wmflabs.org/topedits/${config.project.domain}?namespace=${config.page.nsId}&page=${encodeURIComponent(mw.Title.newFromText(config.page.name).getMainText())}`,
+                url: `https://xtools.wmcloud.org/topedits/${config.project.domain}?namespace=${config.page.nsId}&page=${encodeURIComponent(mw.Title.newFromText(config.page.name).getMainText())}`,
                 pageExists: true,
             },
             'search-history-wikiblame': {
@@ -87,7 +87,7 @@ window.MoreMenu.page = config => ({
                 pageExists: true,
             },
             'search-history-xtools': {
-                url: `https://xtools.wmflabs.org/blame/${config.project.domain}?page=${config.page.encodedName}`,
+                url: `https://xtools.wmcloud.org/blame/${config.project.domain}?page=${config.page.encodedName}`,
                 pageExists: true,
                 databaseRestrict: ['dewiki', 'enwiki', 'eswiki', 'euwiki', 'trwiki'],
             },

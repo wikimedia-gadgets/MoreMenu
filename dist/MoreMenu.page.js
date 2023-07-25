@@ -76,7 +76,7 @@ window.MoreMenu.page = function (config) {
       /** Tools and links that provide meaningful statistics. */
       'analysis': {
         'analysis-xtools': {
-          url: "https://xtools.wmflabs.org/articleinfo/".concat(config.project.domain, "/").concat(config.page.escapedName),
+          url: "https://xtools.wmcloud.org/articleinfo/".concat(config.project.domain, "/").concat(config.page.escapedName),
           pageExists: true,
           insertAfter: false
         },
@@ -93,7 +93,7 @@ window.MoreMenu.page = function (config) {
           insertAfter: 'analysis-xtools'
         },
         'authorship': {
-          url: "https://xtools.wmflabs.org/authorship/".concat(config.project.domain, "/").concat(config.page.escapedName),
+          url: "https://xtools.wmcloud.org/authorship/".concat(config.project.domain, "/").concat(config.page.escapedName),
           pageExists: true,
           databaseRestrict: ['dewiki', 'enwiki', 'eswiki', 'euwiki', 'trwiki']
         },
@@ -129,7 +129,7 @@ window.MoreMenu.page = function (config) {
           pageExists: true
         },
         'search-by-contributor': {
-          url: "https://xtools.wmflabs.org/topedits/".concat(config.project.domain, "?namespace=").concat(config.page.nsId, "&page=").concat(encodeURIComponent(mw.config.get('wgTitle'))),
+          url: "https://xtools.wmcloud.org/topedits/".concat(config.project.domain, "?namespace=").concat(config.page.nsId, "&page=").concat(encodeURIComponent(mw.config.get('wgTitle'))),
           pageExists: true
         },
         'search-history-wikiblame': {
@@ -137,7 +137,7 @@ window.MoreMenu.page = function (config) {
           pageExists: true
         },
         'search-history-xtools': {
-          url: "https://xtools.wmflabs.org/blame/".concat(config.project.domain, "?page=").concat(config.page.encodedName),
+          url: "https://xtools.wmcloud.org/blame/".concat(config.project.domain, "?page=").concat(config.page.encodedName),
           pageExists: true,
           databaseRestrict: ['dewiki', 'enwiki', 'eswiki', 'euwiki', 'trwiki']
         },

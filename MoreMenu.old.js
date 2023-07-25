@@ -197,47 +197,47 @@
 			},
 			'Analysis' : {
 				'Analysis – XTools' : {
-					url : '//xtools.wmflabs.org/ec/' + serverName + '/' + encodedUserName
+					url : 'https://xtools.wmcloud.org/ec/' + serverName + '/' + encodedUserName
 				},
 				'AfD stats' : {
-					url : '//tools.wmflabs.org/afdstats/afdstats.py?name=' + encodedUserName,
+					url : 'https://afdstats.toolforge.org/afdstats.py?name=' + encodedUserName,
 					databaseRestrict : [ 'enwiki' ]
 				},
 				'Articles created' : {
-					url : '//xtools.wmflabs.org/pages/' + serverName + '/' + encodedUserName + '/0',
+					url : 'https://xtools.wmcloud.org/pages/' + serverName + '/' + encodedUserName + '/0',
 					groups : ['user']
 				},
 				'BLP edits' : {
-					url : '//xtools.wmflabs.org/categoryedits/' + serverName + '/' + encodedUserName + '/Living people',
+					url : 'https://xtools.wmcloud.org/categoryedits/' + serverName + '/' + encodedUserName + '/Living people',
 					databaseRestrict : [ 'enwiki' ]
 				},
 				'Edit summary usage' : {
-					url : '//xtools.wmflabs.org/editsummary/' + serverName + '/' + encodedUserName
+					url : 'https://xtools.wmcloud.org/editsummary/' + serverName + '/' + encodedUserName
 				},
 				'Edit summary search' : {
-					url : '//tools.wmflabs.org/sigma/summary.py?name=' + encodedUserName
+					url : 'https://sigma.toolforge.org/summary.py?name=' + encodedUserName
 				},
 				'Global contributions' : {
-					url : '//tools.wmflabs.org/guc/?user=' + encodedUserName + '&blocks=true'
+					url : 'https://guc.toolforge.org/?user=' + encodedUserName + '&blocks=true'
 				},
 				'Non-automated edits' : {
-					url : '//xtools.wmflabs.org/autoedits/' + serverName + '/' + encodedUserName
+					url : 'https://xtools.wmcloud.org/autoedits/' + serverName + '/' + encodedUserName
 				},
 				'SUL' : {
 					url : mw.util.getUrl( 'Special:CentralAuth/' + userName ),
 					groups : [ 'user' ]
 				},
 				'Top edits' : {
-					url : '//xtools.wmflabs.org/topedits/' + serverName + '/' + encodedUserName + '/0'
+					url : 'https://xtools.wmcloud.org/topedits/' + serverName + '/' + encodedUserName + '/0'
 				}
 			},
 			'IP lookup' : {
 				'WHOIS' : {
-					url : 'https://tools.wmflabs.org/whois/gateway.py?lookup=true&ip=' + escapedUserName,
+					url : 'https://whois.toolforge.org/gateway.py?lookup=true&ip=' + escapedUserName,
 					ipOnly : true
 				},
 				'Proxy check' : {
-					url : 'https://tools.wmflabs.org/ipcheck/?ip=' + escapedUserName,
+					url : 'https://ipcheck.toolforge.org/?ip=' + escapedUserName,
 					ipOnly : true,
 					userPermissions : 'block'
 				},
@@ -283,7 +283,7 @@
 				groups : [ 'user' ]
 			},
 			'User rights changes' : {
-				url : '//xtools.wmflabs.org/ec-rightschanges/' + serverName + '/' + encodedUserName,
+				url : 'https://xtools.wmcloud.org/ec-rightschanges/' + serverName + '/' + encodedUserName,
 				groups : [ 'user' ]
 			},
 			'User thanks received' : {
@@ -314,17 +314,17 @@
 			},
 			'Analysis' : {
 				'Analysis – XTools' : {
-					url : '//xtools.wmflabs.org/articleinfo/' + serverName + '/' + escapedPageName,
+					url : 'https://xtools.wmcloud.org/articleinfo/' + serverName + '/' + escapedPageName,
 					pageExists : true
 				},
 				'Analysis – WikiHistory' : {
-					url : '//tools.wmflabs.org/wikihistory/wh.php?page_title=' + escapedPageName + '&wiki=' + mwDBname,
+					url : 'https://wikihistory.toolforge.org/wh.php?page_title=' + escapedPageName + '&wiki=' + mwDBname,
 					databaseRestrict : [ 'enwiki', 'dewiki' ],
 					namespaceRestrict : [ 0 ],
 					pageExists : true
 				},
 				'Analysis – &#931;' : {
-					url : 'https://tools.wmflabs.org/sigma/articleinfo.py?page=' + encodedPageName + '&server=' + mwDBname,
+					url : 'https://sigma.toolforge.org/articleinfo.py?page=' + encodedPageName + '&server=' + mwDBname,
 					pageExists : true
 				},
 				'Basic statistics' : {
@@ -332,7 +332,7 @@
 					pageExists : true
 				},
 				'Search by contributor' : {
-					url : '//tools.wmflabs.org/sigma/usersearch.py?page=' + encodedPageName + '&server=' + mwDBname,
+					url : 'https://sigma.toolforge.org/usersearch.py?page=' + encodedPageName + '&server=' + mwDBname,
 					pageExists : true
 				},
 				'Search revision history' : {
@@ -340,7 +340,7 @@
 					pageExists : true
 				},
 				'Traffic report' : {
-					url : '//tools.wmflabs.org/pageviews?project=' + serverName + '&pages=' + encodedPageName,
+					url : 'https://pageviews.wmcloud.org/?project=' + serverName + '&pages=' + encodedPageName,
 					pageExists : true
 				},
 				'Transclusions' : {
@@ -361,7 +361,7 @@
 					noticeProjectRestrict : [ 'wikipedia' ]
 				},
 				'Copyright vio detector' : {
-					url : '//tools.wmflabs.org/copyvios?lang='+  contentLanguage + '&project=' + noticeProject + '&title=' + encodedPageName + '&oldid=&action=search&use_engine=1&use_links=1',
+					url : 'https://copyvios.toolforge.org/?lang='+  contentLanguage + '&project=' + noticeProject + '&title=' + encodedPageName + '&oldid=&action=search&use_engine=1&use_links=1',
 					pageExists : true,
 					title : 'Queries search engine for copyright violations. Could take a while, so be patient.'
 				},
@@ -371,13 +371,13 @@
 					noticeProjectRestrict : [ 'wikipedia' ]
 				},
 				'Expand bare references' : {
-					url : '//tools.wmflabs.org/refill/result.php?page=' + encodedPageName + '&defaults=y&wiki=' + contentLanguage,
+					url : 'https://refill.toolforge.org/result.php?page=' + encodedPageName + '&defaults=y&wiki=' + contentLanguage,
 					pageExists: true,
 					namespaceRestrict : [ 0, 2, 118 ],
 					noticeProjectRestrict : [ 'wikipedia', 'commons', 'meta' ]
 				},
 				'Fix dead links' : {
-					url : '//tools.wmflabs.org/iabot/index.php?page=runbotsingle&pagesearch=' + encodedPageName + '&wiki=' + mwDBname,
+					url : 'https://iabot.toolforge.org/index.php?page=runbotsingle&pagesearch=' + encodedPageName + '&wiki=' + mwDBname,
 					pageExists: true,
 					databaseRestrict : [ 'enwiki', 'svwiki' ]
 				},
@@ -388,7 +388,7 @@
 					namespaceRestrict : [ 0, 2, 118 ]
 				},
 				'Transclusion count' : {
-					url : '//tools.wmflabs.org/templatecount/index.php?lang=' + contentLanguage + '&name=' + encodeURIComponent( mw.config.get( 'wgTitle' ) ) + '&namespace=' + namespaceNumber,
+					url : 'https://templatecount.toolforge.org/index.php?lang=' + contentLanguage + '&name=' + encodeURIComponent( mw.config.get( 'wgTitle' ) ) + '&namespace=' + namespaceNumber,
 					namespaceRestrict : [2, 4, 5, 10, 11, 12, 13, 100, 101, 828],
 					noticeProjectRestrict : [ 'wikipedia' ]
 				}
