@@ -17,10 +17,8 @@
 "use strict";
 
 /* eslint-disable quote-props */
-
 /* eslint-disable max-len */
 window.MoreMenu = window.MoreMenu || {};
-
 window.MoreMenu.user = function (config) {
   return {
     user: {
@@ -148,8 +146,8 @@ window.MoreMenu.user = function (config) {
             type: 'newusers'
           }),
           targetUserGroups: ['user'] // any user can create new accounts at [[Special:CreateAccount]]
-
         },
+
         'user-rights-log': {
           url: mw.util.getUrl('Special:Log', {
             user: config.targetUser.name,
@@ -258,7 +256,6 @@ window.MoreMenu.user = function (config) {
           targetUserIpRange: true
         }
       },
-
       /** Actions the current user can take on the target user. */
       'change-rights': {
         url: mw.util.getUrl('Special:UserRights', {

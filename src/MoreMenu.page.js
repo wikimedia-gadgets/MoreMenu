@@ -135,7 +135,12 @@ window.MoreMenu.page = config => ({
         },
         'delete-page': {
             /** NOTE: must use `decodeURIComponent` because mw.util.getUrl will otherwise double-escape. This should be safe. */
-            url: mw.util.getUrl(config.page.name, { action: 'delete', 'wpReason': decodeURIComponent($('#delete-reason').text()).replace(/\+/g, ' ') }),
+            url: mw.util.getUrl(config.page.name, {
+                action: 'delete',
+                ...(false === window.MoreMenu.prefillDeletionReason
+                    ? {}
+                    : { 'wpReason': decodeURIComponent($('#delete-reason').text()).replace(/\+/g, ' ') }),
+            }),
             currentUserRights: ['delete'],
             pageExists: true,
             visible: !mw.config.get('wgIsMainPage'),

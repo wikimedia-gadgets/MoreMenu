@@ -16,16 +16,17 @@
 **/
 "use strict";
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 /* eslint-disable quote-props */
-
 /* eslint-disable max-len */
 window.MoreMenu = window.MoreMenu || {};
-
 window.MoreMenu.page = function (config) {
   var _page;
-
   return {
     page: (_page = {
       'page-logs': {
@@ -72,7 +73,6 @@ window.MoreMenu.page = function (config) {
           })
         }
       },
-
       /** Tools and links that provide meaningful statistics. */
       'analysis': {
         'analysis-xtools': {
@@ -129,7 +129,7 @@ window.MoreMenu.page = function (config) {
           pageExists: true
         },
         'search-by-contributor': {
-          url: "https://xtools.wmcloud.org/topedits/".concat(config.project.domain, "?namespace=").concat(config.page.nsId, "&page=").concat(encodeURIComponent(mw.config.get('wgTitle'))),
+          url: "https://xtools.wmcloud.org/topedits/".concat(config.project.domain, "?namespace=").concat(config.page.nsId, "&page=").concat(encodeURIComponent(mw.Title.newFromText(config.page.name).getMainText())),
           pageExists: true
         },
         'search-history-wikiblame': {
@@ -148,7 +148,6 @@ window.MoreMenu.page = function (config) {
           })
         }
       },
-
       /** Tools used to semi-automate editing. */
       'tools': {
         'check-external-links': {
@@ -177,7 +176,6 @@ window.MoreMenu.page = function (config) {
           databaseRestrict: ['alswiki', 'barwiki', 'ckbwiki', 'dewiki', 'enwiki', 'eswiki', 'frwiki', 'huwiki', 'itwiki', 'jawiki', 'kowiki', 'lvwiki', 'nlwiki', 'nowiki', 'ptwiki', 'ruwiki', 'svwiki', 'zhwiki']
         }
       },
-
       /** Actions the current user can take on the page. */
       'change-model': {
         url: mw.util.getUrl("Special:ChangeContentModel/".concat(config.page.name)),
@@ -187,10 +185,11 @@ window.MoreMenu.page = function (config) {
       },
       'delete-page': {
         /** NOTE: must use `decodeURIComponent` because mw.util.getUrl will otherwise double-escape. This should be safe. */
-        url: mw.util.getUrl(null, {
-          action: 'delete',
+        url: mw.util.getUrl(config.page.name, _objectSpread({
+          action: 'delete'
+        }, false === window.MoreMenu.prefillDeletionReason ? {} : {
           'wpReason': decodeURIComponent($('#delete-reason').text()).replace(/\+/g, ' ')
-        }),
+        })),
         currentUserRights: ['delete'],
         pageExists: true,
         visible: !mw.config.get('wgIsMainPage')
@@ -199,11 +198,9 @@ window.MoreMenu.page = function (config) {
         url: "//".concat(config.project.domain, "/w/index.php?title=").concat(config.page.encodedName, "&action=edit&section=0"),
         namespaceRestrict: [0, 1, 2, 3, 4, 5, 118],
         pageExists: true,
-
         /** Don't show the 'Edit intro' link if the edittop gadget is enabled or there is only one section. */
         visible: '1' !== mw.user.options.get('gadget-edittop') && $('.mw-editsection').length
       },
-
       /** Placeholder for history link in Monobook/Modern, will get replaced by native link */
       'history': {
         url: '#',
