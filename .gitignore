@@ -1,4 +1,4 @@
 .idea/
 node_modules/
 bin/translationsHelper.js
-credentials.json.dist
+credentials.json
