@@ -704,7 +704,7 @@ $(function () {
     var reAddCount = parseInt(mw.storage.get('mmNativeMenuUsage'), 10) || 0;
 
     /** Ignore for non-Vector/Timeless, if user disabled this feature, or if reAddCount is high. */
-    if (-1 === ['vector', 'vector-2022', 'timeless'].indexOf(config.currentUser.skin) || !!window.moreMenuDisableAutoRemoval || reAddCount >= 5) {
+    if (-1 === ['vector', 'vector-2022', 'timeless'].indexOf(config.currentUser.skin) || !!window.MoreMenu.disableAutoRemoval || reAddCount >= 5) {
       return;
     }
     addMutationObserver('#p-cactions');
@@ -712,7 +712,8 @@ $(function () {
     /** Wait 5 seconds before checking the reAddCount, to give other scripts time to populate the menu */
     setTimeout(function () {
       if ($('#p-cactions').find('li').length) {
-        mw.storage.set('mmNativeMenuUsage', reAddCount + 1);
+        // Set expiry to 24 hours.
+        mw.storage.set('mmNativeMenuUsage', reAddCount + 1, 60 * 60 * 24);
       }
     }, 5000);
   }
