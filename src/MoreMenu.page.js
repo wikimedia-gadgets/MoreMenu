@@ -79,7 +79,7 @@ window.MoreMenu.page = config => ({
                 pageExists: true,
             },
             'search-by-contributor': {
-                url: `https://xtools.wmcloud.org/topedits/${config.project.domain}?namespace=${config.page.nsId}&page=${encodeURIComponent(mw.config.get('wgTitle'))}`,
+                url: `https://xtools.wmcloud.org/topedits/${config.project.domain}?namespace=${config.page.nsId}&page=${encodeURIComponent(mw.Title.newFromText(config.page.name).getMainText())}`,
                 pageExists: true,
             },
             'search-history-wikiblame': {
@@ -135,7 +135,7 @@ window.MoreMenu.page = config => ({
         },
         'delete-page': {
             /** NOTE: must use `decodeURIComponent` because mw.util.getUrl will otherwise double-escape. This should be safe. */
-            url: mw.util.getUrl(null, { action: 'delete', 'wpReason': decodeURIComponent($('#delete-reason').text()).replace(/\+/g, ' ') }),
+            url: mw.util.getUrl(config.page.name, { action: 'delete', 'wpReason': decodeURIComponent($('#delete-reason').text()).replace(/\+/g, ' ') }),
             currentUserRights: ['delete'],
             pageExists: true,
             visible: !mw.config.get('wgIsMainPage'),
