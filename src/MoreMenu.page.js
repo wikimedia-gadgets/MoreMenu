@@ -121,7 +121,7 @@ window.MoreMenu.page = config => ({
                 noticeProjectRestrict: ['wikipedia', 'commons', 'meta'],
             },
             'fix-dead-links': {
-                url: `https://iabot.toolforge.org/index.php?page=runbotsingle&pagesearch=${config.page.encodedName}&wiki=${config.project.dbName}`,
+                url: `https://iabot.wmcloud.org/index.php?page=runbotsingle&pagesearch=${config.page.encodedName}&wiki=${config.project.dbName}`,
                 pageExists: true,
                 databaseRestrict: ['alswiki', 'barwiki', 'ckbwiki', 'dewiki', 'enwiki', 'eswiki', 'frwiki', 'huwiki', 'itwiki', 'jawiki', 'kowiki', 'lvwiki', 'nlwiki', 'nowiki', 'ptwiki', 'ruwiki', 'svwiki', 'zhwiki'],
             },
