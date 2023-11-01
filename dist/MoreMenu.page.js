@@ -150,20 +150,6 @@ window.MoreMenu.page = function (config) {
       },
       /** Tools used to semi-automate editing. */
       'tools': {
-        'check-external-links': {
-          url: "http://69.142.160.183/~dispenser/cgi-bin/webchecklinks.py?page=".concat(config.page.encodedName, "&hostname=").concat(config.project.domain),
-          pageExists: true
-        },
-        'check-redirects': {
-          url: "http://69.142.160.183/~dispenser/cgi-bin/rdcheck.py?page=".concat(config.page.encodedName, "&lang=").concat(config.project.contentLanguage),
-          pageExists: true,
-          noticeProjectRestrict: ['wikipedia']
-        },
-        'disambiguate-links': {
-          url: "http://69.142.160.183/~dispenser/cgi-bin/dablinks.py?page=".concat(config.page.encodedName, "&lang=").concat(config.project.contentLanguage),
-          pageExists: true,
-          noticeProjectRestrict: ['wikipedia']
-        },
         'expand-bare-references': {
           url: "https://refill.toolforge.org/ng/result.php?page=".concat(config.page.encodedName, "&defaults=y&wiki=").concat(config.project.contentLanguage),
           pageExists: true,
@@ -171,7 +157,7 @@ window.MoreMenu.page = function (config) {
           noticeProjectRestrict: ['wikipedia', 'commons', 'meta']
         },
         'fix-dead-links': {
-          url: "https://iabot.toolforge.org/index.php?page=runbotsingle&pagesearch=".concat(config.page.encodedName, "&wiki=").concat(config.project.dbName),
+          url: "https://iabot.wmcloud.org/index.php?page=runbotsingle&pagesearch=".concat(config.page.encodedName, "&wiki=").concat(config.project.dbName),
           pageExists: true,
           databaseRestrict: ['alswiki', 'barwiki', 'ckbwiki', 'dewiki', 'enwiki', 'eswiki', 'frwiki', 'huwiki', 'itwiki', 'jawiki', 'kowiki', 'lvwiki', 'nlwiki', 'nowiki', 'ptwiki', 'ruwiki', 'svwiki', 'zhwiki']
         }
