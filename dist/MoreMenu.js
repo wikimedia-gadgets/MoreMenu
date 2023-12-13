@@ -6,7 +6,7 @@
 * Want to add custom links? See [[meta:MoreMenu#Customization]].
 * 
 * Script:         MoreMenu.js
-* Version:        5.1.23
+* Version:        5.1.24
 * Author:         MusikAnimal
 * License:        MIT
 * Documentation:  [[meta:MoreMenu]]
@@ -364,10 +364,9 @@ $(function () {
   function addCSS() {
     switch (config.currentUser.skin) {
       case 'vector':
+        return mw.util.addCSS("\n                .mm-tab .vector-menu-content {\n                    height: initial;\n                    overflow: initial !important;\n                }\n                .mm-menu .mw-list-item {\n                    white-space: nowrap;\n                }\n                .mm-submenu {\n                    background: #ffffff;\n                    border: 1px solid #a2a9b1;\n                    min-width: 120px !important;\n                    ".concat(rightKey, ": inherit !important;\n                    top: -1px !important;\n                }\n                #p-views {\n                    padding-left: inherit !important;\n                    padding-right: inherit !important;\n                }\n                #p-views .vector-menu-content::after {\n                    display: none !important;\n                }\n                .rtl #p-views .vector-menu-content::before {\n                    display: none !important;\n                }\n                .mm-submenu .mm-item {\n                    font-size: inherit !important;\n                }\n            "));
       case 'vector-2022':
-        // FIXME: first ruleset is a hotfix for T315418 / T319358
-        // FIXME: last two rulesets are for T337893
-        return mw.util.addCSS("\n                .mm-tab .vector-menu-content {\n                    height: initial;\n                    overflow: initial !important;\n                }\n                .mm-menu .mw-list-item {\n                    white-space: nowrap;\n                }\n                .mm-submenu {\n                    background: #ffffff;\n                    border: 1px solid #a2a9b1;\n                    min-width: 120px !important;\n                    ".concat(rightKey, ": inherit !important;\n                    top: -1px !important;\n                }\n                #p-views {\n                    padding-left: inherit !important;\n                    padding-right: inherit !important;\n                }\n                #p-views .vector-menu-content::after {\n                    display: none !important;\n                }\n                .rtl #p-views .vector-menu-content::before {\n                    display: none !important;\n                }\n                .mm-submenu .mm-item {\n                    font-size: inherit !important;\n                }\n                .vector-feature-zebra-design-enabled .mm-menu {\n                    background: white;\n                    border: 1px solid #a2a9b1;\n                }\n                .vector-feature-zebra-design-enabled .mm-menu .mw-list-item {\n                    padding: 8px;\n                }\n            "));
+        return mw.util.addCSS("\n                #p-page-dropdown .vector-dropdown-content,\n                #p-user-dropdown .vector-dropdown-content {\n                    height: initial;\n                    overflow-x: initial !important;\n                    overflow-y: initial !important;\n                    top: 35px !important;\n                }\n                #p-page-dropdown .vector-dropdown-content::after,\n                #p-user-dropdown .vector-dropdown-content::after {\n                    display: none !important;\n                }\n                .mm-menu .mw-list-item {\n                    white-space: nowrap;\n                }\n                .mm-submenu {\n                    background: #ffffff;\n                    box-shadow: 0 2px 6px -1px rgba(0,0,0,0.2);\n                    min-width: 120px !important;\n                    padding: 1px 10px;\n                    top: -1px !important;\n                }\n                #p-views {\n                    padding-left: inherit !important;\n                    padding-right: inherit !important;\n                }\n            ");
       case 'timeless':
         return mw.util.addCSS("\n                .mm-submenu-wrapper {\n                    cursor: default;\n                }\n                .mm-submenu {\n                    background: #f8f9fa;\n                    border: 1px solid rgb(200, 204, 209);\n                    box-shadow: 0 2px 3px 1px rgba(0, 0, 0, 0.05);\n                    padding: 1.2em 1.5em !important;\n                    top: -1.2em;\n                    white-space: nowrap;\n                    z-index: 95;\n                }\n                .mm-submenu::after {\n                    border-bottom: 8px solid transparent;\n                    border-top: 8px solid transparent;\n                    border-".concat(leftKey, ": 8px solid rgb(200, 204, 209);\n                    content: '';\n                    height: 0;\n                    padding-").concat(rightKey, ": 4px;\n                    position: absolute;\n                    top: 20px;\n                    width: 0;\n                    ").concat(rightKey, ": -13px;\n                }\n                @media screen and (max-width: 1339px) and (min-width: 1100px) {\n                    .mm-submenu::after {\n                        border-").concat(leftKey, ": none;\n                        border-").concat(rightKey, ": 8px solid rgb(200, 204, 209);\n                        padding-").concat(leftKey, ": 4px;\n                        padding-").concat(rightKey, ": inherit;\n                        ").concat(rightKey, ": inherit;\n                        ").concat(leftKey, ": -35px;\n                    }\n                }\n                @media screen and (max-width: 850px) {\n                    .mm-submenu {\n                        top: -2.2em;\n                    }\n                }\n            "));
       case 'monobook':
@@ -519,8 +518,15 @@ $(function () {
    * @param {String} html As generated by getMenuHtml().
    */
   function drawMenuVector(parentKey, html) {
-    html = "<div id=\"p-".concat(parentKey, "\" class=\"mw-portlet mw-portlet-").concat(parentKey, " vector-menu vector-dropdown vector-menu-dropdown vector-has-collapsible-items mm-").concat(parentKey, " mm-tab\" ") + "aria-labelledby=\"p-".concat(parentKey, "-label\">") + "<input id=\"p-".concat(parentKey, "-dropdown-checkbox\" class=\"vector-menu-checkbox vector-dropdown-checkbox\" type=\"checkbox\" role=\"button\" aria-haspopup=\"true\" aria-labelledby=\"p-").concat(parentKey, "-label\">") + "<label id=\"p-".concat(parentKey, "-label\" class=\"vector-menu-heading vector-dropdown-label\" for=\"p-").concat(parentKey, "-dropdown-checkbox\"><span class=\"vector-menu-heading-label\">").concat(msg(parentKey), "</span></label>") + '<div class="vector-menu-content vector-dropdown-content">' + "<ul class=\"menu vector-menu-content-list mm-menu\">".concat(html, "</ul>") + '</div></div>';
-    $(html).insertAfter($('#p-views, .mm-page').last());
+    var menu = mw.util.addPortlet("p-".concat(parentKey), msg(parentKey), '#p-cactions');
+    menu.classList.add("mm-".concat(parentKey));
+    menu.classList.add('mm-tab');
+    // Temporarily add and then remove an entry, so that mw.util.addPortletLink() does its thing.
+    mw.util.addPortletLink("p-".concat(parentKey), '#', 'temp');
+    // Now replace with our custom HTML, and add missing classes.
+    var menuContent = menu.querySelector('ul');
+    menuContent.innerHTML = html;
+    menuContent.classList.add('mm-menu');
   }
 
   /**
