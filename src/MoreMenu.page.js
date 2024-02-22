@@ -60,12 +60,12 @@ window.MoreMenu.page = config => ({
                 url: `https://copyvios.toolforge.org?lang=${config.project.domain.split('.')[0]}&project=${config.project.domain.split('.')[1]}&title=${config.page.encodedName}&oldid=&action=search&use_engine=1&use_links=1`,
                 pageExists: true,
             },
+            'link-count': {
+                url: `https://linkcount.toolforge.org/?project=${config.project.domain}&page=${config.page.encodedName}`,
+            },
             'traffic-report': {
                 url: `https://pageviews.wmcloud.org?project=${config.project.domain}&pages=${config.page.encodedName}`,
                 pageExists: true,
-            },
-            'link-count': {
-                url: `https://linkcount.toolforge.org/?project=${config.project.domain}&page=${config.page.encodedName}`,
             },
             'transclusions': {
                 url: `https://${config.project.domain}/w/index.php?title=Special:WhatLinksHere/${config.page.encodedName}&hidelinks=1&hideredirs=1`,
