@@ -64,9 +64,8 @@ window.MoreMenu.page = config => ({
                 url: `https://pageviews.wmcloud.org?project=${config.project.domain}&pages=${config.page.encodedName}`,
                 pageExists: true,
             },
-            'transclusion-count': {
+            'link-count': {
                 url: `https://linkcount.toolforge.org/?project=${config.project.domain}&page=${config.page.encodedName}`,
-                namespaceRestrict: [2, 4, 5, 10, 11, 12, 13, 100, 101, 828],
             },
             'transclusions': {
                 url: `https://${config.project.domain}/w/index.php?title=Special:WhatLinksHere/${config.page.encodedName}&hidelinks=1&hideredirs=1`,
