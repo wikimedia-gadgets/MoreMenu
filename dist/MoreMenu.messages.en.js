@@ -6,7 +6,7 @@
 * Want to add custom links? See [[meta:MoreMenu#Customization]].
 * 
 * Script:         MoreMenu.js
-* Version:        5.1.24
+* Version:        5.2.0
 * Author:         MusikAnimal
 * License:        MIT
 * Documentation:  [[meta:MoreMenu]]
@@ -63,6 +63,7 @@ $.extend(window.MoreMenu.messages, {
   "global-contributions-xtools": "Global edits – XTools",
   "ip-lookup": "IP lookup",
   "latest-diff": "Latest diff",
+  "link-count": "Link count",
   "mass-message-log": "Mass message log",
   "merge-page": "Merge",
   "move-log": "Move log",
@@ -93,7 +94,6 @@ $.extend(window.MoreMenu.messages, {
   "top-edited-pages": "Top edited pages",
   "traffic-report": "Traffic report",
   "transclusions": "Transclusions",
-  "transclusion-count": "Transclusion count",
   "unblock-user": "Unblock user",
   "undelete-page": "Undelete",
   "upload-log": "Upload log",

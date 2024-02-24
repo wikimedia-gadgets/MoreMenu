@@ -1,35 +1,24 @@
 {
-    "env": {
-        "browser": true,
-        "es6": true
-    },
-    "extends": [
-        "airbnb-base"
-    ],
-    "globals": {
-        "Atomics": "readonly",
-        "SharedArrayBuffer": "readonly",
-        "$": "readonly",
-        "mw": "readonly",
-        "MoreMenu": "writable"
-    },
-    "parserOptions": {
-        "ecmaVersion": 9
-    },
-    "overrides": [
-        {
-            "files": "src/*.js"
-        }
-    ],
-    "rules": {
-        "indent": ["error", 4],
-        "max-len": ["error", {"code": 120}],
-        "no-bitwise": "off",
-        "no-param-reassign": "off",
-        "arrow-parens": ["error", "as-needed"],
-        "newline-per-chained-call": "off",
-        "yoda": ["error", "always", {"onlyEquality":  true}],
-        "comma-dangle": ["error", "always-multiline"],
-        "func-names": "off"
-    }
+	"env": {
+		"browser": true,
+		"es6": true
+	},
+	"extends": [
+		"wikimedia/client/es6",
+		"wikimedia/mediawiki",
+		"wikimedia/jquery"
+	],
+	"globals": {
+		"MoreMenu": "writable",
+		"process": "readonly"
+	},
+	"parserOptions": {
+		"ecmaVersion": 9
+	},
+	"rules": {
+		"es-x/no-rest-spread-properties": "off",
+		"mediawiki/class-doc": "off",
+		"no-bitwise": "off",
+		"no-jquery/no-global-selector": "off"
+	}
 }

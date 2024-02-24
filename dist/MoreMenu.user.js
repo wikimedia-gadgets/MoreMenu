@@ -6,7 +6,7 @@
 * Want to add custom links? See [[meta:MoreMenu#Customization]].
 * 
 * Script:         MoreMenu.js
-* Version:        5.1.24
+* Version:        5.2.0
 * Author:         MusikAnimal
 * License:        MIT
 * Documentation:  [[meta:MoreMenu]]
@@ -17,7 +17,7 @@
 "use strict";
 
 /* eslint-disable quote-props */
-/* eslint-disable max-len */
+
 window.MoreMenu = window.MoreMenu || {};
 window.MoreMenu.user = function (config) {
   return {
@@ -147,7 +147,6 @@ window.MoreMenu.user = function (config) {
           }),
           targetUserGroups: ['user'] // any user can create new accounts at [[Special:CreateAccount]]
         },
-
         'user-rights-log': {
           url: mw.util.getUrl('Special:Log', {
             user: config.targetUser.name,

@@ -6,7 +6,7 @@
 * Want to add custom links? See [[meta:MoreMenu#Customization]].
 * 
 * Script:         MoreMenu.js
-* Version:        5.1.24
+* Version:        5.2.0
 * Author:         MusikAnimal
 * License:        MIT
 * Documentation:  [[meta:MoreMenu]]
@@ -16,10 +16,10 @@
 **/
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : String(i); }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 /** Script starts here, waiting for the DOM to be ready before calling init(). */
 $(function () {
   window.MoreMenu = window.MoreMenu || {};
@@ -31,16 +31,20 @@ $(function () {
 
   /**
    * Flag to suppress warnings shown by the msg() function.
-   * This is set by the addItem() method, since user-provided messages may not be stored in `MoreMenu.messages`.
+   * This is set by the addItem() method, since user-provided
+   * messages may not be stored in `MoreMenu.messages`.
    */
   var ignoreI18nWarnings = false;
 
   /** RTL helpers. */
-  var isRtl = 'rtl' === $('html').prop('dir');
+  var isRtl = $('html').prop('dir') === 'rtl';
   var leftKey = isRtl ? 'right' : 'left';
   var rightKey = isRtl ? 'left' : 'right';
 
-  /** Configuration to be passed to MoreMenu.user.js, MoreMenu.page.js, and handlers of the 'moremenu.ready' hook. */
+  /**
+   * Configuration to be passed to MoreMenu.user.js, MoreMenu.page.js,
+   * and handlers of the 'moremenu.ready' hook.
+   */
   var config = new function () {
     /** Project-level */
     this.project = {
@@ -59,7 +63,7 @@ $(function () {
       id: mw.config.get('wgArticleId'),
       movable: !mw.config.get('wgIsMainPage') && !!$('#ca-move').length
     };
-    if (-1 === this.page.nsId && !!mw.config.get('wgRelevantPageName') && mw.config.get('wgRelevantPageName').length && this.page.name !== mw.config.get('wgRelevantPageName')) {
+    if (this.page.nsId === -1 && !!mw.config.get('wgRelevantPageName') && mw.config.get('wgRelevantPageName').length && this.page.name !== mw.config.get('wgRelevantPageName')) {
       $.extend(this.page, {
         name: mw.config.get('wgRelevantPageName'),
         id: mw.config.get('wgRelevantArticleId')
@@ -75,8 +79,8 @@ $(function () {
     this.currentUser = {
       skin: mw.config.get('skin'),
       groups: mw.config.get('wgUserGroups'),
-      groupsData: {},
       // Keyed by user group name, values have keys 'rights' and 'canAddRemoveGroups'.
+      groupsData: {},
       rights: []
     };
 
@@ -91,7 +95,7 @@ $(function () {
       blocked: false,
       ipRange: false
     };
-    if (!this.targetUser.name && 'Contributions' === mw.config.get('wgCanonicalSpecialPageName') && !$('.mw-userpage-userdoesnotexist')[0]) {
+    if (!this.targetUser.name && mw.config.get('wgCanonicalSpecialPageName') === 'Contributions' && !$('.mw-userpage-userdoesnotexist')[0]) {
       /**
        * IP range at Special:Contribs, where wgRelevantUserName isn't set.
        * @see https://phabricator.wikimedia.org/T206954
@@ -110,12 +114,12 @@ $(function () {
 
   /**
    * Log a message to the console.
-   * @param {String} message
-   * @param {String} [level] Level accepted by `console`, e.g. 'debug', 'info', 'log', 'warn', 'error'.
+   * @param {string} message
+   * @param {string} [level] Level accepted by `console`, e.g. 'debug', 'info', etc.
    */
   function log(message) {
     var level = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'debug';
-    if (!(window.moreMenuDebug || 'debug' !== level)) {
+    if (!(window.moreMenuDebug || level !== 'debug')) {
       return;
     }
     message = "[MoreMenu] ".concat(message);
@@ -129,7 +133,7 @@ $(function () {
 
   /**
    * Get a MoreMenu module.
-   * @param {String} name Title of module, such as 'user', which pulls in MoreMenu.user.js.
+   * @param {string} name Title of module, such as 'user', which pulls in MoreMenu.user.js.
    * @return {Object} All modules return Objects.
    */
   function getModule(name) {
@@ -141,10 +145,10 @@ $(function () {
 
   /**
    * Get translation for the given key.
-   * @param {String} key As defined in MoreMenu.messages.js
-   * @param {Boolean} [ignore] Set to true to suppress warnings if the message doesn't exist.
+   * @param {string} key As defined in MoreMenu.messages.js
+   * @param {boolean} [ignore] Set to true to suppress warnings if the message doesn't exist.
    *   This also can be prevented by setting `ignoreI18nWarnings`.
-   * @returns {String}
+   * @return {string}
    */
   function msg(key) {
     var ignore = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
@@ -157,8 +161,8 @@ $(function () {
 
   /**
    * Check whether the message exists.
-   * @param {String} key
-   * @returns {Boolean}
+   * @param {string} key
+   * @return {boolean}
    */
   function msgExists(key) {
     return undefined !== getModule('messages')[key];
@@ -166,8 +170,8 @@ $(function () {
 
   /**
    * Normalize the given ID into the expected format.
-   * @param {String} id
-   * @returns {string}
+   * @param {string} id
+   * @return {string}
    */
   function normalizeId(id) {
     return id.toLowerCase().replace(/\s+/g, '-');
@@ -175,15 +179,14 @@ $(function () {
 
   /**
    * Generate a unique ID for a menu item.
-   * @param {String} parentKey The message key for the parent menu ('user' or 'page').
-   * @param {String} [itemKey] The message key for the link itself.
-   * @param {String} [submenuKey] The message key for the submenu that the item is within, if applicable.
-   * @returns {String} For example, 'c-user-user-logs-block-log' for User > User logs > Block log.
+   * @param {string} parentKey The message key for the parent menu ('user' or 'page').
+   * @param {string} [itemKey] The message key for the link itself.
+   * @param {string} [submenuKey] The message key for the submenu that the item is within.
+   * @return {string} For example, 'c-user-user-logs-block-log' for User > User logs > Block log.
    */
   function getItemId(parentKey, itemKey) {
     var submenuKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-    /* eslint-disable prefer-template */
-    return "mm-".concat(normalizeId(parentKey)) + (submenuKey ? "-".concat(normalizeId(submenuKey)) : '') + ('string' === typeof itemKey ? "-".concat(normalizeId(itemKey)) : '');
+    return "mm-".concat(normalizeId(parentKey)) + (submenuKey ? "-".concat(normalizeId(submenuKey)) : '') + (typeof itemKey === 'string' ? "-".concat(normalizeId(itemKey)) : '');
   }
 
   /**
@@ -191,12 +194,12 @@ $(function () {
    * at MediaWiki:Gadget-MoreMenu.messages.en.js (replacing 'en' with the requested language).
    * To override locally, define it before MoreMenu.js in your wiki's gadget definition.
    * See [[meta:MoreMenu#Localization]] for more.
-   * @returns {jQuery.Promise}
+   * @return {jQuery.Promise}
    */
   function loadTranslations() {
     var dfd = $.Deferred();
     var lang = mw.config.get('wgUserLanguage');
-    if ('en' === lang) {
+    if (lang === 'en') {
       return dfd.resolve();
     }
 
@@ -209,7 +212,7 @@ $(function () {
 
   /**
    * Get promises needed for initializing the script, such as user rights and block status.
-   * @returns {jQuery.Promise[]}
+   * @return {jQuery.Promise[]}
    */
   function getPromises() {
     var promises = new Array(4);
@@ -242,18 +245,16 @@ $(function () {
   }
 
   /**
-   * Do the given groups and/or rights indicate the user is allowed to change and other user's groups?
+   * Do the given groups and/or rights indicate the user is allowed to change other user's groups?
    * @param {Array} groups
    * @param {Array} rights
-   * @returns {Boolean}
+   * @return {boolean}
    */
   function canAddRemoveGroups(groups, rights) {
     if (rights && rights.indexOf('userrights') >= 0) {
       /** User explicitly has rights to change user groups. */
       return true;
     }
-
-    /* eslint-disable arrow-body-style */
     var valid = groups.some(function (group) {
       return config.currentUser.groupsData[group] && config.currentUser.groupsData[group].canAddRemoveGroups;
     });
@@ -266,9 +267,9 @@ $(function () {
 
   /**
    * Check if any of the given values are present in the permitted values.
-   * @param {Number|String|Array} permitted
-   * @param {Number|String|Array} given
-   * @returns {Boolean}
+   * @param {number | string | Array} permitted
+   * @param {number | string | Array} given
+   * @return {boolean}
    */
   function hasConditional(permitted, given) {
     /** Convert to arrays if non-array. */
@@ -291,11 +292,11 @@ $(function () {
 
   /**
    * Generate HTML for a menu item.
-   * @param {String} parentKey Message key for the parent menu ('user' or 'page').
-   * @param {String} itemKey Message key for menu item.
-   * @param {String} itemData Configuration for this menu item.
-   * @param {String} [submenuKey] The message key for the submenu that the item is within, if applicable.
-   * @return {String} The raw HTML.
+   * @param {string} parentKey Message key for the parent menu ('user' or 'page').
+   * @param {string} itemKey Message key for menu item.
+   * @param {string} itemData Configuration for this menu item.
+   * @param {string} [submenuKey] The message key for the submenu that the item is within.
+   * @return {string} The raw HTML.
    */
   function getItemHtml(parentKey, itemKey, itemData) {
     var submenuKey = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
@@ -338,8 +339,6 @@ $(function () {
       });
     }
     var passed = true;
-    /* eslint-disable no-restricted-syntax */
-    /* eslint-disable guard-for-in */
     for (var condition in conditions) {
       passed &= conditions[condition];
       if (!passed) {
@@ -353,26 +352,26 @@ $(function () {
     /** Markup for the menu item. */
     var titleAttr = msgExists("".concat(itemKey, "-desc")) || itemData.description ? " title=\"".concat(itemData.description ? itemData.description : msg("".concat(itemKey, "-desc")), "\"") : '';
     var styleAttr = itemData.style ? " style=\"".concat(itemData.style, "\"") : '';
-    return "\n            <li id=\"".concat(getItemId(parentKey, itemKey, submenuKey), "\" class=\"mm-item mw-list-item\">\n                <a href=\"").concat(itemData.url, "\"").concat(titleAttr).concat(styleAttr, ">\n                    <span>").concat(msg(itemData.title || itemKey), "</span>\n                </a>\n            </li>");
+    return "\n\t\t\t<li id=\"".concat(getItemId(parentKey, itemKey, submenuKey), "\" class=\"mm-item mw-list-item\">\n\t\t\t\t<a href=\"").concat(itemData.url, "\"").concat(titleAttr).concat(styleAttr, ">\n\t\t\t\t\t<span>").concat(msg(itemData.title || itemKey), "</span>\n\t\t\t\t</a>\n\t\t\t</li>");
   }
 
   /**
    * Apply CSS based on the skin. This is done here because it is fast enough,
    * not that much CSS, and saves users from having to import one more thing.
-   * @returns {CSSStyleSheet|null}
+   * @return {CSSStyleSheet|null}
    */
   function addCSS() {
     switch (config.currentUser.skin) {
       case 'vector':
-        return mw.util.addCSS("\n                .mm-tab .vector-menu-content {\n                    height: initial;\n                    overflow: initial !important;\n                }\n                .mm-menu .mw-list-item {\n                    white-space: nowrap;\n                }\n                .mm-submenu {\n                    background: #ffffff;\n                    border: 1px solid #a2a9b1;\n                    min-width: 120px !important;\n                    ".concat(rightKey, ": inherit !important;\n                    top: -1px !important;\n                }\n                #p-views {\n                    padding-left: inherit !important;\n                    padding-right: inherit !important;\n                }\n                #p-views .vector-menu-content::after {\n                    display: none !important;\n                }\n                .rtl #p-views .vector-menu-content::before {\n                    display: none !important;\n                }\n                .mm-submenu .mm-item {\n                    font-size: inherit !important;\n                }\n            "));
+        return mw.util.addCSS("\n\t\t\t\t.mm-tab .vector-menu-content {\n\t\t\t\t\theight: initial;\n\t\t\t\t\toverflow: initial !important;\n\t\t\t\t}\n\t\t\t\t.mm-menu .mw-list-item {\n\t\t\t\t\twhite-space: nowrap;\n\t\t\t\t}\n\t\t\t\t.mm-submenu {\n\t\t\t\t\tbackground: #ffffff;\n\t\t\t\t\tborder: 1px solid #a2a9b1;\n\t\t\t\t\tmin-width: 120px !important;\n\t\t\t\t\t".concat(rightKey, ": inherit !important;\n\t\t\t\t\ttop: -1px !important;\n\t\t\t\t}\n\t\t\t\t#p-views {\n\t\t\t\t\tpadding-left: inherit !important;\n\t\t\t\t\tpadding-right: inherit !important;\n\t\t\t\t}\n\t\t\t\t#p-views .vector-menu-content::after {\n\t\t\t\t\tdisplay: none !important;\n\t\t\t\t}\n\t\t\t\t.rtl #p-views .vector-menu-content::before {\n\t\t\t\t\tdisplay: none !important;\n\t\t\t\t}\n\t\t\t\t.mm-submenu .mm-item {\n\t\t\t\t\tfont-size: inherit !important;\n\t\t\t\t}\n\t\t\t"));
       case 'vector-2022':
-        return mw.util.addCSS("\n                #p-page-dropdown .vector-dropdown-content,\n                #p-user-dropdown .vector-dropdown-content {\n                    height: initial;\n                    overflow-x: initial !important;\n                    overflow-y: initial !important;\n                    top: 35px !important;\n                }\n                #p-page-dropdown .vector-dropdown-content::after,\n                #p-user-dropdown .vector-dropdown-content::after {\n                    display: none !important;\n                }\n                .mm-menu .mw-list-item {\n                    white-space: nowrap;\n                }\n                .mm-submenu {\n                    background: #ffffff;\n                    box-shadow: 0 2px 6px -1px rgba(0,0,0,0.2);\n                    min-width: 120px !important;\n                    padding: 1px 10px;\n                    top: -1px !important;\n                }\n                #p-views {\n                    padding-left: inherit !important;\n                    padding-right: inherit !important;\n                }\n            ");
+        return mw.util.addCSS("\n\t\t\t\t#p-page-dropdown .vector-dropdown-content,\n\t\t\t\t#p-user-dropdown .vector-dropdown-content {\n\t\t\t\t\theight: initial;\n\t\t\t\t\toverflow-x: initial !important;\n\t\t\t\t\toverflow-y: initial !important;\n\t\t\t\t\ttop: 35px !important;\n\t\t\t\t}\n\t\t\t\t#p-page-dropdown .vector-dropdown-content::after,\n\t\t\t\t#p-user-dropdown .vector-dropdown-content::after {\n\t\t\t\t\tdisplay: none !important;\n\t\t\t\t}\n\t\t\t\t.mm-menu .mw-list-item {\n\t\t\t\t\twhite-space: nowrap;\n\t\t\t\t}\n\t\t\t\t.mm-submenu {\n\t\t\t\t\tbackground: #ffffff;\n\t\t\t\t\tbox-shadow: 0 2px 6px -1px rgba(0,0,0,0.2);\n\t\t\t\t\tmin-width: 120px !important;\n\t\t\t\t\tpadding: 1px 10px;\n\t\t\t\t\ttop: -1px !important;\n\t\t\t\t}\n\t\t\t\t#p-views {\n\t\t\t\t\tpadding-left: inherit !important;\n\t\t\t\t\tpadding-right: inherit !important;\n\t\t\t\t}\n\t\t\t");
       case 'timeless':
-        return mw.util.addCSS("\n                .mm-submenu-wrapper {\n                    cursor: default;\n                }\n                .mm-submenu {\n                    background: #f8f9fa;\n                    border: 1px solid rgb(200, 204, 209);\n                    box-shadow: 0 2px 3px 1px rgba(0, 0, 0, 0.05);\n                    padding: 1.2em 1.5em !important;\n                    top: -1.2em;\n                    white-space: nowrap;\n                    z-index: 95;\n                }\n                .mm-submenu::after {\n                    border-bottom: 8px solid transparent;\n                    border-top: 8px solid transparent;\n                    border-".concat(leftKey, ": 8px solid rgb(200, 204, 209);\n                    content: '';\n                    height: 0;\n                    padding-").concat(rightKey, ": 4px;\n                    position: absolute;\n                    top: 20px;\n                    width: 0;\n                    ").concat(rightKey, ": -13px;\n                }\n                @media screen and (max-width: 1339px) and (min-width: 1100px) {\n                    .mm-submenu::after {\n                        border-").concat(leftKey, ": none;\n                        border-").concat(rightKey, ": 8px solid rgb(200, 204, 209);\n                        padding-").concat(leftKey, ": 4px;\n                        padding-").concat(rightKey, ": inherit;\n                        ").concat(rightKey, ": inherit;\n                        ").concat(leftKey, ": -35px;\n                    }\n                }\n                @media screen and (max-width: 850px) {\n                    .mm-submenu {\n                        top: -2.2em;\n                    }\n                }\n            "));
+        return mw.util.addCSS("\n\t\t\t\t.mm-submenu-wrapper {\n\t\t\t\t\tcursor: default;\n\t\t\t\t}\n\t\t\t\t.mm-submenu {\n\t\t\t\t\tbackground: #f8f9fa;\n\t\t\t\t\tborder: 1px solid rgb(200, 204, 209);\n\t\t\t\t\tbox-shadow: 0 2px 3px 1px rgba(0, 0, 0, 0.05);\n\t\t\t\t\tpadding: 1.2em 1.5em !important;\n\t\t\t\t\ttop: -1.2em;\n\t\t\t\t\twhite-space: nowrap;\n\t\t\t\t\tz-index: 95;\n\t\t\t\t}\n\t\t\t\t.mm-submenu::after {\n\t\t\t\t\tborder-bottom: 8px solid transparent;\n\t\t\t\t\tborder-top: 8px solid transparent;\n\t\t\t\t\tborder-".concat(leftKey, ": 8px solid rgb(200, 204, 209);\n\t\t\t\t\tcontent: '';\n\t\t\t\t\theight: 0;\n\t\t\t\t\tpadding-").concat(rightKey, ": 4px;\n\t\t\t\t\tposition: absolute;\n\t\t\t\t\ttop: 20px;\n\t\t\t\t\twidth: 0;\n\t\t\t\t\t").concat(rightKey, ": -13px;\n\t\t\t\t}\n\t\t\t\t@media screen and (max-width: 1339px) and (min-width: 1100px) {\n\t\t\t\t\t.mm-submenu::after {\n\t\t\t\t\t\tborder-").concat(leftKey, ": none;\n\t\t\t\t\t\tborder-").concat(rightKey, ": 8px solid rgb(200, 204, 209);\n\t\t\t\t\t\tpadding-").concat(leftKey, ": 4px;\n\t\t\t\t\t\tpadding-").concat(rightKey, ": inherit;\n\t\t\t\t\t\t").concat(rightKey, ": inherit;\n\t\t\t\t\t\t").concat(leftKey, ": -35px;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\t@media screen and (max-width: 850px) {\n\t\t\t\t\t.mm-submenu {\n\t\t\t\t\t\ttop: -2.2em;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t"));
       case 'monobook':
-        return mw.util.addCSS("\n                .mm-tab {\n                    position: relative;\n                }\n                .mm-menu {\n                    background: #fff;\n                    border-bottom: 1px solid #aaa;\n                    ".concat(leftKey, ": -1px;\n                    margin: 0;\n                    position: absolute;\n                    z-index: 99;\n                }\n                .mm-menu ~ a {\n                    z-index: 99 !important;\n                }\n                .mm-submenu {\n                    background: #fff;\n                    border-bottom: 1px solid #aaa;\n                    border-top: 1px solid #aaa;\n                    font-size: inherit;\n                    margin: 0;\n                    min-width: 75px;\n                    top: -1px;\n                    z-index: 95;\n                }\n                .mm-item, .mm-submenu-wrapper {\n                    background: #fff !important;\n                    border-top: 0 !important;\n                    display: block !important;\n                    margin: 0 !important;\n                    padding: 0 !important;\n                    width: 100%;\n                }\n                .mm-item a, .mm-submenu-wrapper a {\n                    background: transparent !important;\n                    text-transform: none !important;\n                }\n                .mm-menu a:hover {\n                    text-decoration: underline !important;\n                }\n            "));
+        return mw.util.addCSS("\n\t\t\t\t.mm-tab {\n\t\t\t\t\tposition: relative;\n\t\t\t\t}\n\t\t\t\t.mm-menu {\n\t\t\t\t\tbackground: #fff;\n\t\t\t\t\tborder-bottom: 1px solid #aaa;\n\t\t\t\t\t".concat(leftKey, ": -1px;\n\t\t\t\t\tmargin: 0;\n\t\t\t\t\tposition: absolute;\n\t\t\t\t\tz-index: 99;\n\t\t\t\t}\n\t\t\t\t.mm-menu ~ a {\n\t\t\t\t\tz-index: 99 !important;\n\t\t\t\t}\n\t\t\t\t.mm-submenu {\n\t\t\t\t\tbackground: #fff;\n\t\t\t\t\tborder-bottom: 1px solid #aaa;\n\t\t\t\t\tborder-top: 1px solid #aaa;\n\t\t\t\t\tfont-size: inherit;\n\t\t\t\t\tmargin: 0;\n\t\t\t\t\tmin-width: 75px;\n\t\t\t\t\ttop: -1px;\n\t\t\t\t\tz-index: 95;\n\t\t\t\t}\n\t\t\t\t.mm-item, .mm-submenu-wrapper {\n\t\t\t\t\tbackground: #fff !important;\n\t\t\t\t\tborder-top: 0 !important;\n\t\t\t\t\tdisplay: block !important;\n\t\t\t\t\tmargin: 0 !important;\n\t\t\t\t\tpadding: 0 !important;\n\t\t\t\t\twidth: 100%;\n\t\t\t\t}\n\t\t\t\t.mm-item a, .mm-submenu-wrapper a {\n\t\t\t\t\tbackground: transparent !important;\n\t\t\t\t\ttext-transform: none !important;\n\t\t\t\t}\n\t\t\t\t.mm-menu a:hover {\n\t\t\t\t\ttext-decoration: underline !important;\n\t\t\t\t}\n\t\t\t"));
       case 'modern':
-        return mw.util.addCSS("\n                .mm-menu, .mm-submenu {\n                    background: #f0f0f0 !important;\n                    border: solid 1px #666;\n                }\n                .mm-menu {\n                    border-top: none;\n                    position: absolute;\n                    z-index: 99;\n                }\n                .mm-submenu-wrapper > a {\n                    cursor: default !important;\n                }\n                .mm-item, .mm-submenu-wrapper {\n                    display: block !important;\n                    float: none !important;\n                    height: inherit !important;\n                    margin: 0 !important;\n                    padding: 0 !important;\n                }\n                .mm-menu a {\n                    display: inline-block;\n                    padding: 3px 10px !important;\n                    text-transform: none !important;\n                    text-decoration: none !important;\n                    white-space: nowrap;\n                    width: 100%;\n                }\n                .mm-menu a:hover {\n                    text-decoration: underline !important;\n                }\n                .mm-submenu {\n                    ".concat(leftKey, ": 100%;\n                    min-width: 120px !important;\n                    top: 0;\n                }\n            "));
+        return mw.util.addCSS("\n\t\t\t\t.mm-menu, .mm-submenu {\n\t\t\t\t\tbackground: #f0f0f0 !important;\n\t\t\t\t\tborder: solid 1px #666;\n\t\t\t\t}\n\t\t\t\t.mm-menu {\n\t\t\t\t\tborder-top: none;\n\t\t\t\t\tposition: absolute;\n\t\t\t\t\tz-index: 99;\n\t\t\t\t}\n\t\t\t\t.mm-submenu-wrapper > a {\n\t\t\t\t\tcursor: default !important;\n\t\t\t\t}\n\t\t\t\t.mm-item, .mm-submenu-wrapper {\n\t\t\t\t\tdisplay: block !important;\n\t\t\t\t\tfloat: none !important;\n\t\t\t\t\theight: inherit !important;\n\t\t\t\t\tmargin: 0 !important;\n\t\t\t\t\tpadding: 0 !important;\n\t\t\t\t}\n\t\t\t\t.mm-menu a {\n\t\t\t\t\tdisplay: inline-block;\n\t\t\t\t\tpadding: 3px 10px !important;\n\t\t\t\t\ttext-transform: none !important;\n\t\t\t\t\ttext-decoration: none !important;\n\t\t\t\t\twhite-space: nowrap;\n\t\t\t\t\twidth: 100%;\n\t\t\t\t}\n\t\t\t\t.mm-menu a:hover {\n\t\t\t\t\ttext-decoration: underline !important;\n\t\t\t\t}\n\t\t\t\t.mm-submenu {\n\t\t\t\t\t".concat(leftKey, ": 100%;\n\t\t\t\t\tmin-width: 120px !important;\n\t\t\t\t\ttop: 0;\n\t\t\t\t}\n\t\t\t"));
       default:
         return null;
     }
@@ -380,8 +379,8 @@ $(function () {
 
   /**
    * Get CSS for the submenu.
-   * @param $element
-   * @returns {Object} To be passed to $.css()
+   * @param {jQuery} $element
+   * @return {Object} To be passed to $.css()
    */
   function getSubmenuCss($element) {
     switch (config.currentUser.skin) {
@@ -413,7 +412,7 @@ $(function () {
   /**
    * Sort alphabetically by translation.
    * @param {Array} i18nKeys
-   * @returns {Array}
+   * @return {Array}
    */
   function sortByTranslation(i18nKeys) {
     return i18nKeys.sort(function (a, b) {
@@ -453,10 +452,10 @@ $(function () {
     sortedItemKeys.forEach(function (itemKey) {
       var target = items[itemKey].insertAfter;
       var newIndex;
-      if (false === target) {
+      if (target === false) {
         /** False means put at the top. */
         newIndex = 0;
-      } else if (true === target) {
+      } else if (target === true) {
         /** True means put at the bottom. */
         newIndex = itemKeys.length;
       } else if (!target) {
@@ -468,7 +467,7 @@ $(function () {
          * Insert at end if target wasn't found.
          * The +1 is because it goes after the target.
          */
-        newIndex = -1 === newIndex ? newItemKeys.length : newIndex + 1;
+        newIndex = newIndex === -1 ? newItemKeys.length : newIndex + 1;
       }
 
       /** Remove the original placement, and insert after the target. */
@@ -482,25 +481,25 @@ $(function () {
 
   /**
    * Get the markup for the menu based on the given data.
-   * @param {String} parentKey Message key for the parent menu ('user' or 'page').
+   * @param {string} parentKey Message key for the parent menu ('user' or 'page').
    * @param {Object} items Menu items, as provided by MoreMenu.user.js and MoreMenu.page.js
-   * @param {String} [submenuKey] Used to ensure the generated IDs include the submenu name.
-   * @return {String} Raw HTML.
+   * @param {string} [submenuKey] Used to ensure the generated IDs include the submenu name.
+   * @return {string} Raw HTML.
    */
   function getMenuHtml(parentKey, items, submenuKey) {
     var html = '';
-    var submenuClasses = 'vector' === config.currentUser.skin || 'vector-2022' === config.currentUser.skin ? 'vector-menu-content-list' : '';
+    var submenuClasses = config.currentUser.skin === 'vector' || config.currentUser.skin === 'vector-2022' ? 'vector-menu-content-list' : '';
     sortItems(items).forEach(function (itemKey) {
       var item = items[itemKey];
       var itemHtml = '';
       if (!item.url) {
         /** This is a submenu. */
-        itemHtml += "\n                    <li style=\"position:relative;\" id=\"".concat(getItemId(parentKey, itemKey), "\" class=\"mm-submenu-wrapper mw-list-item\">\n                    <a style=\"font-weight: bold\"><span>").concat(msg(itemKey), "&hellip;</span></a>\n                    <ul class=\"menu mm-submenu ").concat(submenuClasses, "\" style=\"display: none; position: absolute;\">");
+        itemHtml += "\n\t\t\t\t\t<li style=\"position:relative;\" id=\"".concat(getItemId(parentKey, itemKey), "\" class=\"mm-submenu-wrapper mw-list-item\">\n\t\t\t\t\t<a style=\"font-weight: bold\"><span>").concat(msg(itemKey), "&hellip;</span></a>\n\t\t\t\t\t<ul class=\"menu mm-submenu ").concat(submenuClasses, "\" style=\"display: none; position: absolute;\">");
         sortItems(item).forEach(function (submenuItemKey) {
           itemHtml += getItemHtml(parentKey, submenuItemKey, item[submenuItemKey], itemKey);
         });
         itemHtml += '</ul></li>';
-        if (0 === $(itemHtml).last().find('.mm-submenu li').length) {
+        if ($(itemHtml).last().find('.mm-submenu li').length === 0) {
           /** No items in the submenu, so don't show the submenu at all. */
           itemHtml = '';
         }
@@ -514,8 +513,8 @@ $(function () {
 
   /**
    * Draw menu for the Vector skin.
-   * @param {String} parentKey Message key for the parent menu ('user' or 'page').
-   * @param {String} html As generated by getMenuHtml().
+   * @param {string} parentKey Message key for the parent menu ('user' or 'page').
+   * @param {string} html As generated by getMenuHtml().
    */
   function drawMenuVector(parentKey, html) {
     var menu = mw.util.addPortlet("p-".concat(parentKey), msg(parentKey), '#p-cactions');
@@ -531,8 +530,8 @@ $(function () {
 
   /**
    * Draw menu for the Timeless skin.
-   * @param {String} parentKey Message key for the parent menu ('user' or 'page').
-   * @param {String} html As generated by getMenuHtml().
+   * @param {string} parentKey Message key for the parent menu ('user' or 'page').
+   * @param {string} html As generated by getMenuHtml().
    */
   function drawMenuTimeless(parentKey, html) {
     html = "<div role=\"navigation\" class=\"mw-portlet mm-".concat(parentKey, " mm-tab\" id=\"p-").concat(parentKey, "\" aria-labelledby=\"p-").concat(parentKey, "-label\">") + "<h3 id=\"p-".concat(parentKey, "-label\">").concat(msg(parentKey), "</h3>") + "<div class=\"mw-portlet-body\"><ul class=\"mm-menu\">".concat(html, "</ul></div></div>");
@@ -545,8 +544,8 @@ $(function () {
 
   /**
    * Draw menu for the Monobook skin.
-   * @param {String} parentKey Message key for the parent menu ('user' or 'page').
-   * @param {String} html As generated by getMenuHtml().
+   * @param {string} parentKey Message key for the parent menu ('user' or 'page').
+   * @param {string} html As generated by getMenuHtml().
    */
   function drawMenuMonobook(parentKey, html) {
     html = "<li id=\"ca-".concat(parentKey, "\" class=\"mm-").concat(parentKey, " mm-tab\">") + "<a href=\"javascript:void(0)\">".concat(msg(parentKey), "</a>") + "<ul class=\"mm-menu\" style=\"display:none\">".concat(html, "</ul>") + '</li>';
@@ -569,8 +568,8 @@ $(function () {
 
   /**
    * Draw menu for the Modern skin.
-   * @param {String} parentKey Message key for the parent menu ('user' or 'page').
-   * @param {String} html As generated by getMenuHtml().
+   * @param {string} parentKey Message key for the parent menu ('user' or 'page').
+   * @param {string} html As generated by getMenuHtml().
    */
   function drawMenuModern(parentKey, html) {
     html = "<li id=\"ca-".concat(parentKey, "\" class=\"mm-").concat(parentKey, " mm-tab\">") + "<a href=\"javascript:void(0)\">".concat(msg(parentKey), "</a>") + "<ul class=\"mm-menu\" style=\"display:none\">".concat(html, "</ul>") + '</li>';
@@ -634,11 +633,11 @@ $(function () {
    * Monobook and Modern have 'History' and 'Watch' links as tabs. To conserve space, they are moved to the Page menu.
    * This method is called before and after the menus are drawn, to ensure positioning is calculated correctly.
    * Listeners on these links are preserved, but we do change the element IDs to our pattern (e.g. `mm-page-history`).
-   * @param {Boolean} [replace] True to replace the links in .mm-page with the native links, false just hides them.
+   * @param {boolean} [replace] True to replace the links in .mm-page with the native links, false just hides them.
    */
   function handleHistoryAndWatchLinks() {
     var replace = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-    var monobookModern = -1 !== ['monobook', 'modern'].indexOf(config.currentUser.skin);
+    var monobookModern = ['monobook', 'modern'].indexOf(config.currentUser.skin) !== -1;
     var $histLink = $('#ca-history');
     var $watchLink = $('.mw-watchlink');
     var $moveLink = $('#ca-move');
@@ -667,10 +666,10 @@ $(function () {
    * Add a MutationObserver to look for items added/removed from the given menus.
    * If they are empty, the container is hidden, otherwise it's unhidden.
    * MutationObserver implementation courtesy of LunarTwilight. See https://github.com/wikimedia-gadgets/MoreMenu/pull/1
-   * @param {String|Array} ids Selector for the menu to observe (a parent of the <ul> element).
+   * @param {string | Array} ids Selector for the menu to observe (a parent of the <ul> element).
    */
   function addMutationObserver(ids) {
-    if ('string' === typeof ids) {
+    if (typeof ids === 'string') {
       ids = [ids];
     }
     ids.forEach(function (id) {
@@ -680,7 +679,7 @@ $(function () {
       }
       var $menu = $parent.find('ul');
       var menuIsEmpty = function menuIsEmpty() {
-        return '' === $menu.html().trim();
+        return $menu.html().trim() === '';
       };
       if (menuIsEmpty()) {
         $parent.hide();
@@ -710,7 +709,7 @@ $(function () {
     var reAddCount = parseInt(mw.storage.get('mmNativeMenuUsage'), 10) || 0;
 
     /** Ignore for non-Vector/Timeless, if user disabled this feature, or if reAddCount is high. */
-    if (-1 === ['vector', 'vector-2022', 'timeless'].indexOf(config.currentUser.skin) || !!window.MoreMenu.disableAutoRemoval || reAddCount >= 5) {
+    if (['vector', 'vector-2022', 'timeless'].indexOf(config.currentUser.skin) === -1 || !!window.MoreMenu.disableAutoRemoval || reAddCount >= 5) {
       return;
     }
     addMutationObserver('#p-cactions');
@@ -732,15 +731,15 @@ $(function () {
    */
   function removeNativeLinks() {
     var linksToRemove = ['#ca-protect', '#ca-unprotect', '#ca-delete', '#ca-undelete'];
-    if ('timeless' === config.currentUser.skin) {
-      linksToRemove.push.apply(linksToRemove, ['#t-contributions', '#t-log', '#t-blockip', '#t-emailuser', '#t-userrights', '#t-info', '#t-pagelog']);
+    if (config.currentUser.skin === 'timeless') {
+      linksToRemove.push.apply(linksToRemove, linksToRemove.concat(['#t-contributions', '#t-log', '#t-blockip', '#t-emailuser', '#t-userrights', '#t-info', '#t-pagelog']));
     }
     $(linksToRemove.join(',')).remove();
     handleHistoryAndWatchLinks();
     observeCactionsMenu();
 
     /** Remove empty userpage tools menu in Timeless */
-    if ('timeless' === config.currentUser.skin) {
+    if (config.currentUser.skin === 'timeless') {
       addMutationObserver('#p-userpagetools');
     }
   }
@@ -825,10 +824,10 @@ $(function () {
 
   /**
    * Get the ID of the menu item preceding the given item.
-   * @param {String} menu The parent menu the item lives (or will live) under.
-   * @param {String} [submenu] The given item lives (or will live) under this submenu.
-   * @param {Boolean|String} [insertAfter] The preceding item should be this one.
-   * @returns {jQuery}
+   * @param {string} menu The parent menu the item lives (or will live) under.
+   * @param {string} [submenu] The given item lives (or will live) under this submenu.
+   * @param {boolean | string} [insertAfter] The preceding item should be this one.
+   * @return {jQuery}
    */
   function getBeforeItem(menu, submenu, insertAfter) {
     var beforeItemKey = getItemId(menu, insertAfter || '', submenu);
@@ -841,10 +840,10 @@ $(function () {
 
   /**
    * Add an item (or submenu + its items) to a menu, given the full config hash for the item.
-   * @param {String} menu The parent menu to append to, either 'user' or 'page'.
+   * @param {string} menu The parent menu to append to, either 'user' or 'page'.
    * @param {Object} items A single item/submenu with structure matching config at MoreMenu.user or MoreMenu.page.
-   * @param {Boolean|String} [insertAfter] Insert the item/submenu after the item with this ID.
-   * @param {String} [submenu] Insert into this submenu.
+   * @param {boolean | string} [insertAfter] Insert the item/submenu after the item with this ID.
+   * @param {string} [submenu] Insert into this submenu.
    */
   MoreMenu.addItemCore = function (menu, items, insertAfter, submenu) {
     if (!$(".mm-".concat(menu)).length) {
@@ -885,11 +884,11 @@ $(function () {
 
       /** Grab the visible top-level items (excluding submenus). */
       var $topItems = submenu ? $(menuId).find('.mm-submenu > .mm-item') : $(menuId).find('.mm-menu > .mm-item');
-      if (true === insertAfter) {
+      if (insertAfter === true) {
         $topItems.last().after($html);
         return;
       }
-      if (false === insertAfter) {
+      if (insertAfter === false) {
         $topItems.first().before($html);
         return;
       }
@@ -899,12 +898,14 @@ $(function () {
       }
 
       /** Create a list of the IDs and append the new ID. */
-      var ids = $.map($topItems, function (el) {
+      var ids = $topItems.toArray().map(function (el) {
         return el.id;
       }).concat([newId]);
 
       /** Extract the i18n keys and sort alphabetically by translation. */
-      var i18nKeys = sortByTranslation(ids.map(function (id) {
+      var i18nKeys = sortByTranslation(
+      // eslint-disable-next-line security/detect-non-literal-regexp
+      ids.map(function (id) {
         return id.replace(new RegExp("^mm-".concat(menu, "-").concat(submenu ? "".concat(submenu, "-") : '')), '');
       }));
 
@@ -926,10 +927,10 @@ $(function () {
 
   /**
    * Add a single item to a menu.
-   * @param {String} menu Either 'page' or 'user'.
-   * @param {String} name Title for the link. Can either be a normal string or an i18n key.
+   * @param {string} menu Either 'page' or 'user'.
+   * @param {string} name Title for the link. Can either be a normal string or an i18n key.
    * @param {Object} data Item data.
-   * @param {Boolean|String} [insertAfter] Insert the link after the link with this ID.
+   * @param {boolean | string} [insertAfter] Insert the link after the link with this ID.
    */
   MoreMenu.addItem = function (menu, name, data, insertAfter) {
     MoreMenu.addItemCore(menu, _defineProperty({}, name, data), insertAfter);
@@ -937,11 +938,11 @@ $(function () {
 
   /**
    * Add a single item to a submenu.
-   * @param {String} menu Either 'page' or 'user'.
-   * @param {String} submenu ID for the submenu (such as 'user-logs' or 'analysis').
-   * @param {String} name Title for the link. Can either be a normal string or an i18n key.
+   * @param {string} menu Either 'page' or 'user'.
+   * @param {string} submenu ID for the submenu (such as 'user-logs' or 'analysis').
+   * @param {string} name Title for the link. Can either be a normal string or an i18n key.
    * @param {Object} data Item data.
-   * @param {Boolean|String} [insertAfter] Insert the link after the link with this ID.
+   * @param {boolean | string} [insertAfter] Insert the link after the link with this ID.
    */
   MoreMenu.addSubmenuItem = function (menu, submenu, name, data, insertAfter) {
     MoreMenu.addItemCore(menu, _defineProperty({}, name, data), insertAfter, submenu);
@@ -949,10 +950,10 @@ $(function () {
 
   /**
    * Add a new submenu.
-   * @param {String} menu Either 'page' or 'user'.
-   * @param {String} name Name for the submenu. Can either be a normal string or an i18n key.
+   * @param {string} menu Either 'page' or 'user'.
+   * @param {string} name Name for the submenu. Can either be a normal string or an i18n key.
    * @param {Object} items Keys are the names for each link, and values are the item data.
-   * @param {Boolean|String} [insertAfter] Insert the submenu after the link with this ID.
+   * @param {boolean | string} [insertAfter] Insert the submenu after the link with this ID.
    */
   MoreMenu.addSubmenu = function (menu, name, items, insertAfter) {
     MoreMenu.addItemCore(menu, _defineProperty({}, name, items), insertAfter);
@@ -960,10 +961,10 @@ $(function () {
 
   /**
    * Add a link to the given menu.
-   * @param {String} menu Either 'page' or 'user'.
-   * @param {String} name Title for the link. Can either be a normal string or an i18n key.
-   * @param {String} url URL to point to.
-   * @param {Boolean|String} [insertAfter] Insert the link after the link with this ID.
+   * @param {string} menu Either 'page' or 'user'.
+   * @param {string} name Title for the link. Can either be a normal string or an i18n key.
+   * @param {string} url URL to point to.
+   * @param {boolean | string} [insertAfter] Insert the link after the link with this ID.
    */
   MoreMenu.addLink = function (menu, name, url, insertAfter) {
     MoreMenu.addItemCore(menu, _defineProperty({}, name, {
@@ -973,11 +974,11 @@ $(function () {
 
   /**
    * Add a link to the given submenu.
-   * @param {String} menu Either 'page' or 'user'.
-   * @param {String} submenu ID for the submenu (such as 'user-logs' or 'analysis').
-   * @param {String} name Title for the link. Can either be a normal string or an i18n key.
-   * @param {String} url URL to point to.
-   * @param {Boolean|String} [insertAfter] Insert the link after the link with this ID.
+   * @param {string} menu Either 'page' or 'user'.
+   * @param {string} submenu ID for the submenu (such as 'user-logs' or 'analysis').
+   * @param {string} name Title for the link. Can either be a normal string or an i18n key.
+   * @param {string} url URL to point to.
+   * @param {boolean | string} [insertAfter] Insert the link after the link with this ID.
    */
   MoreMenu.addSubmenuLink = function (menu, submenu, name, url, insertAfter) {
     MoreMenu.addItemCore(menu, _defineProperty({}, name, {

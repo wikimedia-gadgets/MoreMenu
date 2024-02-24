@@ -6,7 +6,7 @@
 * Want to add custom links? See [[meta:MoreMenu#Customization]].
 * 
 * Script:         MoreMenu.js
-* Version:        5.1.24
+* Version:        5.2.0
 * Author:         MusikAnimal
 * License:        MIT
 * Documentation:  [[meta:MoreMenu]]
@@ -16,19 +16,18 @@
 **/
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : String(i); }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 /* eslint-disable quote-props */
 /* eslint-disable max-len */
 window.MoreMenu = window.MoreMenu || {};
 window.MoreMenu.page = function (config) {
-  var _page;
   return {
-    page: (_page = {
+    page: _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty({
       'page-logs': {
         'all-logs': {
           url: mw.util.getUrl('Special:Log', {
@@ -107,13 +106,12 @@ window.MoreMenu.page = function (config) {
           url: "https://copyvios.toolforge.org?lang=".concat(config.project.domain.split('.')[0], "&project=").concat(config.project.domain.split('.')[1], "&title=").concat(config.page.encodedName, "&oldid=&action=search&use_engine=1&use_links=1"),
           pageExists: true
         },
+        'link-count': {
+          url: "https://linkcount.toolforge.org/?project=".concat(config.project.domain, "&page=").concat(config.page.encodedName)
+        },
         'traffic-report': {
           url: "https://pageviews.wmcloud.org?project=".concat(config.project.domain, "&pages=").concat(config.page.encodedName),
           pageExists: true
-        },
-        'transclusion-count': {
-          url: "https://linkcount.toolforge.org/?project=".concat(config.project.domain, "&page=").concat(config.page.encodedName),
-          namespaceRestrict: [2, 4, 5, 10, 11, 12, 13, 100, 101, 828]
         },
         'transclusions': {
           url: "https://".concat(config.project.domain, "/w/index.php?title=Special:WhatLinksHere/").concat(config.page.encodedName, "&hidelinks=1&hideredirs=1"),
@@ -133,7 +131,7 @@ window.MoreMenu.page = function (config) {
           pageExists: true
         },
         'search-history-wikiblame': {
-          url: "http://wikipedia.ramselehof.de/wikiblame.php?lang=".concat(config.project.contentLanguage, "&project=").concat(config.project.noticeProject, "&article=").concat(config.page.encodedName),
+          url: "https://wikipedia.ramselehof.de/wikiblame.php?lang=".concat(config.project.contentLanguage, "&project=").concat(config.project.noticeProject, "&article=").concat(config.page.encodedName),
           pageExists: true
         },
         'search-history-xtools': {
@@ -173,7 +171,7 @@ window.MoreMenu.page = function (config) {
         /** NOTE: must use `decodeURIComponent` because mw.util.getUrl will otherwise double-escape. This should be safe. */
         url: mw.util.getUrl(config.page.name, _objectSpread({
           action: 'delete'
-        }, false === window.MoreMenu.prefillDeletionReason ? {} : {
+        }, window.MoreMenu.prefillDeletionReason === false ? {} : {
           'wpReason': decodeURIComponent($('#delete-reason').text()).replace(/\+/g, ' ')
         })),
         currentUserRights: ['delete'],
@@ -185,12 +183,12 @@ window.MoreMenu.page = function (config) {
         namespaceRestrict: [0, 1, 2, 3, 4, 5, 118],
         pageExists: true,
         /** Don't show the 'Edit intro' link if the edittop gadget is enabled or there is only one section. */
-        visible: '1' !== mw.user.options.get('gadget-edittop') && $('.mw-editsection').length
+        visible: mw.user.options.get('gadget-edittop') !== '1' && $('.mw-editsection').length
       },
       /** Placeholder for history link in Monobook/Modern, will get replaced by native link */
       'history': {
         url: '#',
-        visible: -1 !== ['monobook', 'modern'].indexOf(config.currentUser.skin)
+        visible: ['monobook', 'modern'].indexOf(config.currentUser.skin) !== -1
       },
       'merge-page': {
         url: mw.util.getUrl('Special:MergeHistory', {
@@ -206,26 +204,26 @@ window.MoreMenu.page = function (config) {
         pageExists: true,
         pageMovable: true
       }
-    }, _defineProperty(_page, config.page["protected"] ? 'change-protection' : 'protect-page', {
+    }, config.page["protected"] ? 'change-protection' : 'protect-page', {
       url: mw.util.getUrl(config.page.name, {
         action: 'protect'
       }),
       currentUserRights: ['protect', 'stablesettings']
-    }), _defineProperty(_page, 'purge-cache', {
+    }), 'purge-cache', {
       url: mw.util.getUrl(config.page.name, {
         action: 'purge',
         forcelinkupdate: true
       }),
       pageExists: true
-    }), _defineProperty(_page, 'subpages', {
+    }), 'subpages', {
       url: mw.util.getUrl("Special:PrefixIndex/".concat(config.page.name, "/"))
-    }), _defineProperty(_page, 'undelete-page', {
+    }), 'undelete-page', {
       url: mw.util.getUrl("Special:Undelete/".concat(config.page.name)),
       currentUserRights: ['undelete'],
       pageDeleted: true
-    }), _defineProperty(_page, 'watch', {
+    }), 'watch', {
       url: '#',
-      visible: -1 !== ['monobook', 'modern'].indexOf(config.currentUser.skin)
-    }), _page)
+      visible: ['monobook', 'modern'].indexOf(config.currentUser.skin) !== -1
+    })
   };
 };
