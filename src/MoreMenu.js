@@ -388,7 +388,7 @@ $( () => {
 					white-space: nowrap;
 				}
 				.mm-submenu {
-					background: #ffffff;
+					background: var(--background-color-base, #ffffff);
 					border: 1px solid #a2a9b1;
 					min-width: 120px !important;
 					${ rightKey }: inherit !important;
