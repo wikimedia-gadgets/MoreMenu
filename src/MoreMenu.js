@@ -425,7 +425,7 @@ $( () => {
 					white-space: nowrap;
 				}
 				.mm-submenu {
-					background: #ffffff;
+					background: var(--background-color-base, #ffffff);;
 					box-shadow: 0 2px 6px -1px rgba(0,0,0,0.2);
 					min-width: 120px !important;
 					padding: 1px 10px;
