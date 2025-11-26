@@ -82,7 +82,7 @@ window.MoreMenu.page = ( config ) => ( {
 				pageExists: true
 			},
 			'search-history-wikiblame': {
-				url: `https://wikipedia.ramselehof.de/wikiblame.php?lang=${ config.project.contentLanguage }&project=${ config.project.noticeProject }&article=${ config.page.encodedName }`,
+				url: `https://wikipedia.ramselehof.de/wikiblame.php?lang=${ config.project.domain.split( '.' )[ 0 ] }&project=${ config.project.domain.split( '.' )[ 1 ] }&tld=${ config.project.domain.split('.')[ 2 ] }&article=${ config.page.encodedName }`,
 				pageExists: true
 			},
 			'search-history-xtools': {
