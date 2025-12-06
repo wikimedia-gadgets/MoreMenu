@@ -229,7 +229,7 @@ window.MoreMenu.user = function (config) {
       },
       'ip-lookup': {
         'spur': {
-          url: "https://spur.us/app/context?q=".concat(config.targetUser.name),
+          url: "https://spur.us/context/".concat(config.targetUser.name),
           targetUserIp: true,
           targetUserIpRange: false,
           currentUserGroups: ['user']
