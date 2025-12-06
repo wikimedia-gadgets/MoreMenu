@@ -150,7 +150,7 @@ window.MoreMenu.user = ( config ) => ( {
 		},
 		'ip-lookup': {
 			'spur': {
-				url: `https://spur.us/app/context?q=${ config.targetUser.name }`,
+				url: `https://spur.us/context/${ config.targetUser.name }`,
 				targetUserIp: true,
 				targetUserIpRange: false,
 				currentUserGroups: [ 'user' ]
