@@ -2,14 +2,14 @@
 * WARNING: GLOBAL GADGET FILE
 * Compiled from source at https://github.com/wikimedia-gadgets/MoreMenu
 * Please submit code changes as a pull request to the source repository at https://github.com/wikimedia-gadgets/MoreMenu
-* Are there missing translations? See [[meta:MoreMenu#Localization]].
-* Want to add custom links? See [[meta:MoreMenu#Customization]].
+* Are there missing translations? See [[m:MoreMenu#Localization]].
+* Want to add custom links? See [[m:MoreMenu#Customization]].
 * 
 * Script:         MoreMenu.js
 * Version:        5.2.3
 * Author:         MusikAnimal
 * License:        MIT
-* Documentation:  [[meta:MoreMenu]]
+* Documentation:  [[m:MoreMenu]]
 * GitHub:         https://github.com/wikimedia-gadgets/MoreMenu
 * Skins:          Vector, Timeless, Monobook, Modern
 * Browsers:       See [[mw:Compatibility#Browsers]]
