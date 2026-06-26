@@ -410,8 +410,10 @@ $( () => {
 			` );
 			case 'vector-2022':
 				return mw.util.addCSS( `
-				#p-page-dropdown {
+				#p-page-dropdown,
+				#p-user-dropdown {
 					display: flex;
+					padding: 0 6px;
 				}
 				#p-page-dropdown .vector-dropdown-content,
 				#p-user-dropdown .vector-dropdown-content {
