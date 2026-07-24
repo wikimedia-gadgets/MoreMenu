@@ -27,6 +27,6 @@
 		"babel-plugin-add-header-comment": "^1.0.3",
 		"eslint-config-wikimedia": "^0.26.0",
 		"eslint-plugin-import": "^2.22.1",
-		"mwn": "^2.0.2"
+		"mwn": "^3.0.3"
 	}
 }
