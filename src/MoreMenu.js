@@ -387,13 +387,12 @@ $( () => {
 				.mm-menu .mw-list-item {
 					white-space: nowrap;
 				}
-				.mm-submenu {
-					background: var(--background-color-base, #ffffff);
-					border: 1px solid #a2a9b1;
-					min-width: 120px !important;
-					${ rightKey }: inherit !important;
-					top: -1px !important;
-				}
+			.mm-submenu {
+				background: var(--background-color-base, #ffffff);
+				border: 1px solid #a2a9b1;
+				min-width: 120px !important;
+				top: -1px !important;
+			}
 				#p-views {
 					padding-left: inherit !important;
 					padding-right: inherit !important;
@@ -574,10 +573,20 @@ $( () => {
 	 * @return {Object} To be passed to $.css()
 	 */
 	function getSubmenuCss( $element ) {
+		const windowWidth = $( window ).width();
+		const elementOffset = $element.offset();
+		const elementWidth = $element.outerWidth();
+
 		switch ( config.currentUser.skin ) {
 			case 'vector':
-			case 'vector-2022':
-				return { [ leftKey ]: $element.outerWidth() };
+			case 'vector-2022': {
+				const actualWidth = $element.find( '.mm-submenu' ).show().outerWidth();
+				$element.find( '.mm-submenu' ).hide();
+				const wouldOverflowRight = elementOffset.left + elementWidth + actualWidth > windowWidth;
+				return wouldOverflowRight ?
+					{ [ rightKey ]: elementWidth } :
+					{ [ leftKey ]: elementWidth };
+			}
 			case 'timeless':
 				return {
 					[ $( window ).width() <= 1339 && $( window ).width() >= 1100 ? leftKey : rightKey ]:

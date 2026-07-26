@@ -363,7 +363,7 @@ $(function () {
   function addCSS() {
     switch (config.currentUser.skin) {
       case 'vector':
-        return mw.util.addCSS("\n\t\t\t\t.mm-tab .vector-menu-content {\n\t\t\t\t\theight: initial;\n\t\t\t\t\toverflow: initial !important;\n\t\t\t\t}\n\t\t\t\t.mm-menu .mw-list-item {\n\t\t\t\t\twhite-space: nowrap;\n\t\t\t\t}\n\t\t\t\t.mm-submenu {\n\t\t\t\t\tbackground: var(--background-color-base, #ffffff);\n\t\t\t\t\tborder: 1px solid #a2a9b1;\n\t\t\t\t\tmin-width: 120px !important;\n\t\t\t\t\t".concat(rightKey, ": inherit !important;\n\t\t\t\t\ttop: -1px !important;\n\t\t\t\t}\n\t\t\t\t#p-views {\n\t\t\t\t\tpadding-left: inherit !important;\n\t\t\t\t\tpadding-right: inherit !important;\n\t\t\t\t}\n\t\t\t\t#p-views .vector-menu-content::after {\n\t\t\t\t\tdisplay: none !important;\n\t\t\t\t}\n\t\t\t\t.rtl #p-views .vector-menu-content::before {\n\t\t\t\t\tdisplay: none !important;\n\t\t\t\t}\n\t\t\t\t.mm-submenu .mm-item {\n\t\t\t\t\tfont-size: inherit !important;\n\t\t\t\t}\n\t\t\t"));
+        return mw.util.addCSS("\n\t\t\t\t.mm-tab .vector-menu-content {\n\t\t\t\t\theight: initial;\n\t\t\t\t\toverflow: initial !important;\n\t\t\t\t}\n\t\t\t\t.mm-menu .mw-list-item {\n\t\t\t\t\twhite-space: nowrap;\n\t\t\t\t}\n\t\t\t.mm-submenu {\n\t\t\t\tbackground: var(--background-color-base, #ffffff);\n\t\t\t\tborder: 1px solid #a2a9b1;\n\t\t\t\tmin-width: 120px !important;\n\t\t\t\ttop: -1px !important;\n\t\t\t}\n\t\t\t\t#p-views {\n\t\t\t\t\tpadding-left: inherit !important;\n\t\t\t\t\tpadding-right: inherit !important;\n\t\t\t\t}\n\t\t\t\t#p-views .vector-menu-content::after {\n\t\t\t\t\tdisplay: none !important;\n\t\t\t\t}\n\t\t\t\t.rtl #p-views .vector-menu-content::before {\n\t\t\t\t\tdisplay: none !important;\n\t\t\t\t}\n\t\t\t\t.mm-submenu .mm-item {\n\t\t\t\t\tfont-size: inherit !important;\n\t\t\t\t}\n\t\t\t");
       case 'vector-2022':
         return mw.util.addCSS("\n\t\t\t\t#p-page-dropdown,\n\t\t\t\t#p-user-dropdown {\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\tpadding: 0 6px;\n\t\t\t\t}\n\t\t\t\t#p-page-dropdown .vector-dropdown-content,\n\t\t\t\t#p-user-dropdown .vector-dropdown-content {\n\t\t\t\t\theight: initial;\n\t\t\t\t\toverflow-x: initial !important;\n\t\t\t\t\toverflow-y: initial !important;\n\t\t\t\t\ttop: 35px !important;\n\t\t\t\t}\n\t\t\t\t#p-page-dropdown .vector-dropdown-content::after,\n\t\t\t\t#p-user-dropdown .vector-dropdown-content::after {\n\t\t\t\t\tdisplay: none !important;\n\t\t\t\t}\n\t\t\t\t.mm-menu .mw-list-item {\n\t\t\t\t\twhite-space: nowrap;\n\t\t\t\t}\n\t\t\t\t.mm-submenu {\n\t\t\t\t\tbackground: var(--background-color-base, #ffffff);;\n\t\t\t\t\tbox-shadow: 0 2px 6px -1px rgba(0,0,0,0.2);\n\t\t\t\t\tmin-width: 120px !important;\n\t\t\t\t\tpadding: 1px 10px;\n\t\t\t\t\ttop: -1px !important;\n\t\t\t\t}\n\t\t\t\t#p-views {\n\t\t\t\t\tpadding-left: inherit !important;\n\t\t\t\t\tpadding-right: inherit !important;\n\t\t\t\t}\n\t\t\t");
       case 'timeless':
@@ -383,10 +383,18 @@ $(function () {
    * @return {Object} To be passed to $.css()
    */
   function getSubmenuCss($element) {
+    var windowWidth = $(window).width();
+    var elementOffset = $element.offset();
+    var elementWidth = $element.outerWidth();
     switch (config.currentUser.skin) {
       case 'vector':
       case 'vector-2022':
-        return _defineProperty({}, leftKey, $element.outerWidth());
+        {
+          var actualWidth = $element.find('.mm-submenu').show().outerWidth();
+          $element.find('.mm-submenu').hide();
+          var wouldOverflowRight = elementOffset.left + elementWidth + actualWidth > windowWidth;
+          return wouldOverflowRight ? _defineProperty({}, rightKey, elementWidth) : _defineProperty({}, leftKey, elementWidth);
+        }
       case 'timeless':
         return _defineProperty({}, $(window).width() <= 1339 && $(window).width() >= 1100 ? leftKey : rightKey, $element.outerWidth() + 11);
       case 'monobook':
