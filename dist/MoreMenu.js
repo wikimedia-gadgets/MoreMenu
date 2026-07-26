@@ -392,8 +392,8 @@ $(function () {
         {
           var actualWidth = $element.find('.mm-submenu').show().outerWidth();
           $element.find('.mm-submenu').hide();
-          var wouldOverflowRight = elementOffset.left + elementWidth + actualWidth > windowWidth;
-          return wouldOverflowRight ? _defineProperty({}, rightKey, elementWidth) : _defineProperty({}, leftKey, elementWidth);
+          var wouldOverflow = isRtl ? elementOffset.left < actualWidth : elementOffset.left + elementWidth + actualWidth > windowWidth;
+          return wouldOverflow ? _defineProperty({}, rightKey, elementWidth) : _defineProperty({}, leftKey, elementWidth);
         }
       case 'timeless':
         return _defineProperty({}, $(window).width() <= 1339 && $(window).width() >= 1100 ? leftKey : rightKey, $element.outerWidth() + 11);
