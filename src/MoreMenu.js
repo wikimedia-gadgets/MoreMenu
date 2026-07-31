@@ -580,8 +580,10 @@ $( () => {
 		switch ( config.currentUser.skin ) {
 			case 'vector':
 			case 'vector-2022': {
-				const actualWidth = $element.find( '.mm-submenu' ).show().outerWidth();
-				$element.find( '.mm-submenu' ).hide();
+				const $submenu = $element.find( '.mm-submenu' );
+				$submenu.css( { display: 'block', visibility: 'hidden' } );
+				const actualWidth = $submenu.outerWidth();
+				$submenu.css( 'visibility', '' ).hide();
 				const wouldOverflow = isRtl ?
 					elementOffset.left < actualWidth :
 					elementOffset.left + elementWidth + actualWidth > windowWidth;

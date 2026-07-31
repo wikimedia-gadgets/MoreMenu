@@ -390,8 +390,13 @@ $(function () {
       case 'vector':
       case 'vector-2022':
         {
-          var actualWidth = $element.find('.mm-submenu').show().outerWidth();
-          $element.find('.mm-submenu').hide();
+          var $submenu = $element.find('.mm-submenu');
+          $submenu.css({
+            display: 'block',
+            visibility: 'hidden'
+          });
+          var actualWidth = $submenu.outerWidth();
+          $submenu.css('visibility', '').hide();
           var wouldOverflow = isRtl ? elementOffset.left < actualWidth : elementOffset.left + elementWidth + actualWidth > windowWidth;
           return wouldOverflow ? _defineProperty({}, rightKey, elementWidth) : _defineProperty({}, leftKey, elementWidth);
         }
