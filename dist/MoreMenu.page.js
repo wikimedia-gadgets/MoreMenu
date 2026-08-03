@@ -6,7 +6,7 @@
 * Want to add custom links? See [[m:MoreMenu#Customization]].
 * 
 * Script:         MoreMenu.js
-* Version:        5.2.4
+* Version:        5.2.5
 * Author:         MusikAnimal
 * License:        MIT
 * Documentation:  [[m:MoreMenu]]
