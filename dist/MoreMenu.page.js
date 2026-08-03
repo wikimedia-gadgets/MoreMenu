@@ -94,7 +94,7 @@ window.MoreMenu.page = function (config) {
         'authorship': {
           url: "https://xtools.wmcloud.org/authorship/".concat(config.project.domain, "/").concat(config.page.escapedName),
           pageExists: true,
-          databaseRestrict: ['dewiki', 'enwiki', 'eswiki', 'euwiki', 'trwiki']
+          databaseRestrict: ['afwiki', 'alswiki', 'arwiki', 'azwiki', 'bewiki', 'bgwiki', 'bnwiki', 'bswiki', 'cewiki', 'cswiki', 'cywiki', 'dawiki', 'dewiki', 'dsbwiki', 'elwiki', 'enwiki', 'eowiki', 'eswiki', 'etwiki', 'euwiki', 'fawiki', 'fiwiki', 'frwiki', 'glwiki', 'hewiki', 'hiwiki', 'hrwiki', 'huwiki', 'iawiki', 'idwiki', 'itwiki', 'jawiki', 'kawiki', 'kowiki', 'kkwiki', 'kuwiki', 'ltwiki', 'lvwiki', 'mkwiki', 'mlwiki', 'mrwiki', 'mswiki', 'mtwiki', 'newiki', 'nlwiki', 'nowiki', 'plwiki', 'ptwiki', 'rowiki', 'ruwiki', 'shwiki', 'simplewiki', 'skwiki', 'slwiki', 'sqwiki', 'srwiki', 'svwiki', 'swwiki', 'tawiki', 'tewiki', 'tgwiki', 'thwiki', 'tlwiki', 'trwiki', 'ukwiki', 'urwiki', 'uzwiki', 'vecwiki', 'viwiki', 'zhwiki']
         },
         'basic-statistics': {
           url: mw.util.getUrl(config.page.name, {
@@ -137,7 +137,7 @@ window.MoreMenu.page = function (config) {
         'search-history-xtools': {
           url: "https://xtools.wmcloud.org/blame/".concat(config.project.domain, "?page=").concat(config.page.encodedName),
           pageExists: true,
-          databaseRestrict: ['dewiki', 'enwiki', 'eswiki', 'euwiki', 'trwiki']
+          databaseRestrict: ['afwiki', 'alswiki', 'arwiki', 'azwiki', 'bewiki', 'bgwiki', 'bnwiki', 'bswiki', 'cewiki', 'cswiki', 'cywiki', 'dawiki', 'dewiki', 'dsbwiki', 'elwiki', 'enwiki', 'eowiki', 'eswiki', 'etwiki', 'euwiki', 'fawiki', 'fiwiki', 'frwiki', 'glwiki', 'hewiki', 'hiwiki', 'hrwiki', 'huwiki', 'iawiki', 'idwiki', 'itwiki', 'jawiki', 'kawiki', 'kowiki', 'kkwiki', 'kuwiki', 'ltwiki', 'lvwiki', 'mkwiki', 'mlwiki', 'mrwiki', 'mswiki', 'mtwiki', 'newiki', 'nlwiki', 'nowiki', 'plwiki', 'ptwiki', 'rowiki', 'ruwiki', 'shwiki', 'simplewiki', 'skwiki', 'slwiki', 'sqwiki', 'srwiki', 'svwiki', 'swwiki', 'tawiki', 'tewiki', 'tgwiki', 'thwiki', 'tlwiki', 'trwiki', 'ukwiki', 'urwiki', 'uzwiki', 'vecwiki', 'viwiki', 'zhwiki']
         },
         'search-subpages': {
           url: mw.util.getUrl('Special:Search', {
@@ -156,8 +156,8 @@ window.MoreMenu.page = function (config) {
         },
         'fix-dead-links': {
           url: "https://iabot.wmcloud.org/index.php?page=runbotsingle&pagesearch=".concat(config.page.encodedName, "&wiki=").concat(config.project.dbName),
-          pageExists: true,
-          databaseRestrict: ['alswiki', 'barwiki', 'ckbwiki', 'dewiki', 'enwiki', 'eswiki', 'frwiki', 'huwiki', 'itwiki', 'jawiki', 'kowiki', 'lvwiki', 'nlwiki', 'nowiki', 'ptwiki', 'ruwiki', 'svwiki', 'zhwiki']
+          namespaceRestrict: [0],
+          pageExists: true
         }
       },
       /** Actions the current user can take on the page. */
