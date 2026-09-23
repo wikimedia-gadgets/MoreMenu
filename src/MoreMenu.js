@@ -81,15 +81,20 @@ $( () => {
 			blocked: false,
 			ipRange: false
 		};
-		if ( !this.targetUser.name &&
-			mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Contributions' &&
-			!$( '.mw-userpage-userdoesnotexist' )[ 0 ]
-		) {
-			/**
-			 * IP range at Special:Contribs, where wgRelevantUserName isn't set.
-			 * @see https://phabricator.wikimedia.org/T206954
-			 */
-			this.targetUser.name = mw.config.get( 'wgTitle' ).split( '/' ).slice( 1 ).join( '/' );
+		if ( !this.targetUser.name && !$( '.mw-userpage-userdoesnotexist' )[ 0 ] ) {
+			const specialPageName = mw.config.get( 'wgCanonicalSpecialPageName' );
+
+			if ( specialPageName === 'Contributions' ) {
+				/**
+				 * IP range at Special:Contribs, where wgRelevantUserName isn't set.
+				 * @see https://phabricator.wikimedia.org/T206954
+				 */
+				this.targetUser.name = mw.config.get( 'wgTitle' ).split( '/' ).slice( 1 ).join( '/' );
+			}
+			if ( specialPageName === 'IPContributions' || specialPageName === 'GlobalContributions' ) {
+				this.targetUser.name = mw.config.get( 'wgIPRangeTarget' );
+			}
+
 			this.targetUser.ipRange = true;
 
 			/** Some things don't work for IPv4 ranges (block log API), but do for IPv6 ranges... */
