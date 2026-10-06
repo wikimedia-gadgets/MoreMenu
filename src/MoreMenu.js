@@ -90,8 +90,7 @@ $( () => {
 				 * @see https://phabricator.wikimedia.org/T206954
 				 */
 				this.targetUser.name = mw.config.get( 'wgTitle' ).split( '/' ).slice( 1 ).join( '/' );
-			}
-			if ( specialPageName === 'IPContributions' || specialPageName === 'GlobalContributions' ) {
+			} else if ( specialPageName === 'IPContributions' || specialPageName === 'GlobalContributions' ) {
 				this.targetUser.name = mw.config.get( 'wgIPRangeTarget' );
 			}
 
